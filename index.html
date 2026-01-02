@@ -540,6 +540,42 @@
             font-size: 18px;
         }
     }
+	/* Loại bỏ hoàn toàn hiệu ứng highlight khi chạm trên mobile */
+* {
+    -webkit-tap-highlight-color: transparent; /* Cho Chrome, Safari, Android Browser */
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* Cách viết khác cũng hiệu quả */
+}
+
+/* Đảm bảo nút trở về trạng thái bình thường sau khi chạm */
+.control-button,
+.mode-button,
+.capture-btn,
+#submitQuiz,
+.question {
+    -webkit-appearance: none; /* Loại bỏ style mặc định của hệ thống */
+    outline: none; /* Loại bỏ viền focus mặc định */
+}
+
+/* Nếu bạn vẫn muốn có feedback nhẹ khi chạm (khuyến khích cho UX tốt) 
+   thì tự tạo hiệu ứng :active mượt mà thay vì để trình duyệt tự làm */
+.control-button:active,
+.mode-button:active,
+.capture-btn:active,
+#submitQuiz:active,
+.question:active {
+    background-color: #000000 !important; /* hoặc màu bạn muốn khi nhấn */
+    opacity: 0.8;
+    transition: all 0.1s ease; /* Hiệu ứng mượt */
+}
+
+/* Trở về bình thường nhanh chóng */
+.control-button,
+.mode-button,
+.capture-btn,
+#submitQuiz,
+.question {
+    transition: all 0.2s ease;
+}
 </style>
 </head>
 <body>
@@ -819,22 +855,24 @@ B1
             }
         };
 
-        audioPlayer.ontimeupdate = function() {
-            updateTimeDisplay();
-            
-            if (isDialoguePlaying && currentDialogueIndex < dialogueTimings.length) {
-                const timing = dialogueTimings[currentDialogueIndex];
-                if (audioPlayer.currentTime >= timing.end) {
-                    stopDialogue();
-                }
-            }
-            
-            if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
-                if (audioPlayer.currentTime >= customLoopEnd) {
-                    audioPlayer.currentTime = customLoopStart;
-                }
-            }
-        };
+		audioPlayer.ontimeupdate = function() {
+			updateTimeDisplay();
+			
+			// Kiểm tra dừng đoạn thoại
+			if (isDialoguePlaying && currentDialogueIndex < dialogueTimings.length) {
+				const timing = dialogueTimings[currentDialogueIndex];
+				if (audioPlayer.currentTime >= timing.end) {
+					stopDialogue();  // Gọi hàm đã sửa ở trên → sẽ pause ngay
+				}
+			}
+			
+			// Kiểm tra loop tùy chỉnh (nếu có)
+			if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
+				if (audioPlayer.currentTime >= customLoopEnd) {
+					audioPlayer.currentTime = customLoopStart;
+				}
+			}
+		};
 
         function playDialogue(index) {
             if (index >= 0 && index < dialogueTimings.length) {
@@ -851,17 +889,19 @@ B1
             }
         }
 
-        function stopDialogue() {
-            isDialoguePlaying = false;
-            document.querySelectorAll('.character-name').forEach(name => {
-                name.classList.remove('playing');
-            });
-            
-            if (!audioPlayer.paused && isDialoguePlaying) {
-                audioPlayer.pause();
-                pausePlayButton.textContent = "播";
-            }
-        }
+		function stopDialogue() {
+			// Dừng phát trước
+			audioPlayer.pause();
+			pausePlayButton.textContent = "播";
+
+			// Xóa highlight
+			document.querySelectorAll('.character-name').forEach(name => {
+				name.classList.remove('playing');
+			});
+
+			// Đặt lại trạng thái
+			isDialoguePlaying = false;
+		}
 
         function highlightCharacterName(index, isPlaying) {
             const characterNames = document.querySelectorAll('.character-name');

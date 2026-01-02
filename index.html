@@ -540,42 +540,7 @@
             font-size: 18px;
         }
     }
-	/* Loại bỏ hoàn toàn hiệu ứng highlight khi chạm trên mobile */
-* {
-    -webkit-tap-highlight-color: transparent; /* Cho Chrome, Safari, Android Browser */
-    -webkit-tap-highlight-color: rgba(0,0,0,0); /* Cách viết khác cũng hiệu quả */
-}
-
-/* Đảm bảo nút trở về trạng thái bình thường sau khi chạm */
-.control-button,
-.mode-button,
-.capture-btn,
-#submitQuiz,
-.question {
-    -webkit-appearance: none; /* Loại bỏ style mặc định của hệ thống */
-    outline: none; /* Loại bỏ viền focus mặc định */
-}
-
-/* Nếu bạn vẫn muốn có feedback nhẹ khi chạm (khuyến khích cho UX tốt) 
-   thì tự tạo hiệu ứng :active mượt mà thay vì để trình duyệt tự làm */
-.control-button:active,
-.mode-button:active,
-.capture-btn:active,
-#submitQuiz:active,
-.question:active {
-    background-color: #000000 !important; /* hoặc màu bạn muốn khi nhấn */
-    opacity: 0.8;
-    transition: all 0.1s ease; /* Hiệu ứng mượt */
-}
-
-/* Trở về bình thường nhanh chóng */
-.control-button,
-.mode-button,
-.capture-btn,
-#submitQuiz,
-.question {
-    transition: all 0.2s ease;
-}
+	
 </style>
 </head>
 <body>

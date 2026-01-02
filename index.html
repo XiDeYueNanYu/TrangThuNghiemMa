@@ -3,549 +3,593 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học Tiếng Việt Qua Hội Thoại</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<style>
-    :root {
-        --color1: #fbfbfb;
-        --color3: #393535;
-        --color4: #fbfbfb;
-        --color12: #393535;
-        --structure-bg: rgba(254,156,4,0.5);
-        
-        --padding-top: 100px;
-        --padding-bottom: 100px;
-        --padding-left: 60px;
-        --padding-right: 60px;
-
-        --title-font-size: 90px;
-        --title-color: #393535;
-        --neirong-line-height: 2.1;
-        
-        --character-column-width: 300px;
-        --char-box-height: 1.2;
-    }
-
-    body {
-        background-color: #1a1a1a;
-        font-family: Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding-bottom: 80px; /* Để chỗ cho thanh mode bar */
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        width: 100%;
-        margin-bottom: 20px;
-        padding: 0 10px;
-        box-sizing: border-box;
-    }
-
-    .text-box {
-        width: 100%;
-        max-width: 1500px;
-        padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
-        border: 10px solid var(--color1);
-        background-color: var(--color4);
-        font-size: 80px;
-        color: var(--color3);
-        line-height: var(--neirong-line-height);
-        text-align: justify;
-        box-sizing: border-box;
-    }
-
-    .title {
-        font-size: var(--title-font-size);
-        font-weight: bold;
-        color: var(--title-color);
-        text-align: center;
-        margin-bottom: 30px;
-        display: block;
-        line-height: 1;
-    }
-
-    .dialogue-grid {
-        display: grid;
-        grid-template-columns: var(--character-column-width) 1fr;
-        gap: 40px;
-        margin-bottom: 25px;
-        align-items: start;
-        width: 100%;
-    }
-
-    .dialogue-content {
-        text-align: left;
-        padding-top: 5px; 
-    }
-    
-    .character-box {
-        display: flex;
-        justify-content: flex-end; 
-        align-items: center;   
-        line-height: 1.2;    
-        width: 100%;
-        height: auto;
-        padding-top: 35px;
-    }
-
-    .character-name {
-        padding: 2px 15px; 
-        border: 5px solid rgba(73,121,107,0.4);
-        border-radius: 15px;
-        font-weight: bold;
-        font-size: 70px;
-        line-height: 1.2;
-        display: inline-block; 
-        vertical-align: middle;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .character-name:hover {
-        transform: scale(1.02);
-        box-shadow: 0 0 10px rgba(73,121,107,0.6);
-    }
-
-    .character-name.playing {
-        background-color: #ffcc00 !important;
-        box-shadow: 0 0 15px rgba(255,204,0,0.8);
-    }
-
-    .colon {
-        font-weight: bold;
-        font-size: 80px;
-        margin-left: 10px; 
-        margin-right: 5px; 
-        line-height: 1.2;
-    }
-
-    .translated-word {
-        position: relative;
-        display: inline-block;
-        margin-top: 0px;
-        background-color: rgba(167,187,174,0.3);
-        padding: 3px 3px;
-        border-radius: 8px;
-        line-height: 1.2;
-    }
-
-    .annotation-top {
-        position: absolute;
-        top: -50px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 38px;
-        color: var(--color12);
-        background-color: rgba(167,187,174,0.7);
-        padding: 5px 10px;
-        border-radius: 8px;
-        white-space: nowrap;
-        line-height: 1;
-        font-weight: normal;
-    }
-
-    .structure-main {
-        background-color: var(--structure-bg);
-        padding: 2px 10px;
-        border-radius: 8px;
-    }
-
-    .structure-dependent {
-        border-bottom: 10px solid var(--structure-bg);
-        padding-bottom: 0px;
-    }
-
-    .capture-btn {
-        padding: 15px 40px;
-        font-size: 24px;
-        font-weight: bold;
-        cursor: pointer;
-        background-color: #27ae60;
-        color: white;
-        border: none;
-        border-radius: 50px;
-        transition: 0.3s;
-        margin-bottom: 20px;
-    }
-
-    .capture-btn:hover { background-color: #219150; }
-
-    /* Thanh điều khiển audio */
-    .floating-controls {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background-color: #f0f0f0;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        text-align: center;
-        display: block;
-        z-index: 1000;
-        transition: all 0.3s ease;
-    }
-
-    #audioPlayer {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .time-row {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-    }
-
-    .time-box-group {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .button-group {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .floating-controls p#timeDisplay {
-        font-size: 28px;
-        color: #FFFFFF;
-        background-color: #000000;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 0;
-    }
-
-    .floating-controls .time-box {
-        font-size: 16px;
-        color: #FFFFFF;
-        background-color: #555555;
-        padding: 5px 10px;
-        border-radius: 5px;
-        min-width: 60px;
-    }
-
-    .tua-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        margin-bottom: 10px;
-        flex-wrap: wrap;
-    }
-
-    .action-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .control-button {
-        width: 50px;
-        height: 50px;
-        background-color: #363535;
-        color: white;
-        border: none;
-        border-radius: 50%;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .control-button:disabled {
-        background-color: #888888;
-        cursor: not-allowed;
-    }
-
-    .control-button:hover:not(:disabled) {
-        background-color: #000000;
-    }
-
-    .pause-play-button {
-        background-color: #FF4500;
-    }
-
-    .pause-play-button:hover {
-        background-color: #CC3700;
-    }
-
-    .toggle-button {
-        background-color: #4682B4;
-    }
-
-    .toggle-button:hover {
-        background-color: #36648B;
-    }
-
-    .loop-button {
-        background-color: #3c923c;
-    }
-
-    .loop-button:hover {
-        background-color: #347d34;
-    }
-
-    .clear-button {
-        background-color: #bc3f13;
-    }
-
-    .clear-button:hover {
-        background-color: #d15124;
-    }
-
-    /* Thanh lựa chọn chế độ */
-    .floating-mode-bar {
-        position: fixed;
-        bottom: 0;
-        min-width: 800px;
-		left: 50%;
-        transform: translateX(-50%);
-        background-color: #68838B;
-        padding: 10px;
-        border-radius: 0;
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        z-index: 1000;
-    }
-
-    .mode-button {
-        padding: 12px 24px;
-        border: 0 solid #ccc;
-        background: #95a8ad;
-        color: #293437;
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        border-radius: 8px;
-        min-width: 120px;
-        transition: all 0.3s;
-    }
-
-    .mode-button.active {
-        border: 3px solid #ffffff;
-        background: #f0f0f0;
-        color: #293437;
-    }
-
-    /* Quiz Container */
-    #quizContainer {
-        display: none;
-        font-family: Arial, sans-serif;
-        width: 100%;
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 15px;
-        box-sizing: border-box;
-    }
-
-    #quizInstructions {
-        font-size: 24px;
-        color: #ffffff;
-        background-color: #68838B;
-        padding: 12px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        text-align: center;
-        line-height: 1.5;
-    }
-
-    .question {
-        margin-bottom: 18px;
-        padding: 16px;
-        color: #53686f;
-        border: 5px solid #53686f;
-        border-radius: 10px;
-        background-color: #ffffff;
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    .question.selected {
-        background-color: #B7D7AA;
-    }
-
-    #result {
-        margin-top: 30px;
-        padding: 20px;
-        display: none;
-        border: 5px solid #53686f;
-        border-radius: 10px;
-        font-size: 20px;
-        font-weight: bold;
-        background-color: #ffffff;
-        color: #007a33;
-        line-height: 1.8;
-    }
-
-    .wrong-answer {
-        color: #f65936;
-        margin: 12px 0;
-        font-size: 18px;
-    }
-
-    #submitQuiz {
-        padding: 12px 24px;
-        border: 3px solid #53686f;
-        background-color: #FF6820;
-        border-radius: 8px;
-        color: white;
-        cursor: pointer;
-        font-size: 20px;
-        font-weight: bold;
-        display: block;
-        margin: 30px auto;
-    }
-
-    #submitQuiz:hover {
-        background-color: #ff844a;
-    }
-
-    /* ====================== RESPONSIVE CHO MOBILE ====================== */
-    @media (max-width: 768px) {
+    <title>Hội Thoại</title>
+    <style>
         :root {
-            --padding-top: 40px;
-            --padding-bottom: 40px;
-            --padding-left: 20px;
-            --padding-right: 20px;
-            --title-font-size: 50px;
-            --neirong-line-height: 2.6;
-            --character-column-width: 80px;
+            --color1: #fbfbfb;
+            --color3: #393535;
+            --color4: #fbfbfb;
+            --color12: #393535;
+            --structure-bg: rgba(254,156,4,0.5);
+            
+            --padding-top: 100px;
+            --padding-bottom: 100px;
+            --padding-left: 60px;
+            --padding-right: 60px;
+
+            --title-font-size: 90px;
+            --title-color: #393535;
+            --neirong-line-height: 2.2;
+            
+            --character-column-width: 150px;
+            --char-box-height: 1.2;
+
+            /* 2 thông số điều chỉnh khoảng cách nội dung */
+            --content-top-margin: 10px;     /* Khoảng cách từ nội dung đến lề trên (sau phần tiêu đề) */
+            --content-bottom-margin: 300px;  /* Khoảng cách từ nội dung đến lề dưới */
+
+            /* Thông số điều chỉnh vị trí audio controls so với chân trang */
+            --audio-bottom-position: 80px;  /* Khoảng cách từ đáy trang lên */
+        }
+
+        body {
+            background-color: #1a1a1a;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 80px;
+        }
+
+        #infoBox { 
+            width: 100%; 
+            max-width: 800px;
+            height: 150px; 
+            margin: 0 auto 5px auto; 
+            border: 1px solid #68838B; 
+            background: #68838B; 
+            color: #D2B48C; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: clamp(40px, 5vw, 90px);
+            font-weight: bold;
+        }
+
+        #contactBox { 
+            width: 100%; 
+            max-width: 800px;
+            height: 45px; 
+            margin: 0 auto 5px auto; 
+            border: 1px solid #68838B; 
+            background: #68838B; 
+            color: #D2B48C; 
+            display: flex; 
+            align-items: center; 
+            justify-content: left; 
+            padding-left: 20px;
+            font-size: clamp(12px, 2vw, 25px); 
+            font-weight: bold;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+            margin-top: var(--content-top-margin);
+            margin-bottom: var(--content-bottom-margin);
         }
 
         .text-box {
-            font-size: 20px;
-            padding: 30px 15px;
-            border-width: 6px;
+            width: 100%;
+            max-width: 1500px;
+            padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
+            border: 10px solid var(--color1);
+            background-color: var(--color4);
+            font-size: 50px;
+            color: var(--color3);
+            line-height: var(--neirong-line-height);
+            text-align: justify;
+            box-sizing: border-box;
         }
 
         .title {
-            font-size: 30px;
-            margin-bottom: 20px;
-        }
-
-        .character-name {
-            font-size: 16px;
-            padding: 4px 10px;
-            border-width: 4px;
-        }
-
-        .colon {
-            font-size: 16px;
-			margin-left: 3px;
-			margin-right: 3px;
-        }
-
-        .annotation-top {
-            font-size: 13px;
-            top: -20px;
-            padding: 2px 2px;
-			border-radius: 1px;
+            font-size: var(--title-font-size);
+            font-weight: bold;
+            color: var(--title-color);
+            text-align: center;
+            margin-bottom: 30px;
+            display: block;
+            line-height: 1;
         }
 
         .dialogue-grid {
-            gap: 5px;
-            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: var(--character-column-width) 1fr;
+            gap: 40px;
+            margin-bottom: 25px;
+            align-items: start;
+            width: 100%;
         }
 
+        .dialogue-content {
+            text-align: left;
+            padding-top: 5px; 
+        }
+        
         .character-box {
-            padding-top: 11px;
+            display: flex;
+            justify-content: flex-end; 
+            align-items: center;   
+            line-height: 1.2;    
+            width: 100%;
+            height: auto;
+            padding-top: 35px;
         }
 
-        .capture-btn {
-            padding: 12px 30px;
-            font-size: 20px;
+        .character-name {
+            padding: 2px 15px; 
+            border: 5px solid rgba(73,121,107,0.4);
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 30px;
+            line-height: 1.2;
+            display: inline-block; 
+            vertical-align: middle;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        /* Audio controls nhỏ gọn hơn */
+        .character-name:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(73,121,107,0.6);
+        }
+
+        .character-name.playing {
+            background-color: #ffcc00 !important;
+            box-shadow: 0 0 15px rgba(255,204,0,0.8);
+        }
+
+        .colon {
+            font-weight: bold;
+            font-size: 35px;
+            margin-left: 10px; 
+            margin-right: 5px; 
+            line-height: 1.2;
+        }
+
+        .translated-word {
+            position: relative;
+            display: inline-block;
+            margin-top: 0px;
+            background-color: rgba(167,187,174,0.3);
+            padding: 3px 3px;
+            border-radius: 8px;
+            line-height: 1.2;
+        }
+
+        .annotation-top {
+            position: absolute;
+            top: -38px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 25px;
+            color: var(--color12);
+            background-color: rgba(167,187,174,0.7);
+            padding: 5px 10px;
+            border-radius: 8px;
+            white-space: nowrap;
+            line-height: 1;
+            font-weight: normal;
+        }
+
+        .structure-main {
+            background-color: var(--structure-bg);
+            padding: 2px 10px;
+            border-radius: 8px;
+        }
+
+        .structure-dependent {
+            border-bottom: 10px solid var(--structure-bg);
+            padding-bottom: 0px;
+        }
+
+        /* Thanh điều khiển audio - góc dưới bên phải */
         .floating-controls {
-            top: 10px;
-            right: 10px;
-            padding: 8px;
+            position: fixed;
+            bottom: var(--audio-bottom-position);
+            right: 20px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            display: block;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
 
-        .control-button {
-            width: 40px;
-            height: 40px;
-            font-size: 14px;
+        #audioPlayer {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .time-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .time-box-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
 
         .floating-controls p#timeDisplay {
-            font-size: 22px;
-            padding: 4px 8px;
+            font-size: 28px;
+            color: #FFFFFF;
+            background-color: #000000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0;
         }
 
         .floating-controls .time-box {
-            font-size: 13px;
-            min-width: 50px;
-            padding: 4px 8px;
+            font-size: 16px;
+            color: #FFFFFF;
+            background-color: #555555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            min-width: 60px;
         }
 
-        /* Thanh mode bar */
+        .tua-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background-color: #363535;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .control-button:disabled {
+            background-color: #888888;
+            cursor: not-allowed;
+        }
+
+        .control-button:hover:not(:disabled) {
+            background-color: #000000;
+        }
+
+        .pause-play-button {
+            background-color: #FF4500;
+        }
+
+        .pause-play-button:hover {
+            background-color: #CC3700;
+        }
+
+        .toggle-button {
+            background-color: #4682B4;
+        }
+
+        .toggle-button:hover {
+            background-color: #36648B;
+        }
+
+        .loop-button {
+            background-color: #3c923c;
+        }
+
+        .loop-button:hover {
+            background-color: #347d34;
+        }
+
+        .clear-button {
+            background-color: #bc3f13;
+        }
+
+        .clear-button:hover {
+            background-color: #d15124;
+        }
+
+        /* Thanh lựa chọn chế độ */
         .floating-mode-bar {
-			width: 90%;
-			min-width:100px;
-			left: 50%;
+            position: fixed;
+            bottom: 0;
+            min-width: 800px;
+            left: 50%;
             transform: translateX(-50%);
-            padding: 8px;
-            gap: 15px;
+            background-color: #68838B;
+            padding: 10px;
+            border-radius: 0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
         }
 
         .mode-button {
-            padding: 10px 18px;
-            font-size: 18px;
-            min-width: 100px;
+            padding: 12px 24px;
+            border: 0 solid #ccc;
+            background: #95a8ad;
+            color: #293437;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            min-width: 120px;
+            transition: all 0.3s;
         }
 
-        /* Quiz trên mobile */
+        .mode-button.active {
+            border: 3px solid #ffffff;
+            background: #f0f0f0;
+            color: #293437;
+        }
+
+        /* Quiz Container */
+        #quizContainer {
+            display: none;
+            font-family: Arial, sans-serif;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
         #quizInstructions {
-            font-size: 20px;
-            padding: 10px;
+            font-size: 24px;
+            color: #ffffff;
+            background-color: #68838B;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.5;
         }
 
         .question {
-            font-size: 18px;
-            padding: 14px;
-            border-width: 4px;
+            margin-bottom: 18px;
+            padding: 16px;
+            color: #53686f;
+            border: 5px solid #53686f;
+            border-radius: 10px;
+            background-color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .question.selected {
+            background-color: #B7D7AA;
         }
 
         #result {
-            font-size: 18px;
-            padding: 15px;
+            margin-top: 30px;
+            padding: 20px;
+            display: none;
+            border: 5px solid #53686f;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #007a33;
+            line-height: 1.8;
         }
 
         .wrong-answer {
-            font-size: 16px;
+            color: #f65936;
+            margin: 12px 0;
+            font-size: 18px;
         }
 
         #submitQuiz {
-            padding: 10px 20px;
-            font-size: 18px;
+            padding: 12px 24px;
+            border: 3px solid #53686f;
+            background-color: #FF6820;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: block;
+            margin: 30px auto;
         }
-    }
-	
-</style>
+
+        #submitQuiz:hover {
+            background-color: #ff844a;
+        }
+
+        /* Tắt highlight khi chạm trên mobile */
+        * {
+            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+
+        .control-button,
+        .mode-button,
+        #submitQuiz,
+        .question {
+            -webkit-appearance: none;
+            outline: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .control-button:active,
+        .mode-button:active,
+        #submitQuiz:active,
+        .question:active {
+            opacity: 0.7;
+            transform: scale(0.95);
+            transition: all 0.1s ease;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            :root {
+                --padding-top: 40px;
+                --padding-bottom: 40px;
+                --padding-left: 20px;
+                --padding-right: 20px;
+                --title-font-size: 50px;
+                --neirong-line-height: 2.6;
+                --character-column-width: 80px;
+                --audio-bottom-position: 70px;
+            }
+			#infoBox { 
+			width: 95%;
+            height: 100px; 
+			font-size: clamp(60px, 5vw, 90px);
+			}
+			#contactBox { 
+            width: 93%; 
+            height: 45px; 
+            font-size: clamp(18px, 2vw, 25px); 
+            font-weight: bold;
+			}
+            .text-box {
+                font-size: 20px;
+                padding: 30px 15px;
+                border-width: 6px;
+            }
+
+            .title {
+                font-size: 30px;
+                margin-bottom: 20px;
+            }
+
+            .character-name {
+                font-size: 16px;
+                padding: 4px 10px;
+                border-width: 4px;
+            }
+
+            .colon {
+                font-size: 16px;
+                margin-left: 3px;
+                margin-right: 3px;
+            }
+
+            .annotation-top {
+                font-size: 13px;
+                top: -20px;
+                padding: 2px 2px;
+                border-radius: 1px;
+            }
+
+            .dialogue-grid {
+                gap: 5px;
+                margin-bottom: 20px;
+            }
+
+            .character-box {
+                padding-top: 11px;
+            }
+
+            .floating-controls {
+                padding: 8px;
+            }
+
+            .control-button {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .floating-controls p#timeDisplay {
+                font-size: 22px;
+                padding: 4px 8px;
+            }
+
+            .floating-controls .time-box {
+                font-size: 13px;
+                min-width: 50px;
+                padding: 4px 8px;
+            }
+
+            .floating-mode-bar {
+                width: 90%;
+                min-width: 100px;
+                padding: 8px;
+                gap: 15px;
+            }
+
+            .mode-button {
+                padding: 10px 18px;
+                font-size: 18px;
+                min-width: 100px;
+            }
+
+            #quizInstructions {
+                font-size: 20px;
+                padding: 10px;
+            }
+
+            .question {
+                font-size: 18px;
+                padding: 14px;
+                border-width: 4px;
+            }
+
+            #result {
+                font-size: 18px;
+                padding: 15px;
+            }
+
+            #submitQuiz {
+                padding: 10px 20px;
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div id="infoBox">习得越南语</div>
+    <div id="contactBox">讲师-阮玉煌 | Weixin：XiDeYueNanYu</div>
+
     <div class="container" id="dialogueContainer">
-        <button class="capture-btn" id="captureBtn">Chụp Ảnh Hội Thoại</button>
         <div class="text-box" id="textDisplay"></div>
     </div>
 
@@ -556,7 +600,7 @@
         <div id="result"></div>
     </div>
 
-    <!-- Thanh điều khiển audio -->
+    <!-- Thanh điều khiển audio - góc dưới bên phải -->
     <div class="floating-controls" id="floatingControls">
         <audio id="audioPlayer" src="hoithoai.mp3" controls></audio>
         <div class="time-row">
@@ -670,7 +714,7 @@ B1
 
         let currentDialogueIndex = 0;
         let dialogueElements = [];
-        let userSelections = {}; // index → true/false/undefined
+        let userSelections = {};
 
         function renderText(rawText) {
             let lines = rawText.trim().split('\n');
@@ -764,7 +808,6 @@ B1
             return result;
         }
 
-        // ========== AUDIO PLAYER LOGIC ==========
         const audioPlayer = document.getElementById("audioPlayer");
         const timeDisplay = document.getElementById("timeDisplay");
         const loopStart = document.getElementById("loopStart");
@@ -820,24 +863,22 @@ B1
             }
         };
 
-		audioPlayer.ontimeupdate = function() {
-			updateTimeDisplay();
-			
-			// Kiểm tra dừng đoạn thoại
-			if (isDialoguePlaying && currentDialogueIndex < dialogueTimings.length) {
-				const timing = dialogueTimings[currentDialogueIndex];
-				if (audioPlayer.currentTime >= timing.end) {
-					stopDialogue();  // Gọi hàm đã sửa ở trên → sẽ pause ngay
-				}
-			}
-			
-			// Kiểm tra loop tùy chỉnh (nếu có)
-			if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
-				if (audioPlayer.currentTime >= customLoopEnd) {
-					audioPlayer.currentTime = customLoopStart;
-				}
-			}
-		};
+        audioPlayer.ontimeupdate = function() {
+            updateTimeDisplay();
+            
+            if (isDialoguePlaying && currentDialogueIndex < dialogueTimings.length) {
+                const timing = dialogueTimings[currentDialogueIndex];
+                if (audioPlayer.currentTime >= timing.end) {
+                    stopDialogue();
+                }
+            }
+            
+            if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
+                if (audioPlayer.currentTime >= customLoopEnd) {
+                    audioPlayer.currentTime = customLoopStart;
+                }
+            }
+        };
 
         function playDialogue(index) {
             if (index >= 0 && index < dialogueTimings.length) {
@@ -854,19 +895,16 @@ B1
             }
         }
 
-		function stopDialogue() {
-			// Dừng phát trước
-			audioPlayer.pause();
-			pausePlayButton.textContent = "播";
+        function stopDialogue() {
+            audioPlayer.pause();
+            pausePlayButton.textContent = "播";
 
-			// Xóa highlight
-			document.querySelectorAll('.character-name').forEach(name => {
-				name.classList.remove('playing');
-			});
+            document.querySelectorAll('.character-name').forEach(name => {
+                name.classList.remove('playing');
+            });
 
-			// Đặt lại trạng thái
-			isDialoguePlaying = false;
-		}
+            isDialoguePlaying = false;
+        }
 
         function highlightCharacterName(index, isPlaying) {
             const characterNames = document.querySelectorAll('.character-name');
@@ -878,49 +916,20 @@ B1
             });
         }
 
-        rewind5sButton.onclick = () => {
-            if (!isLooping) {
-                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5);
-                updateTimeDisplay();
-            }
-        };
-        
-        rewind1sButton.onclick = () => {
-            if (!isLooping) {
-                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 1);
-                updateTimeDisplay();
-            }
-        };
-        
-        forward1sButton.onclick = () => {
-            if (!isLooping) {
-                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 1);
-                updateTimeDisplay();
-            }
-        };
-        
-        forward5sButton.onclick = () => {
-            if (!isLooping) {
-                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5);
-                updateTimeDisplay();
-            }
-        };
+        rewind5sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5); updateTimeDisplay(); };
+        rewind1sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 1); updateTimeDisplay(); };
+        forward1sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 1); updateTimeDisplay(); };
+        forward5sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5); updateTimeDisplay(); };
 
         pausePlayButton.onclick = () => {
             if (audioPlayer.paused) {
                 audioPlayer.play();
                 pausePlayButton.textContent = "停";
-                
-                if (isDialoguePlaying) {
-                    highlightCharacterName(currentDialogueIndex, true);
-                }
+                if (isDialoguePlaying) highlightCharacterName(currentDialogueIndex, true);
             } else {
                 audioPlayer.pause();
                 pausePlayButton.textContent = "播";
-                
-                if (isDialoguePlaying) {
-                    stopDialogue();
-                }
+                if (isDialoguePlaying) stopDialogue();
             }
         };
 
@@ -979,19 +988,6 @@ B1
             stopDialogue();
         };
 
-        document.getElementById('captureBtn').addEventListener('click', () => {
-            html2canvas(document.getElementById('textDisplay'), {
-                scale: 2,
-                backgroundColor: "#fbfbfb"
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'vietnamese-dialogue.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            });
-        });
-
-        // Quiz Logic - ĐÃ SỬA HOÀN CHỈNH
         function loadQuiz() {
             const questionsDiv = document.getElementById('questions');
             questionsDiv.innerHTML = '';
@@ -999,12 +995,7 @@ B1
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question';
                 questionDiv.textContent = `Câu ${index + 1}: ${item.question}`;
-
-                // Khôi phục lựa chọn cũ nếu có
-                if (userSelections[index] === true) {
-                    questionDiv.classList.add('selected');
-                }
-
+                if (userSelections[index] === true) questionDiv.classList.add('selected');
                 questionDiv.onclick = () => {
                     questionDiv.classList.toggle('selected');
                     userSelections[index] = questionDiv.classList.contains('selected');
@@ -1019,7 +1010,7 @@ B1
             let wrongAnswers = [];
 
             quizData.forEach((item, index) => {
-                const userAnswer = userSelections[index] === true; // true nếu click, false/undefined nếu không click
+                const userAnswer = userSelections[index] === true;
                 const correctAnswer = item.correct;
 
                 if (userAnswer === correctAnswer) {
@@ -1041,14 +1032,14 @@ B1
             resultDiv.innerHTML = `<h3>结果: ${score}/${total} 正确 (${(score/total * 100).toFixed(2)}%)</h3>`;
 
             if (wrongAnswers.length === 0) {
-                resultDiv.innerHTML += '<p style="color:#007a33; font-size:22px;">恭喜！您全部答对！</p>';
+                resultDiv.innerHTML += '<p style="color:#007a33; font-size:22px;">恭喜！全部正确！</p>';
             } else {
                 resultDiv.innerHTML += '<h4 style="color:#f65936;">错题回顾:</h4>';
                 wrongAnswers.forEach(wrong => {
                     resultDiv.innerHTML += `
                         <div class="wrong-answer">
                             第 ${wrong.num} 题: ${wrong.content}<br>
-                            您的选择: <strong>${wrong.user}</strong> → 正确答案: <strong>${wrong.correct}</strong>
+                            你的选择: <strong>${wrong.user}</strong> → 正确答案: <strong>${wrong.correct}</strong>
                         </div>`;
                 });
             }
@@ -1056,7 +1047,6 @@ B1
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Mode Switching
         const dialogueModeButton = document.getElementById('dialogueMode');
         const quizModeButton = document.getElementById('quizMode');
         const dialogueContainer = document.getElementById('dialogueContainer');
@@ -1077,17 +1067,14 @@ B1
             audioPlayer.pause();
             quizModeButton.classList.add('active');
             dialogueModeButton.classList.remove('active');
-            loadQuiz(); // Tải lại quiz và giữ lựa chọn cũ nếu đã làm
+            loadQuiz();
             document.getElementById('result').style.display = 'none';
         });
 
         document.getElementById('submitQuiz').addEventListener('click', checkAnswers);
 
         renderText(text);
-        
-        audioPlayer.onloadedmetadata = function() {
-            updateTimeDisplay();
-        };
+        audioPlayer.onloadedmetadata = () => updateTimeDisplay();
     </script>
 </body>
 </html>

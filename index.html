@@ -3,223 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hội Thoại</title>
+    <title>学习越南语请联系Wx:XiDeYueNanYu</title>
     <style>
-        :root {
-            --color1: #fbfbfb;
-            --color3: #393535;
-            --color4: #fbfbfb;
-            --color12: #393535;
-            --structure-bg: rgba(254,156,4,0.5);
-            
-            --padding-top: 100px;
-            --padding-bottom: 100px;
-            --padding-left: 60px;
-            --padding-right: 60px;
-
-            --title-font-size: 90px;
-            --title-color: #393535;
-            --neirong-line-height: 2.2;
-            
-            --character-column-width: 150px;
-            --char-box-height: 1.2;
-
-            /* 2 thông số điều chỉnh khoảng cách nội dung */
-            --content-top-margin: 10px;     /* Khoảng cách từ nội dung đến lề trên (sau phần tiêu đề) */
-            --content-bottom-margin: 300px;  /* Khoảng cách từ nội dung đến lề dưới */
-
-            /* Thông số điều chỉnh vị trí audio controls so với chân trang */
-            --audio-bottom-position: 80px;  /* Khoảng cách từ đáy trang lên */
-        }
-
         body {
-            background-color: #1a1a1a;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding-bottom: 80px;
+            background-color: #f6faf7;
+            margin-bottom: 60px;
         }
-
         #infoBox { 
             width: 100%; 
-            max-width: 800px;
-            height: 150px; 
-            margin: 0 auto 0px auto; 
-            border: 2px solid #7ab9ac; 
-            background: #59a898; 
-            color: #ffffff; 
+            max-width: 700px;
+            height: 100px; 
+            margin: 0 auto; 
+            border: 1px solid #adcfb1; 
+            background: #99c39e; 
+            color: #ffffffff; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: clamp(40px, 5vw, 90px);
+            font-size: clamp(40px, 5vw, 80px);
             font-weight: bold;
         }
-
         #contactBox { 
             width: 100%; 
-            max-width: 800px;
+            max-width: 700px;
             height: 45px; 
-            margin: 0 auto 0px auto; 
-            border: 1px solid #7ab9ac; 
-            background: #59a898; 
-            color: #ffe120; /*ffe120 ffd300*/
+            margin: 0px auto; 
+            border: 1px solid #adcfb1; 
+            background: #99c39e; 
+            color: #f4f8a6; 
             display: flex; 
             align-items: center; 
             justify-content: left; 
             padding-left: 20px;
-            font-size: clamp(12px, 2vw, 25px); 
+            font-size: clamp(12px, 2vw, 15px); 
             font-weight: bold;
         }
-		#ChuThich { 
-            width: 100%; 
-            max-width: 800px;
-            height: 45px; 
-            margin: 0 auto 0px auto; 
-            border: 1px solid #7ab9ac; 
-            background: #59a898; 
-            color: #ffe120; /*ffe120 ffd300*/
-            display: flex; 
-            align-items: center; 
-            justify-content: left; 
-            padding-left: 20px;
-            font-size: clamp(12px, 2vw, 20px); 
-            font-weight: nomal;
+        .image-frame {
+            max-width: 700px;
+            margin: 20px auto 0 auto;
+            border: 8px solid #89af8e;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+            overflow: hidden;
         }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-            padding: 0 10px;
-            box-sizing: border-box;
-            margin-top: var(--content-top-margin);
-            margin-bottom: var(--content-bottom-margin);
-        }
-
-        .text-box {
-            width: 100%;
-            max-width: 1500px;
-            padding: var(--padding-top) var(--padding-right) var(--padding-bottom) var(--padding-left);
-            border: 10px solid var(--color1);
-            background-color: var(--color4);
-            font-size: 50px;
-            color: var(--color3);
-            line-height: var(--neirong-line-height);
-            text-align: justify;
-            box-sizing: border-box;
-        }
-
-        .title {
-            font-size: var(--title-font-size);
-            font-weight: bold;
-            color: var(--title-color);
-            text-align: center;
-            margin-bottom: 30px;
-            display: block;
-            line-height: 1;
-        }
-
-        .dialogue-grid {
-            display: grid;
-            grid-template-columns: var(--character-column-width) 1fr;
-            gap: 40px;
-            margin-bottom: 25px;
-            align-items: start;
-            width: 100%;
-        }
-
-        .dialogue-content {
-            text-align: left;
-            padding-top: 5px; 
-        }
-        
-        .character-box {
-            display: flex;
-            justify-content: flex-end; 
-            align-items: center;   
-            line-height: 1.2;    
+        .image-frame img {
             width: 100%;
             height: auto;
-            padding-top: 35px;
+            display: block;
         }
-
-        .character-name {
-            padding: 2px 15px; 
-            border: 5px solid rgba(73,121,107,0.7);
-            border-radius: 15px;
-            font-weight: bold;
+        .content-box {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 50px;
+            border: 8px solid #89af8e;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             font-size: 30px;
-            line-height: 1.2;
-            display: inline-block; 
-            vertical-align: middle;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-family: Arial;
+            color: #222322;
+            line-height: 3;
+            text-align: justify;
         }
-
-        .character-name:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 10px rgba(73,121,107,0.6);
-        }
-
-        .character-name.playing {
-            background-color: #ffcc00 !important;
-            box-shadow: 0 0 15px rgba(255,204,0,0.8);
-        }
-
-        .colon {
-            font-weight: bold;
-            font-size: 35px;
-            margin-left: 10px; 
-            margin-right: 5px; 
-            line-height: 1.2;
-        }
-
         .translated-word {
             position: relative;
             display: inline-block;
-            margin-top: 0px;
-            background-color: rgba(167,187,174,0.3);
-            padding: 3px 3px;
-            border-radius: 8px;
-            line-height: 1.2;
+            white-space: nowrap;
+            line-height: 1.3;
+            background-color: #e6f0e7;
+            color: #000000;
+            padding: 4px 4px;
+            border-radius: 2px;
         }
-
-        .annotation-top {
+        .translation {
             position: absolute;
-            top: -38px;
+            top: -29px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 25px;
-            color: var(--color12);
-            background-color: rgba(167,187,174,0.7);
-            padding: 5px 10px;
-            border-radius: 8px;
+            font-size: 18px;
+            background-color: #cfd8cf;
+            color: #313a2d;
+            padding: 4px 4px;
+            border-radius: 1px;
             white-space: nowrap;
+            z-index: 1;
             line-height: 1;
-            font-weight: normal;
         }
-
-        .structure-main {
-            background-color: var(--structure-bg);
-            padding: 2px 10px;
-            border-radius: 8px;
+        .original {
+            display: inline;
+            line-height: 1;
         }
-
-        .structure-dependent {
-            border-bottom: 10px solid var(--structure-bg);
-            padding-bottom: 0px;
-        }
-
-        /* Thanh điều khiển audio - góc dưới bên phải */
         .floating-controls {
             position: fixed;
-            bottom: var(--audio-bottom-position);
+            top: 20px;
             right: 20px;
             background-color: #f0f0f0;
             padding: 10px;
@@ -228,14 +106,11 @@
             text-align: center;
             display: block;
             z-index: 1000;
-            transition: all 0.3s ease;
         }
-
         #audioPlayer {
             width: 100%;
             margin-bottom: 10px;
         }
-
         .time-row {
             display: flex;
             flex-direction: column;
@@ -243,19 +118,16 @@
             gap: 10px;
             margin-bottom: 10px;
         }
-
         .time-box-group {
             display: flex;
             justify-content: center;
             gap: 10px;
         }
-
         .button-group {
             display: flex;
             justify-content: center;
             gap: 10px;
         }
-
         .floating-controls p#timeDisplay {
             font-size: 28px;
             color: #FFFFFF;
@@ -265,7 +137,6 @@
             cursor: pointer;
             margin: 0;
         }
-
         .floating-controls .time-box {
             font-size: 16px;
             color: #FFFFFF;
@@ -274,7 +145,6 @@
             border-radius: 5px;
             min-width: 60px;
         }
-
         .tua-buttons {
             display: flex;
             justify-content: center;
@@ -282,13 +152,11 @@
             margin-bottom: 10px;
             flex-wrap: wrap;
         }
-
         .action-buttons {
             display: flex;
             justify-content: center;
             gap: 10px;
         }
-
         .control-button {
             width: 50px;
             height: 50px;
@@ -303,329 +171,370 @@
             justify-content: center;
             align-items: center;
         }
-
         .control-button:disabled {
             background-color: #888888;
             cursor: not-allowed;
         }
-
         .control-button:hover:not(:disabled) {
             background-color: #000000;
         }
-
         .pause-play-button {
             background-color: #FF4500;
         }
-
         .pause-play-button:hover {
             background-color: #CC3700;
         }
-
         .toggle-button {
             background-color: #4682B4;
         }
-
         .toggle-button:hover {
             background-color: #36648B;
         }
-
         .loop-button {
             background-color: #3c923c;
         }
-
         .loop-button:hover {
             background-color: #347d34;
         }
-
         .clear-button {
             background-color: #bc3f13;
         }
-
         .clear-button:hover {
             background-color: #d15124;
         }
-
-        /* Thanh lựa chọn chế độ */
-        .floating-mode-bar {
-            position: fixed;
-            bottom: 0;
-            min-width: 800px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #59a898;
-            padding: 10px;
-            border-radius: 0;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            z-index: 1000;
+        .active {
+            background-color: #ffffff; 
+            border-radius: 5px;
         }
-
-        .mode-button {
-            padding: 12px 24px;
-            border: 0 solid #cddfdc;
-            background: #b3d6cf; /*b3d6cf 93c5bb*/
-            color: #293437;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 8px;
-            min-width: 120px;
-            transition: all 0.3s;
-        }
-
-        .mode-button.active {
-            border: 3px solid #ffffff;
-            background: #f0f0f0;
-            color: #293437;
-        }
-
-        /* Quiz Container */
-        #quizContainer {
-            display: none;
-            font-family: Arial, sans-serif;
-            width: 100%;
-            max-width: 800px;
-            margin: 2px auto;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        #quizInstructions {
-            font-size: 18px;
-            color: #a7cbc3; /*f7e19c f4f8a6*/
-            background-color: #59a898;
-            padding: 2px;
-            border-radius: 8px;
-			margin-top: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        .question {
-            margin-bottom: 18px;
-            padding: 16px;
-            color: #293437;
-            border: 5px solid #509788;
-            border-radius: 10px;
-            background-color: #ffffff;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .question.selected {
-            background-color: #B7D7AA;
-        }
-
-        #result {
-            margin-top: 30px;
-            padding: 20px;
-            display: none;
-            border: 5px solid #509788;
-            border-radius: 10px;
-            font-size: 20px;
-            font-weight: bold;
-            background-color: #ffffff;
-            color: #007a33;
-            line-height: 1.8;
-        }
-
-        .wrong-answer {
-            color: #f65936;
-            margin: 12px 0;
-            font-size: 18px;
-        }
-
-        #submitQuiz {
-            padding: 12px 24px;
-            border: 3px solid #2c544c;
-            background-color: #feb45b;
-            border-radius: 8px;
-            color: black;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: bold;
-            display: block;
-            margin: 30px auto;
-        }
-
-        #submitQuiz:hover {
-            background-color: #e4a251;
-        }
-
-        /* Tắt highlight khi chạm trên mobile */
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
-        }
-
-        .control-button,
-        .mode-button,
-        #submitQuiz,
-        .question {
-            -webkit-appearance: none;
-            outline: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        .control-button:active,
-        .mode-button:active,
-        #submitQuiz:active,
-        .question:active {
-            opacity: 0.7;
-            transform: scale(0.95);
-            transition: all 0.1s ease;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            :root {
-                --padding-top: 40px;
-                --padding-bottom: 40px;
-                --padding-left: 20px;
-                --padding-right: 20px;
-                --title-font-size: 50px;
-                --neirong-line-height: 2.6;
-                --character-column-width: 80px;
-                --audio-bottom-position: 70px;
-            }
-			#infoBox { 
-			width: 95%;
-            height: 80px; 
-			font-size: clamp(40px, 5vw, 90px);
-			}
-			#contactBox { 
-            width: 93%; 
-            height: 40px; 
-            font-size: clamp(15px, 2vw, 25px); 
-            font-weight: bold;
-			}
-			#ChuThich { 
-            width: 93%; 
-            height: 20px; 
-            font-size: clamp(12px, 2vw, 25px); 
-            font-weight: normal;
-			}
-            .text-box {
-                font-size: 20px;
-                padding: 30px 15px;
-                border-width: 6px;
-            }
-
-            .title {
-                font-size: 30px;
-                margin-bottom: 20px;
-            }
-
-            .character-name {
-                font-size: 16px;
-                padding: 4px 10px;
-                border-width: 4px;
-            }
-
-            .colon {
-                font-size: 16px;
-                margin-left: 3px;
-                margin-right: 3px;
-            }
-
-            .annotation-top {
-                font-size: 13px;
-                top: -20px;
-                padding: 2px 2px;
-                border-radius: 1px;
-            }
-
-            .dialogue-grid {
-                gap: 5px;
-                margin-bottom: 20px;
-            }
-
-            .character-box {
-                padding-top: 11px;
-            }
-
-            .floating-controls {
-                padding: 8px;
-            }
-
+        @media (max-width: 400px) {
             .control-button {
                 width: 40px;
                 height: 40px;
                 font-size: 14px;
             }
-
             .floating-controls p#timeDisplay {
-                font-size: 22px;
-                padding: 4px 8px;
-            }
-
-            .floating-controls .time-box {
-                font-size: 13px;
-                min-width: 50px;
-                padding: 4px 8px;
-            }
-
-            .floating-mode-bar {
-                width: 90%;
-                min-width: 100px;
-                padding: 8px;
-                gap: 15px;
-            }
-
-            .mode-button {
-                padding: 10px 18px;
-                font-size: 18px;
-                min-width: 100px;
-            }
-
-            #quizInstructions {
                 font-size: 20px;
-                padding: 10px;
             }
-
-            .question {
-                font-size: 18px;
-                padding: 14px;
-                border-width: 4px;
-            }
-
-            #result {
-                font-size: 18px;
-                padding: 15px;
-            }
-
-            #submitQuiz {
-                padding: 10px 20px;
-                font-size: 18px;
+            .floating-controls .time-box {
+                font-size: 12px;
+                min-width: 50px;
             }
         }
+        #quizContainer {
+            display: none;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            color: #677c6a;
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 18px;
+            color: #21292c;
+            border: 5px solid #677c6a;
+            border-radius: 10px;
+            background-color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 15px 0;
+            cursor: pointer;
+            color: #21292c;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            display: none;
+            border: 5px solid #677c6a;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #007a33;
+        }
+        .wrong-answer {
+            color: #f65936;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #submitQuiz {
+            font-family: Arial, sans-serif;
+            padding: 10px 20px;
+            border: 3px solid #677c6a;
+            background-color: #FF6820;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #submitQuiz:hover {
+            background-color: #ff844a;
+        }
+        .floating-mode-bar {
+            position: fixed;
+            bottom: 0px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #adcfb1;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0px 5px rgba(0, 0, 0, 1);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            width: 900px;
+        }
+        .mode-button {
+            padding: 10px 20px;
+            border: 2px solid #b7d5bb;
+            background: #89af8e;
+            color: #222923;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: border-color 0.5s;
+        }
+        .mode-button.active {
+            border: 2px solid #ffffff;
+            background: #f0f0f0;
+            color: #222923;
+        }
+        /* Mobile styles */
+        @media (max-width: 768px) { 
+            body {
+                background-color: #f7fbf3;
+                margin-bottom: 60px;
+            }
+            #infoBox { 
+                width: 90%; 
+                height: 120px; 
+                margin: 0 auto; 
+                border: 2px solid #bdd8c0; 
+                background: ##adcfb1; 
+                color: #ffffff; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                font-size: 60px; 
+                font-weight: bold;
+            }
+            #contactBox { 
+                width: 90%; 
+                height: 30px; 
+                margin: 0px auto; 
+                border: 2px solid #bdd8c0; 
+                background: ##adcfb1; 
+                color: #ffe599; 
+                display: flex; 
+                align-items: center; 
+                justify-content: left; 
+                padding-left: 20px;
+                font-size: 16px; 
+                font-weight: bold;
+            }
+            .image-frame {
+                width: 90%;
+                max-width: 700px;
+                margin: 10 screen auto 0 auto;
+                border: 5px solid #89af8e;
+                border-radius: 10px;
+                background-color: #ffffff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                display: none;
+                overflow: hidden;
+            }
+            .image-frame img {
+                width: 100%;
+                height: auto;
+                display: block;
+            }
+            .content-box {
+                max-width: 700px;
+                margin: 10px auto;
+                padding: 20px;
+                padding-top: 50px;
+                padding-bottom: 90px;
+                border: 5px solid #89af8e;
+                border-radius: 10px;
+                background-color: #ffffff;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                font-size: 19px;
+                font-family: Arial;
+                color: #222322;
+                line-height: 3.5;
+                text-align: justify;
+            }
+            .translated-word {
+                position: relative;
+                display: inline-block;
+                white-space: nowrap;
+                line-height: 1.3;
+                background-color: #e6f0e7;
+                color: #222923;
+                padding: 3px 3px;
+                border-radius: 2px;
+            }
+            .translation {
+                position: absolute;
+                top: -25px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 13px;
+                background-color: #cfd8cf;
+                color: #222923;
+                padding: 4px 4px;
+                border-radius: 1px;
+                white-space: nowrap;
+                z-index: 1;
+                line-height: 1;
+            }
+            .original {
+                display: inline;
+                line-height: 1;
+            }
+            .floating-controls {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: #f0f0f0;
+                padding: 10px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                display: block;
+                z-index: 1000;
+            }
+            #audioPlayer {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .time-row {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            .time-box-group {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+            .button-group {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+            .floating-controls p#timeDisplay {
+                font-size: 28px;
+                color: #FFFFFF;
+                background-color: #000000;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                margin: 0;
+            }
+            .floating-controls .time-box {
+                font-size: 16px;
+                color: #FFFFFF;
+                background-color: #555555;
+                padding: 5px 10px;
+                border-radius: 5px;
+                min-width: 60px;
+            }
+            .tua-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 5px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+            .action-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+            }
+            .control-button {
+                width: 50px;
+                height: 50px;
+                background-color: #363535;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .control-button:disabled {
+                background-color: #888888;
+                cursor: not-allowed;
+            }
+            .control-button:hover:not(:disabled) {
+                background-color: #000000;
+            }
+            .pause-play-button {
+                background-color: #FF4500;
+            }
+            .pause-play-button:hover {
+                background-color: #CC3700;
+            }
+            .toggle-button {
+                background-color: #4682B4;
+            }
+            .toggle-button:hover {
+                background-color: #36648B;
+            }
+            .loop-button {
+                background-color: #3c923c;
+            }
+            .loop-button:hover {
+                background-color: #347d34;
+            }
+            .clear-button {
+                background-color: #bc3f13;
+            }
+            .clear-button:hover {
+                background-color: #d15124;
+            }
+            .active {
+                background-color: #ffffff; 
+                border-radius: 5px;
+            }            
     </style>
 </head>
 <body>
     <div id="infoBox">习得越南语</div>
     <div id="contactBox">讲师-阮玉煌 | Weixin：XiDeYueNanYu</div>
-	<div id="ChuThich">可点击人物播放对应的内容</div>
-
-    <div class="container" id="dialogueContainer">
-        <div class="text-box" id="textDisplay"></div>
+    <div id="contentContainer">
+        <div class="image-frame" id="imageFrame">
+            <img id="contentImage" src="" alt="Content Image">
+        </div>
+        <div class="content-box" id="content"></div>
     </div>
-
     <div id="quizContainer">
-        <div id="quizInstructions">请点击你认为正确的句子（点击一次表示“正确”，再点取消），不点击则表示“错误”。完成后点击“提交”查看结果。</div>
-        <div id="questions"></div>
-        <button type="button" id="submitQuiz">提交</button>
+        <h1>回答下面问题</h1>
+        <form id="quizForm">
+            <div id="questions"></div>
+            <button type="button" id="submitQuiz" onclick="checkAnswers()">提交</button>
+        </form>
         <div id="result"></div>
     </div>
-
-    <!-- Thanh điều khiển audio - góc dưới bên phải -->
     <div class="floating-controls" id="floatingControls">
-        <audio id="audioPlayer" src="hoithoai.mp3" controls></audio>
+        <audio id="audioPlayer" src="lesson.mp3" controls></audio>
         <div class="time-row">
             <p id="timeDisplay">00:00</p>
             <div class="time-box-group">
@@ -648,203 +557,209 @@
             <button class="control-button toggle-button" id="toggleControlsButton">藏</button>
         </div>
     </div>
-
-    <!-- Thanh lựa chọn chế độ -->
     <div class="floating-mode-bar">
-        <button class="mode-button active" id="dialogueMode">会话</button>
+        <button class="mode-button active" id="contentMode">内容</button>
         <button class="mode-button" id="quizMode">回答问题</button>
     </div>
 
     <script>
-        const text = `
-B1
-┋David:┋ Chào Lauren. Lâu lắm rồi mới gặp chị.
-┋Lauren:┋ Ô, chào David. Chị mới ở Việt Nam về. Em sắp tốt nghiệp chưa?
-┋David:┋ Chưa. Em còn hai năm nữa. Em định sang Việt Nam học. Tiếng Việt của em chưa tốt lắm nên em muốn đến Hà Nội học một năm rồi về Mỹ học tiếp.
-┋Lauren:┋ Ừ. Em nên đi. Ở đó một năm chắc em sẽ tiến bộ nhiều.
-┋David:┋ Chị ơi. Em chưa đi Việt Nam bao giờ. Thủ tục thế nào ạ?
-┋Lauren:┋ Chị còn giữ mẫu đơn đây. Nhưng tốt nhất là em vào website của Viện Phát triển Ngôn ngữ xem rồi làm theo hướng dẫn.
-┋David:┋ Cho em xem mẫu đơn. Có phức tạp lắm không?
-┋Lauren:┋ Không. Đơn giản lắm. Em chỉ cần điền vào đơn xin học và đơn xin visa thôi. Trong website có tất cả thông tin về các khóa học nữa, em có thể chọn lớp.
-┋David:┋ Thế ạ. Vậy thì tốt quá!
-┋Lauren:┋ Chị đã học ở đó một thời gian. Chương trình học ở đó thú vị lắm.
-┋David:┋ Thế thì em sẽ xem và liên lạc ngay với Viện Phát triển Ngôn ngữ. Cám ơn chị nhiều.`;
 
-        const characterMap = {
-            "David": "#e8efea",
-            "Lauren": "#bad0c2",
-            "Mẹ": "#ffe288"
-        };
-
-const dialogueTimings = [
-    { character: "David", start: 1.862788, end: 4.565656 },
-    { character: "Lauren", start: 4.565656, end: 10.044444 },
-    { character: "David", start: 10.044444, end: 20.052363 },
-    { character: "Lauren", start: 20.344565, end: 25.786828 },
-    { character: "David", start: 25.786828, end: 29.804605 },
-    { character: "Lauren", start: 29.804605, end: 37.986262 },
-    { character: "David", start: 37.986262, end: 41.237009 },
-    { character: "Lauren", start: 41.237009, end: 52.961615 },
-    { character: "David", start: 52.961615, end: 56.029736 },
-    { character: "Lauren", start: 56.029736, end: 60.851069 },
-    { character: "David", start: 60.851069, end: 66.110706 }
+const textContentData = [
+    `SỰ MẾN KHÁCH CỦA NGƯỜI VIỆT NAM.
+Người Việt Nam rất mến khách. Người nước ngoài nào đến Việt Nam cũng đều nhận thấy điều này. Từ người già đến người trẻ, từ phụ nữ đến nam giới, ngay cả trẻ em cũng rất vui vẻ và cởi mở với người nước ngoài.
+Bạn có thể làm quen với người Việt Nam ở bất cứ nơi nào: trong quán bia, nhà hàng, ở hiệu sách, chợ, bến xe hay nhà ga... Người Việt Nam bắt chuyện với bạn rất tự nhiên và thoải mái.
+Khi bạn đã quen thân với họ, họ sẽ mời bạn về nhà chơi. Các gia đình Việt Nam luôn mở rộng cửa đón bạn. Họ sẽ tiếp đón bạn như một vị khách quý. Họ sẽ mời bạn uống chè, ăn cơm, thưởng thức những đặc sản địa phương hoặc những món ăn đặc biệt do họ tự nấu, tự làm.
+Trong thời gian sống ở đây, bạn hãy đến thăm các gia đình Việt Nam, bạn sẽ hiểu thêm về cuộc sống sinh hoạt của người Việt Nam.`
+];
+const dictionary = {
+"sự mến khách": "好客",
+"người Việt Nam": "越南人",
+"người nước ngoài": "外国人",
+"nhận thấy": "注意到",
+"người già": "老人",
+"người trẻ": "年轻人",
+"phụ nữ": "女性",
+"nam giới": "男性",
+"trẻ em": "儿童",
+"vui vẻ": "愉快",
+"cởi mở": "开朗",
+"làm quen": "认识",
+"quán bia": "啤酒摊",
+"nhà hàng": "餐厅",
+"hiệu sách": "书店",
+"chợ": "市场",
+"bến xe": "车站",
+"nhà ga": "火车站",
+"bắt chuyện": "搭话",
+"tự nhiên": "自然",
+"thoải mái": "轻松",
+"quen thân": "熟悉",
+"mời": "邀请",
+"nhà": "家",
+"chơi": "玩",
+"gia đình": "家庭",
+"mở rộng cửa": "敞开大门",
+"tiếp đón": "接待",
+"vị khách quý": "贵宾",
+"uống chè": "喝茶",
+"ăn cơm": "吃饭",
+"thưởng thức": "品尝",
+"đặc sản": "特产",
+"địa phương": "当地",
+"món ăn": "菜肴",
+"đặc biệt": "特别",
+"nấu": "烹饪",
+"làm": "制作",
+"thời gian": "时间",
+"sống": "生活",
+"đến thăm": "拜访",
+"hiểu": "了解",
+"cuộc sống": "生活",
+"sinh hoạt": "生活"
+};
+const quizData = [
+    {
+        question: "Theo bài đọc, điểm nào sau đây đúng với đặc điểm chung của người Việt Nam đối với người nước ngoài?",
+        options: ["Chỉ người lớn mới cởi mở với người nước ngoài", "Người Việt thường dè dặt khi gặp người nước ngoài", "Tất cả các lứa tuổi đều vui vẻ và cởi mở với người nước ngoài", "Người Việt chỉ thân thiện với khách quen"],
+        correct: "Tất cả các lứa tuổi đều vui vẻ và cởi mở với người nước ngoài"
+    },
+    {
+        question: "Người Việt Nam thường làm gì khi đã quen thân với người nước ngoài?",
+        options: ["Giới thiệu địa điểm du lịch nổi tiếng", "Tặng quà lưu niệm truyền thống", "Mời về nhà chơi và tiếp đãi như khách quý", "Mời tham dự các lễ hội địa phương"],
+        correct: "Mời về nhà chơi và tiếp đãi như khách quý"
+    },
+    {
+        question: "Theo bài, ở đâu người nước ngoài có thể dễ dàng làm quen với người Việt Nam?",
+        options: ["Chỉ ở các khu du lịch", "Trong các lớp học tiếng Việt", "Ở bất kỳ nơi nào như quán bia, nhà ga, chợ...", "Tại các văn phòng chính quyền địa phương"],
+        correct: "Ở bất kỳ nơi nào như quán bia, nhà ga, chợ..."
+    },
+    {
+        question: "Việc người Việt mời bạn nước ngoài về nhà chơi thể hiện điều gì?",
+        options: ["Tính cẩn trọng trong quan hệ cá nhân", "Sự hiếu khách và thân thiện", "Mong muốn học hỏi văn hóa phương Tây", "Sự tò mò với người nước ngoài"],
+        correct: "Sự hiếu khách và thân thiện"
+    },
+    {
+        question: "Theo tác giả, điều gì giúp người nước ngoài hiểu hơn về cuộc sống người Việt?",
+        options: ["Đọc sách báo và tài liệu du lịch", "Tham gia các lớp học văn hóa", "Đến thăm gia đình Việt Nam", "Ở trong khách sạn và quan sát sinh hoạt địa phương"],
+        correct: "Đến thăm gia đình Việt Nam"
+    },
+    {
+        question: "Tác giả dùng giọng văn như thế nào khi miêu tả người Việt Nam?",
+        options: ["Khách quan và trung lập", "Phê phán nhẹ nhàng", "Tán dương và tích cực", "Mỉa mai và hài hước"],
+        correct: "Tán dương và tích cực"
+    },
+    {
+        question: "Từ “mở rộng cửa đón bạn” trong ngữ cảnh bài đọc có nghĩa gần nhất với?",
+        options: ["Luôn giữ nhà cửa thoáng mát", "Sẵn sàng tiếp khách đến nhà bất kỳ lúc nào", "Không khóa cửa khi có người đến", "Bắt buộc phải tiếp khách theo phong tục"],
+        correct: "Sẵn sàng tiếp khách đến nhà bất kỳ lúc nào"
+    },
+    {
+        question: "Điều gì không được đề cập đến trong cách người Việt tiếp đãi khách?",
+        options: ["Mời ăn đặc sản địa phương", "Thưởng thức món do chủ nhà tự nấu", "Cùng đi du lịch khắp nơi", "Mời uống chè"],
+        correct: "Cùng đi du lịch khắp nơi"
+    },
+    {
+        question: "Theo bài, thái độ của trẻ em Việt Nam đối với người nước ngoài như thế nào?",
+        options: ["Thụ động và rụt rè", "Chỉ chào hỏi nếu được người lớn yêu cầu", "Rất vui vẻ và cởi mở", "Không quan tâm đến người nước ngoài"],
+        correct: "Rất vui vẻ và cởi mở"
+    },
+    {
+        question: "Câu “Người Việt Nam bắt chuyện với bạn rất tự nhiên và thoải mái” hàm ý gì?",
+        options: ["Người Việt có kỹ năng giao tiếp tốt", "Người Việt chủ yếu giao tiếp bằng ngôn ngữ cơ thể", "Giao tiếp không cần nhiều ngôn ngữ", "Người Việt thân thiện và dễ làm quen"],
+        correct: "Người Việt thân thiện và dễ làm quen"
+    },
+    {
+        question: "Việc nhấn mạnh đến “ở bất cứ nơi nào” trong đoạn 2 nhằm mục đích gì?",
+        options: ["So sánh với các quốc gia khác", "Chứng minh người Việt thích đi nhiều nơi", "Làm nổi bật tính phổ biến và dễ tiếp cận trong giao tiếp", "Phản ánh sự thiếu riêng tư trong xã hội Việt Nam"],
+        correct: "Làm nổi bật tính phổ biến và dễ tiếp cận trong giao tiếp"
+    },
+    {
+        question: "Mục đích chính của bài viết là gì?",
+        options: ["Phân tích tính cách của người Việt qua các thế hệ", "Hướng dẫn người nước ngoài cách giao tiếp ở Việt Nam", "Miêu tả sự thân thiện và mến khách của người Việt Nam", "So sánh văn hóa tiếp khách của Việt Nam và các nước khác"],
+        correct: "Miêu tả sự thân thiện và mến khách của người Việt Nam"
+    }
 ];
 
-        const dictionary = {
-            "mới@ gặp chị": "才",
-            "mới@ ở Việt Nam": "刚刚",
-            "sắp": "快，即将",
-            "tốt nghiệp": "毕业",
-            "còn": "还有",
-            "còn@ giữ mẫu đơn": "还",
-            "định": "打算",
-            "nên@ em muốn": "所以",
-            "nên@ đi": "应该",
-            "rồi@ về Mỹ": "然后",
-            "rồi@ làm theo": "然后",
-            "chắc": "也许",
-            "tiến bộ": "进步",
-            "Thủ tục": "手续",
-            "giữ": "留着",
-            "mẫu đơn": "申请表",
-            "phức tạp": "复杂",
-            "Đơn giản": "简单",
-            "cần": "需要",
-            "điền": "填写",
-            "đơn xin học": "入学申请",
-            "đơn xin visa": "签证申请",
-            "thông tin": "信息",
-            "các khóa học": "课程",
-            "chọn": "选择",
-            "Chương trình học": "教学计划",
-            "thú vị": "有趣",
-            "liên lạc": "联系",
-            "ngay": "马上"
-        };
+        // Xử lý hiển thị văn bản với từ điển
+        const content = document.getElementById('content');
+        function renderText() {
+            let html = textContentData[0].replace(/\n/g, "<br>");
+            const sortedKeys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+            const replacements = [];
 
-        const quizData = [
-            { question: "David đã tốt nghiệp đại học.", correct: false },
-            { question: "David định học tiếng Việt ở Hà Nội trong một năm.", correct: true },
-            { question: "Lauren mới từ Mỹ về.", correct: false },
-            { question: "Thủ tục xin visa rất phức tạp.", correct: false },
-            { question: "David cần điền đơn xin học và đơn xin visa.", correct: true },
-            { question: "Chương trình học ở Viện Phát triển Ngôn ngữ rất nhàm chán.", correct: false },
-            { question: "David đã từng đi Việt Nam trước đây.", correct: false },
-            { question: "Lauren còn giữ mẫu đơn xin học.", correct: true },
-            { question: "David sẽ liên lạc ngay với Viện Phát triển Ngôn ngữ.", correct: true },
-            { question: "Có thể chọn lớp học trên website của viện.", correct: true }
-        ];
-
-        let currentDialogueIndex = 0;
-        let dialogueElements = [];
-        let userSelections = {};
-
-        function renderText(rawText) {
-            let lines = rawText.trim().split('\n');
-            let outputHtml = '';
-
-            if (lines.length > 0) {
-                outputHtml += `<div class="title">${lines[0]}</div>`;
-            }
-
-            for (let i = 1; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
-
-                const charMatch = line.match(/┋(.*?):┋/);
-                let charName = charMatch ? charMatch[1] : "";
-                let content = line.replace(/┋.*?:┋/, "").trim();
-
-                content = applyDictionary(content);
-
-                content = content.replace(/╠(.*?)╣/g, (m, c) => {
-                    return c.replace(/(.*?)(┝[^┝┥]*┥|$)/g, (im, dep, main) => {
-                        let res = '';
-                        if (dep) res += `<span class="structure-dependent">${dep}</span>`;
-                        if (main) res += `<span class="structure-main">${main.slice(1, -1)}</span>`;
-                        return res;
+            // Bước 1: Tìm và lưu trữ các cụm từ khớp
+            sortedKeys.forEach(key => {
+                const regex = new RegExp(`(\\b|[.,!?\\n\\s]|^)(${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(\\b|[.,!?\\n\\s]|$)`, 'gi');
+                let match;
+                while ((match = regex.exec(html)) !== null) {
+                    const start = match.index + match[1].length;
+                    const end = start + match[2].length;
+                    replacements.push({
+                        start,
+                        end,
+                        original: match[2],
+                        prefix: match[1],
+                        suffix: match[3],
+                        translation: dictionary[key]
                     });
-                });
-
-                const bgColor = characterMap[charName] || "#ffffff";
-                const dialogueId = `dialogue-${i-1}`;
-                
-                outputHtml += `
-                    <div class="dialogue-grid" id="${dialogueId}">
-                        <div class="character-box">
-                            <span class="character-name" 
-                                  data-index="${i-1}" 
-                                  data-character="${charName}"
-                                  style="background-color: ${bgColor}">
-                                ${charName}
-                            </span>
-                            <span class="colon">:</span>
-                        </div>
-                        <div class="dialogue-content">${content}</div>
-                    </div>`;
-            }
-
-            document.getElementById('textDisplay').innerHTML = outputHtml;
-            dialogueElements = document.querySelectorAll('.dialogue-grid');
-            addCharacterClickEvents();
-        }
-
-        function addCharacterClickEvents() {
-            const characterNames = document.querySelectorAll('.character-name');
-            characterNames.forEach((nameElement, index) => {
-                nameElement.addEventListener('click', function() {
-                    const dialogueIndex = parseInt(this.getAttribute('data-index'));
-                    playDialogue(dialogueIndex);
-                });
-            });
-        }
-
-        function applyDictionary(text) {
-            const keys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
-            let result = text;
-            const placeholders = [];
-
-            keys.forEach((key, index) => {
-                const parts = key.split('@');
-                const mainWord = parts[0]; 
-                const context = parts.length > 1 ? parts[1] : "";
-                
-                const fullSearchTerm = mainWord + context;
-                const regex = new RegExp(fullSearchTerm, 'g');
-                const placeholder = `___PH_${index}___`;
-                
-                if (result.includes(fullSearchTerm)) {
-                    const htmlContent = `
-                        <span class="translated-word">
-                            <span class="annotation-top">${dictionary[key]}</span>${mainWord}
-                        </span>${context}`;
-                    
-                    placeholders.push({ id: placeholder, content: htmlContent });
-                    result = result.replace(regex, placeholder);
                 }
             });
 
-            placeholders.forEach(ph => {
-                result = result.replace(new RegExp(ph.id, 'g'), ph.content);
-            });
+            // Bước 2: Sắp xếp các lần khớp theo vị trí bắt đầu (start)
+            replacements.sort((a, b) => a.start - b.start);
 
-            return result;
+            // Bước 3: Lọc các lần khớp để loại bỏ chồng lấn
+            const filteredReplacements = [];
+            let lastEnd = -1;
+            for (const replacement of replacements) {
+                if (replacement.start >= lastEnd) {
+                    filteredReplacements.push(replacement);
+                    lastEnd = replacement.end;
+                }
+            }
+
+            // Bước 4: Thay thế các cụm từ đã khớp, từ phải sang trái để tránh ảnh hưởng chỉ số
+            for (let i = filteredReplacements.length - 1; i >= 0; i--) {
+                const { start, end, original, prefix, suffix, translation } = filteredReplacements[i];
+                const translatedHtml = `${prefix}<span class="translated-word"><span class="translation">${translation}</span><span class="original">${original}</span></span>${suffix}`;
+                html = html.slice(0, start - prefix.length) + translatedHtml + html.slice(end + suffix.length);
+            }
+
+            content.innerHTML = html;
         }
 
+        // Xử lý hiển thị ảnh
+        const imageFrame = document.getElementById('imageFrame');
+        const contentImage = document.getElementById('contentImage');
+        const imageSrc = "anhminhhoa.jpg"; // Tên file ảnh cụ thể trong cùng thư mục
+        function renderImage() {
+            if (imageSrc) {
+                contentImage.src = imageSrc;
+                imageFrame.style.display = 'block';
+            } else {
+                imageFrame.style.display = 'none';
+            }
+        }
+
+        // Gọi hàm renderText và renderImage khi khởi tạo
+        renderText();
+        renderImage();
+
+        // Xử lý audio và bảng điều khiển
         const audioPlayer = document.getElementById("audioPlayer");
-        const timeDisplay = document.getElementById("timeDisplay");
-        const loopStart = document.getElementById("loopStart");
-        const loopEnd = document.getElementById("loopEnd");
-        const loopButton = document.getElementById("loopButton");
-        const clearButton = document.getElementById("clearButton");
-        const rewind5sButton = document.getElementById("rewind5sButton");
-        const rewind1sButton = document.getElementById("rewind1sButton");
-        const forward1sButton = document.getElementById("forward1sButton");
-        const forward5sButton = document.getElementById("forward5sButton");
-        const pausePlayButton = document.getElementById("pausePlayButton");
-        const toggleControlsButton = document.getElementById("toggleControlsButton");
         const floatingControls = document.getElementById("floatingControls");
-        const tuaButtons = document.querySelector('.tua-buttons');
+        const timeDisplay = floatingControls.querySelector("#timeDisplay");
+        const loopStart = floatingControls.querySelector("#loopStart");
+        const loopEnd = floatingControls.querySelector("#loopEnd");
+        const loopButton = floatingControls.querySelector("#loopButton");
+        const clearButton = floatingControls.querySelector("#clearButton");
+        const rewind5sButton = floatingControls.querySelector("#rewind5sButton");
+        const rewind1sButton = floatingControls.querySelector("#rewind1sButton");
+        const forward1sButton = floatingControls.querySelector("#forward1sButton");
+        const forward5sButton = floatingControls.querySelector("#forward5sButton");
+        const pausePlayButton = floatingControls.querySelector("#pausePlayButton");
+        const toggleControlsButton = floatingControls.querySelector("#toggleControlsButton");
+        const tuaButtons = floatingControls.querySelector(".tua-buttons");
 
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
@@ -852,20 +767,25 @@ const dialogueTimings = [
             return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function updateTimeDisplay() {
-            if (timeDisplay) {
-                timeDisplay.textContent = formatTime(audioPlayer.currentTime);
-            }
+        function updateTimeDisplay(displayElement) {
+            displayElement.textContent = formatTime(audioPlayer.currentTime);
         }
 
         let customLoopStart = null;
         let customLoopEnd = null;
         let clickCount = 0;
         let isLooping = false;
-        let isDialoguePlaying = false;
-        let controlsVisible = true;
 
-        const updateInterval = setInterval(updateTimeDisplay, 1000);
+        const updateInterval = setInterval(() => updateTimeDisplay(timeDisplay), 1000);
+
+        audioPlayer.ontimeupdate = function() {
+            updateTimeDisplay(timeDisplay);
+            if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
+                if (audioPlayer.currentTime >= customLoopEnd) {
+                    audioPlayer.currentTime = customLoopStart;
+                }
+            }
+        };
 
         timeDisplay.onclick = () => {
             if (audioPlayer.paused) {
@@ -886,73 +806,38 @@ const dialogueTimings = [
             }
         };
 
-        audioPlayer.ontimeupdate = function() {
-            updateTimeDisplay();
-            
-            if (isDialoguePlaying && currentDialogueIndex < dialogueTimings.length) {
-                const timing = dialogueTimings[currentDialogueIndex];
-                if (audioPlayer.currentTime >= timing.end) {
-                    stopDialogue();
-                }
-            }
-            
-            if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
-                if (audioPlayer.currentTime >= customLoopEnd) {
-                    audioPlayer.currentTime = customLoopStart;
-                }
+        rewind5sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5);
+                updateTimeDisplay(timeDisplay);
             }
         };
-
-        function playDialogue(index) {
-            if (index >= 0 && index < dialogueTimings.length) {
-                stopDialogue();
-                currentDialogueIndex = index;
-                const timing = dialogueTimings[currentDialogueIndex];
-                
-                audioPlayer.currentTime = timing.start;
-                audioPlayer.play();
-                
-                isDialoguePlaying = true;
-                pausePlayButton.textContent = "停";
-                highlightCharacterName(index, true);
+        rewind1sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 1);
+                updateTimeDisplay(timeDisplay);
             }
-        }
-
-        function stopDialogue() {
-            audioPlayer.pause();
-            pausePlayButton.textContent = "播";
-
-            document.querySelectorAll('.character-name').forEach(name => {
-                name.classList.remove('playing');
-            });
-
-            isDialoguePlaying = false;
-        }
-
-        function highlightCharacterName(index, isPlaying) {
-            const characterNames = document.querySelectorAll('.character-name');
-            characterNames.forEach((name, i) => {
-                name.classList.remove('playing');
-                if (i === index && isPlaying) {
-                    name.classList.add('playing');
-                }
-            });
-        }
-
-        rewind5sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5); updateTimeDisplay(); };
-        rewind1sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 1); updateTimeDisplay(); };
-        forward1sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 1); updateTimeDisplay(); };
-        forward5sButton.onclick = () => { if (!isLooping) audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5); updateTimeDisplay(); };
+        };
+        forward1sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 1);
+                updateTimeDisplay(timeDisplay);
+            }
+        };
+        forward5sButton.onclick = () => {
+            if (!isLooping) {
+                audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5);
+                updateTimeDisplay(timeDisplay);
+            }
+        };
 
         pausePlayButton.onclick = () => {
             if (audioPlayer.paused) {
                 audioPlayer.play();
                 pausePlayButton.textContent = "停";
-                if (isDialoguePlaying) highlightCharacterName(currentDialogueIndex, true);
             } else {
                 audioPlayer.pause();
                 pausePlayButton.textContent = "播";
-                if (isDialoguePlaying) stopDialogue();
             }
         };
 
@@ -965,7 +850,6 @@ const dialogueTimings = [
                 rewind1sButton.disabled = true;
                 forward1sButton.disabled = true;
                 forward5sButton.disabled = true;
-                pausePlayButton.textContent = "停";
             }
         };
 
@@ -982,6 +866,7 @@ const dialogueTimings = [
             forward5sButton.disabled = false;
         };
 
+        let controlsVisible = true;
         toggleControlsButton.onclick = () => {
             if (controlsVisible) {
                 timeDisplay.style.display = "none";
@@ -1008,96 +893,155 @@ const dialogueTimings = [
 
         audioPlayer.onpause = audioPlayer.onended = function() {
             pausePlayButton.textContent = "播";
-            stopDialogue();
         };
 
+        // Biến lưu trữ vị trí cuộn và lựa chọn
+        let contentScrollPosition = 0;
+        let quizScrollPosition = 0;
+        let userSelections = {};
+        let isSubmitted = false;
+
+        // Hiển thị câu hỏi và khôi phục lựa chọn
         function loadQuiz() {
             const questionsDiv = document.getElementById('questions');
             questionsDiv.innerHTML = '';
             quizData.forEach((item, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.className = 'question';
-                questionDiv.textContent = `Câu ${index + 1}: ${item.question}`;
-                if (userSelections[index] === true) questionDiv.classList.add('selected');
-                questionDiv.onclick = () => {
-                    questionDiv.classList.toggle('selected');
-                    userSelections[index] = questionDiv.classList.contains('selected');
-                };
+                
+                const questionTitle = document.createElement('h3');
+                questionTitle.textContent = `Câu ${index + 1}: ${item.question}`;
+                questionDiv.appendChild(questionTitle);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'options';
+                
+                item.options.forEach(option => {
+                    const label = document.createElement('label');
+                    const isChecked = userSelections[`question${index}`] === option ? 'checked' : '';
+                    label.innerHTML = `
+                        <input type="radio" name="question${index}" value="${option}" ${isChecked}>
+                        ${option}
+                    `;
+                    optionsDiv.appendChild(label);
+                });
+
+                questionDiv.appendChild(optionsDiv);
                 questionsDiv.appendChild(questionDiv);
+            });
+
+            // Khôi phục vị trí cuộn
+            window.scrollTo(0, quizScrollPosition);
+        }
+
+        // Lưu lựa chọn của người dùng
+        function saveSelections() {
+            quizData.forEach((_, index) => {
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selected) {
+                    userSelections[`question${index}`] = selected.value;
+                }
             });
         }
 
+        // Kiểm tra đáp án
         function checkAnswers() {
             let score = 0;
             const total = quizData.length;
             let wrongAnswers = [];
-
+            
             quizData.forEach((item, index) => {
-                const userAnswer = userSelections[index] === true;
-                const correctAnswer = item.correct;
-
-                if (userAnswer === correctAnswer) {
-                    score++;
+                const selected = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selected) {
+                    if (selected.value === item.correct) {
+                        score++;
+                    } else {
+                        wrongAnswers.push({
+                            question: item.question,
+                            selected: selected.value,
+                            correct: item.correct
+                        });
+                    }
                 } else {
-                    const userChoice = userAnswer ? "正确" : "错误";
-                    const correctChoice = correctAnswer ? "正确" : "错误";
                     wrongAnswers.push({
-                        num: index + 1,
-                        content: item.question,
-                        user: userChoice,
-                        correct: correctChoice
+                        question: item.question,
+                        selected: "未选择",
+                        correct: item.correct
                     });
                 }
             });
 
             const resultDiv = document.getElementById('result');
             resultDiv.style.display = 'block';
-            resultDiv.innerHTML = `<h3>结果: ${score}/${total} 正确 (${(score/total * 100).toFixed(2)}%)</h3>`;
+            resultDiv.innerHTML = `
+                <h3>YD-Visa-结果: ${score}/${total} 答案正确</h3>
+                <p>比例: ${(score/total * 100).toFixed(2)}%</p>
+            `;
 
-						if (wrongAnswers.length === 0) {
-				resultDiv.innerHTML += '<p style="color:#007a33; font-size:22px;">恭喜！全部正确！</p>';
-			} /* else {
-				resultDiv.innerHTML += '<h4 style="color:#f65936;">错题回顾:</h4>';
-				wrongAnswers.forEach(wrong => {
-					resultDiv.innerHTML += `
-						<div class="wrong-answer">
-							第 ${wrong.num} 题: ${wrong.content}<br>
-							你的选择: <strong>${wrong.user}</strong> → 正确答案: <strong>${wrong.correct}</strong>
-						</div>`;
-				});
-			} */
+            if (wrongAnswers.length > 0) {
+                resultDiv.innerHTML += '<h4>错误答案:</h4>';
+                wrongAnswers.forEach((wrong, index) => {
+                    resultDiv.innerHTML += `
+                        <div class="wrong-answer">
+                            Câu ${quizData.findIndex(q => q.question === wrong.question) + 1}: ${wrong.question}<br>
+                            你的选择: ${wrong.selected} - 正确答案: ${wrong.correct}
+                        </div>
+                    `;
+                });
+            } else {
+                resultDiv.innerHTML += '<p>回答正确所有问题</p>';
+            }
 
             resultDiv.scrollIntoView({ behavior: 'smooth' });
+            isSubmitted = true; // Đánh dấu đã nộp bài
         }
 
-        const dialogueModeButton = document.getElementById('dialogueMode');
+        // Xử lý chế độ hiển thị
+        const contentModeButton = document.getElementById('contentMode');
         const quizModeButton = document.getElementById('quizMode');
-        const dialogueContainer = document.getElementById('dialogueContainer');
+        const contentContainer = document.getElementById('contentContainer');
         const quizContainer = document.getElementById('quizContainer');
 
-        dialogueModeButton.addEventListener('click', () => {
-            dialogueContainer.style.display = 'flex';
+        contentModeButton.addEventListener('click', () => {
+            // Lưu vị trí cuộn của quiz trước khi chuyển
+            quizScrollPosition = window.scrollY;
+            saveSelections(); // Lưu lựa chọn của người dùng
+            
+            contentContainer.style.display = 'block';
             quizContainer.style.display = 'none';
-            floatingControls.style.display = 'block';
-            dialogueModeButton.classList.add('active');
+            contentModeButton.classList.add('active');
             quizModeButton.classList.remove('active');
+            floatingControls.style.display = 'block';
+            renderText();
+            renderImage();
+            
+            // Khôi phục vị trí cuộn của content
+            window.scrollTo(0, contentScrollPosition);
         });
 
         quizModeButton.addEventListener('click', () => {
-            dialogueContainer.style.display = 'none';
+            // Lưu vị trí cuộn của content trước khi chuyển
+            contentScrollPosition = window.scrollY;
+            saveSelections(); // Lưu lựa chọn của người dùng
+            
+            contentContainer.style.display = 'none';
             quizContainer.style.display = 'block';
-            floatingControls.style.display = 'none';
-            audioPlayer.pause();
             quizModeButton.classList.add('active');
-            dialogueModeButton.classList.remove('active');
+            contentModeButton.classList.remove('active');
+            floatingControls.style.display = 'none';
+            
+            // Reset lựa chọn nếu đã nộp bài
+            if (isSubmitted) {
+                userSelections = {};
+                isSubmitted = false;
+            }
+            
             loadQuiz();
-            document.getElementById('result').style.display = 'none';
         });
 
-        document.getElementById('submitQuiz').addEventListener('click', checkAnswers);
-
-        renderText(text);
-        audioPlayer.onloadedmetadata = () => updateTimeDisplay();
+        // Mặc định hiển thị nội dung
+        contentContainer.style.display = 'block';
+        quizContainer.style.display = 'none';
     </script>
 </body>
 </html>

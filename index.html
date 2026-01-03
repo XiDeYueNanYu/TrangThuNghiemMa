@@ -95,18 +95,19 @@
             display: inline;
             line-height: 1;
         }
-        .floating-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            display: block;
-            z-index: 1000;
-        }
+		.floating-controls {
+			position: fixed;
+			/* Thay đổi từ top thành bottom */
+			bottom: 80px; /* Khoảng cách từ cạnh dưới màn hình */
+			right: 20px;  /* Khoảng cách từ cạnh phải màn hình */
+			background-color: #f0f0f0;
+			padding: 10px;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			text-align: center;
+			display: block;
+			z-index: 1000;
+		}
         #audioPlayer {
             width: 100%;
             margin-bottom: 10px;
@@ -405,7 +406,7 @@
             }
             .floating-controls {
                 position: fixed;
-                top: 20px;
+                bottom: 80px;
                 right: 20px;
                 background-color: #f0f0f0;
                 padding: 10px;
@@ -515,6 +516,98 @@
                 border-radius: 5px;
             }            
     </style>
+    <!-- Thêm CSS cho chế độ từ vựng -->
+    <style>
+        #vocabContainer {
+            display: none;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #88a5a2;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .vocab-navigation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            border: 2px solid #88a5a2;
+            background-color: #d2dddc;
+            color: #202a29;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .nav-button:disabled {
+            background-color: #888888;
+            cursor: not-allowed;
+        }
+        #vocabProgress {
+            font-size: 20px;
+            color: #ff7f50;
+        }
+        .vocab-meaning {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 5px solid #88a5a2;
+            border-radius: 30px;
+            background-color: #fff9ea;
+            font-size: 24px;
+            color: #8aaf47;
+        }
+        #selectedLetters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            min-height: 60px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 5px solid #88a5a2;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+        #availableLetters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px;
+            border: 5px solid #88a5a2;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+        .letter-button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #6b8f8b;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .letter-button:hover {
+            background-color: #000000;
+        }
+        .letter-button.space {
+            background-color: #88a5a2;
+            color: #ffffff;
+        }
+        #selectedLetters.correct {
+            background-color: #c9df8a;
+        }
+        #selectedLetters.wrong {
+            background-color: #ffa584;
+        }
+    </style>
 </head>
 <body>
     <div id="infoBox">习得越南语</div>
@@ -532,6 +625,17 @@
             <button type="button" id="submitQuiz" onclick="checkAnswers()">提交</button>
         </form>
         <div id="result"></div>
+    </div>
+    <!-- Thêm container cho chế độ từ vựng -->
+    <div id="vocabContainer">
+        <div class="vocab-navigation">
+            <button class="nav-button" id="prevVocab">◀</button>
+            <span id="vocabProgress"></span>
+            <button class="nav-button" id="nextVocab">▶</button>
+        </div>
+        <div class="vocab-meaning"><span id="vocabMeaning"></span></div>
+        <div id="selectedLetters"></div>
+        <div id="availableLetters"></div>
     </div>
     <div class="floating-controls" id="floatingControls">
         <audio id="audioPlayer" src="lesson.mp3" controls></audio>
@@ -560,7 +664,11 @@
     <div class="floating-mode-bar">
         <button class="mode-button active" id="contentMode">内容</button>
         <button class="mode-button" id="quizMode">回答问题</button>
+        <button class="mode-button" id="vocabMode">词汇</button>
     </div>
+    <!-- Thêm audio cho đúng/sai -->
+    <audio id="correctAudio" src="Dung.mp3"></audio>
+    <audio id="wrongAudio" src="Sai.mp3"></audio>
 
     <script>
 
@@ -999,8 +1107,10 @@ const quizData = [
         // Xử lý chế độ hiển thị
         const contentModeButton = document.getElementById('contentMode');
         const quizModeButton = document.getElementById('quizMode');
+        const vocabModeButton = document.getElementById('vocabMode');
         const contentContainer = document.getElementById('contentContainer');
         const quizContainer = document.getElementById('quizContainer');
+        const vocabContainer = document.getElementById('vocabContainer');
 
         contentModeButton.addEventListener('click', () => {
             // Lưu vị trí cuộn của quiz trước khi chuyển
@@ -1009,8 +1119,10 @@ const quizData = [
             
             contentContainer.style.display = 'block';
             quizContainer.style.display = 'none';
+            vocabContainer.style.display = 'none';
             contentModeButton.classList.add('active');
             quizModeButton.classList.remove('active');
+            vocabModeButton.classList.remove('active');
             floatingControls.style.display = 'block';
             renderText();
             renderImage();
@@ -1026,8 +1138,10 @@ const quizData = [
             
             contentContainer.style.display = 'none';
             quizContainer.style.display = 'block';
+            vocabContainer.style.display = 'none';
             quizModeButton.classList.add('active');
             contentModeButton.classList.remove('active');
+            vocabModeButton.classList.remove('active');
             floatingControls.style.display = 'none';
             
             // Reset lựa chọn nếu đã nộp bài
@@ -1039,9 +1153,128 @@ const quizData = [
             loadQuiz();
         });
 
+        // Thêm logic cho chế độ từ vựng
+        const vocabList = Object.keys(dictionary);
+        let currentVocabIndex = 0;
+        let selectedLettersArray = [];
+        let availableLettersArray = [];
+        const selectedLettersDiv = document.getElementById('selectedLetters');
+        const availableLettersDiv = document.getElementById('availableLetters');
+        const vocabMeaning = document.getElementById('vocabMeaning');
+        const vocabProgress = document.getElementById('vocabProgress');
+        const prevVocab = document.getElementById('prevVocab');
+        const nextVocab = document.getElementById('nextVocab');
+        const correctAudio = document.getElementById('correctAudio');
+        const wrongAudio = document.getElementById('wrongAudio');
+
+        function loadVocab() {
+            const word = vocabList[currentVocabIndex];
+            const letters = word.split('');
+            vocabMeaning.textContent = dictionary[vocabList[currentVocabIndex]];
+            vocabProgress.textContent = `${currentVocabIndex + 1}/${vocabList.length}`;
+            selectedLettersArray = [];
+            availableLettersArray = [...letters].sort(() => Math.random() - 0.5); // Đảo loạn
+            renderLetters();
+
+            prevVocab.disabled = currentVocabIndex === 0;
+            nextVocab.disabled = currentVocabIndex === vocabList.length - 1;
+        }
+
+        function renderLetters() {
+            selectedLettersDiv.innerHTML = '';
+            availableLettersDiv.innerHTML = '';
+            selectedLettersDiv.classList.remove('correct', 'wrong');
+
+            selectedLettersArray.forEach((letter, index) => {
+                const btn = createLetterButton(letter, () => removeFromSelected(index));
+                selectedLettersDiv.appendChild(btn);
+            });
+
+            availableLettersArray.forEach((letter, index) => {
+                const btn = createLetterButton(letter, () => addToSelected(index));
+                availableLettersDiv.appendChild(btn);
+            });
+        }
+
+        function createLetterButton(letter, onClick) {
+            const btn = document.createElement('button');
+            btn.className = 'letter-button';
+            btn.textContent = letter === ' ' ? ' ' : letter; // Sử dụng ký tự biểu tượng cho khoảng trắng
+            if (letter === ' ') {
+                btn.classList.add('space');
+            }
+            btn.onclick = onClick;
+            return btn;
+        }
+
+        function addToSelected(index) {
+            const letter = availableLettersArray.splice(index, 1)[0];
+            selectedLettersArray.push(letter);
+            renderLetters();
+            checkIfComplete();
+        }
+
+        function removeFromSelected(index) {
+            const letter = selectedLettersArray.splice(index, 1)[0];
+            availableLettersArray.push(letter);
+            renderLetters();
+        }
+
+        function checkIfComplete() {
+            const word = vocabList[currentVocabIndex];
+            const selectedWord = selectedLettersArray.join('');
+            if (selectedLettersArray.length === word.length) {
+                if (selectedWord === word) {
+                    selectedLettersDiv.classList.add('correct');
+                    correctAudio.play();
+                    setTimeout(() => {
+                        if (currentVocabIndex < vocabList.length - 1) {
+                            currentVocabIndex++;
+                            loadVocab();
+                        }
+                    }, 1500);
+                } else {
+                    selectedLettersDiv.classList.add('wrong');
+                    wrongAudio.play();
+                    setTimeout(() => {
+                        availableLettersArray = availableLettersArray.concat(selectedLettersArray);
+                        availableLettersArray.sort(() => Math.random() - 0.5); // Shuffle lại để giống trạng thái ban đầu
+                        selectedLettersArray = [];
+                        renderLetters();
+                    }, 1500);
+                }
+            }
+        }
+
+        prevVocab.addEventListener('click', () => {
+            if (currentVocabIndex > 0) {
+                currentVocabIndex--;
+                loadVocab();
+            }
+        });
+
+        nextVocab.addEventListener('click', () => {
+            if (currentVocabIndex < vocabList.length - 1) {
+                currentVocabIndex++;
+                loadVocab();
+            }
+        });
+
+        vocabModeButton.addEventListener('click', () => {
+            contentContainer.style.display = 'none';
+            quizContainer.style.display = 'none';
+            vocabContainer.style.display = 'block';
+            vocabModeButton.classList.add('active');
+            contentModeButton.classList.remove('active');
+            quizModeButton.classList.remove('active');
+            floatingControls.style.display = 'none';
+            loadVocab();
+        });
+
         // Mặc định hiển thị nội dung
         contentContainer.style.display = 'block';
         quizContainer.style.display = 'none';
+        vocabContainer.style.display = 'none';
     </script>
 </body>
 </html>

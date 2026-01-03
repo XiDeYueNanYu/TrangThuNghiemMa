@@ -49,9 +49,9 @@
             max-width: 800px;
             height: 150px; 
             margin: 0 auto 5px auto; 
-            border: 1px solid #68838B; 
-            background: #68838B; 
-            color: #D2B48C; 
+            border: 1px solid #59a898; 
+            background: #59a898; 
+            color: #ffffff; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -64,9 +64,9 @@
             max-width: 800px;
             height: 45px; 
             margin: 0 auto 5px auto; 
-            border: 1px solid #68838B; 
-            background: #68838B; 
-            color: #D2B48C; 
+            border: 1px solid #59a898; 
+            background: #59a898; 
+            color: #ffe120; /*ffe120 ffd300*/
             display: flex; 
             align-items: center; 
             justify-content: left; 
@@ -136,7 +136,7 @@
 
         .character-name {
             padding: 2px 15px; 
-            border: 5px solid rgba(73,121,107,0.4);
+            border: 5px solid rgba(73,121,107,0.7);
             border-radius: 15px;
             font-weight: bold;
             font-size: 30px;
@@ -337,7 +337,7 @@
             min-width: 800px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #68838B;
+            background-color: #59a898;
             padding: 10px;
             border-radius: 0;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
@@ -349,8 +349,8 @@
 
         .mode-button {
             padding: 12px 24px;
-            border: 0 solid #ccc;
-            background: #95a8ad;
+            border: 0 solid #cddfdc;
+            background: #b3d6cf; /*b3d6cf 93c5bb*/
             color: #293437;
             font-size: 20px;
             font-weight: bold;
@@ -379,8 +379,8 @@
 
         #quizInstructions {
             font-size: 24px;
-            color: #ffffff;
-            background-color: #68838B;
+            color: #a7cbc3; /*f7e19c f4f8a6*/
+            background-color: #59a898;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -391,8 +391,8 @@
         .question {
             margin-bottom: 18px;
             padding: 16px;
-            color: #53686f;
-            border: 5px solid #53686f;
+            color: #293437;
+            border: 5px solid #509788;
             border-radius: 10px;
             background-color: #ffffff;
             font-size: 20px;
@@ -409,7 +409,7 @@
             margin-top: 30px;
             padding: 20px;
             display: none;
-            border: 5px solid #53686f;
+            border: 5px solid #509788;
             border-radius: 10px;
             font-size: 20px;
             font-weight: bold;
@@ -426,10 +426,10 @@
 
         #submitQuiz {
             padding: 12px 24px;
-            border: 3px solid #53686f;
-            background-color: #FF6820;
+            border: 3px solid #2c544c;
+            background-color: #feb45b;
             border-radius: 8px;
-            color: white;
+            color: black;
             cursor: pointer;
             font-size: 20px;
             font-weight: bold;
@@ -438,7 +438,7 @@
         }
 
         #submitQuiz:hover {
-            background-color: #ff844a;
+            background-color: #e4a251;
         }
 
         /* Tắt highlight khi chạm trên mobile */
@@ -594,7 +594,7 @@
     </div>
 
     <div id="quizContainer">
-        <div id="quizInstructions">请点击你认为正确的句子（点击一次表示“正确”，再点取消），不点击则表示“错误”。<br>完成后点击“提交”查看结果。</div>
+        <div id="quizInstructions">请点击你认为正确的句子（点击一次表示“正确”，再点取消），不点击则表示“错误”。完成后点击“提交”查看结果。</div>
         <div id="questions"></div>
         <button type="button" id="submitQuiz">提交</button>
         <div id="result"></div>
@@ -1031,18 +1031,18 @@ const dialogueTimings = [
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `<h3>结果: ${score}/${total} 正确 (${(score/total * 100).toFixed(2)}%)</h3>`;
 
-            if (wrongAnswers.length === 0) {
-                resultDiv.innerHTML += '<p style="color:#007a33; font-size:22px;">恭喜！全部正确！</p>';
-            } else {
-                resultDiv.innerHTML += '<h4 style="color:#f65936;">错题回顾:</h4>';
-                wrongAnswers.forEach(wrong => {
-                    resultDiv.innerHTML += `
-                        <div class="wrong-answer">
-                            第 ${wrong.num} 题: ${wrong.content}<br>
-                            你的选择: <strong>${wrong.user}</strong> → 正确答案: <strong>${wrong.correct}</strong>
-                        </div>`;
-                });
-            }
+						if (wrongAnswers.length === 0) {
+				resultDiv.innerHTML += '<p style="color:#007a33; font-size:22px;">恭喜！全部正确！</p>';
+			} /* else {
+				resultDiv.innerHTML += '<h4 style="color:#f65936;">错题回顾:</h4>';
+				wrongAnswers.forEach(wrong => {
+					resultDiv.innerHTML += `
+						<div class="wrong-answer">
+							第 ${wrong.num} 题: ${wrong.content}<br>
+							你的选择: <strong>${wrong.user}</strong> → 正确答案: <strong>${wrong.correct}</strong>
+						</div>`;
+				});
+			} */
 
             resultDiv.scrollIntoView({ behavior: 'smooth' });
         }

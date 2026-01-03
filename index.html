@@ -48,8 +48,8 @@
             width: 100%; 
             max-width: 800px;
             height: 150px; 
-            margin: 0 auto 5px auto; 
-            border: 1px solid #59a898; 
+            margin: 0 auto 0px auto; 
+            border: 2px solid #7ab9ac; 
             background: #59a898; 
             color: #ffffff; 
             display: flex; 
@@ -63,8 +63,23 @@
             width: 100%; 
             max-width: 800px;
             height: 45px; 
-            margin: 0 auto 5px auto; 
-            border: 1px solid #59a898; 
+            margin: 0 auto 0px auto; 
+            border: 1px solid #7ab9ac; 
+            background: #59a898; 
+            color: #ffe120; /*ffe120 ffd300*/
+            display: flex; 
+            align-items: center; 
+            justify-content: left; 
+            padding-left: 20px;
+            font-size: clamp(12px, 2vw, 25px); 
+            font-weight: bold;
+        }
+		#ChuThich { 
+            width: 100%; 
+            max-width: 800px;
+            height: 45px; 
+            margin: 0 auto 0px auto; 
+            border: 1px solid #7ab9ac; 
             background: #59a898; 
             color: #ffe120; /*ffe120 ffd300*/
             display: flex; 
@@ -372,17 +387,18 @@
             font-family: Arial, sans-serif;
             width: 100%;
             max-width: 800px;
-            margin: 20px auto;
-            padding: 15px;
+            margin: 2px auto;
+            padding: 10px;
             box-sizing: border-box;
         }
 
         #quizInstructions {
-            font-size: 24px;
+            font-size: 18px;
             color: #a7cbc3; /*f7e19c f4f8a6*/
             background-color: #59a898;
-            padding: 12px;
+            padding: 2px;
             border-radius: 8px;
+			margin-top: 5px;
             margin-bottom: 20px;
             text-align: center;
             line-height: 1.5;
@@ -489,6 +505,12 @@
             font-size: clamp(15px, 2vw, 25px); 
             font-weight: bold;
 			}
+			#ChuThich { 
+            width: 93%; 
+            height: 20px; 
+            font-size: clamp(12px, 2vw, 25px); 
+            font-weight: normal;
+			}
             .text-box {
                 font-size: 20px;
                 padding: 30px 15px;
@@ -588,6 +610,7 @@
 <body>
     <div id="infoBox">习得越南语</div>
     <div id="contactBox">讲师-阮玉煌 | Weixin：XiDeYueNanYu</div>
+	<div id="ChuThich">可点击人物播放对应的内容</div>
 
     <div class="container" id="dialogueContainer">
         <div class="text-box" id="textDisplay"></div>

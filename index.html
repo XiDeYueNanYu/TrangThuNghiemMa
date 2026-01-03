@@ -269,6 +269,7 @@
         #submitQuiz {
             font-family: Arial, sans-serif;
             padding: 10spx 20px;
+			margin-bottom: 20px;
             border: 3px solid #88a5a2;
             background-color: #ff5a36;
             border-radius: 5px;
@@ -555,11 +556,11 @@
         }
         .vocab-meaning {
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding: 15px;
-            border: 5px solid #88a5a2;
-            border-radius: 30px;
-            background-color: #fff9ea;
+            border: 2px solid #fed16a;
+            border-radius: 10px;
+            background-color: #ffffe0;
             font-size: 24px;
             color: #8aaf47;
         }
@@ -570,7 +571,7 @@
             min-height: 60px;
             margin-bottom: 20px;
             padding: 10px;
-            border: 5px solid #88a5a2;
+            border: 2px solid #88a5a2;
             border-radius: 10px;
             background-color: #ffffff;
         }
@@ -579,7 +580,7 @@
             flex-wrap: wrap;
             justify-content: center;
             padding: 10px;
-            border: 5px solid #88a5a2;
+            border: 2px solid #88a5a2;
             border-radius: 10px;
             background-color: #ffffff;
         }
@@ -594,18 +595,23 @@
             font-weight: bold;
             cursor: pointer;
         }
-        .letter-button:hover {
+        .letter-button:hover:not(:disabled) {
             background-color: #000000;
         }
         .letter-button.space {
             background-color: #88a5a2;
             color: #ffffff;
         }
+        .letter-button:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+        }
         #selectedLetters.correct {
-            background-color: #c9df8a;
+            background-color: #b7d7aa;
         }
         #selectedLetters.wrong {
-            background-color: #ffa584;
+            background-color: #e1a79e;
         }
     </style>
 </head>
@@ -1156,7 +1162,7 @@ const quizData = [
         // Thêm logic cho chế độ từ vựng
         const vocabList = Object.keys(dictionary);
         let currentVocabIndex = 0;
-        let selectedLettersArray = [];
+        let selectedIndices = []; // Mảng index từ availableLettersArray đã chọn, theo thứ tự
         let availableLettersArray = [];
         const selectedLettersDiv = document.getElementById('selectedLetters');
         const availableLettersDiv = document.getElementById('availableLetters');
@@ -1169,11 +1175,10 @@ const quizData = [
 
         function loadVocab() {
             const word = vocabList[currentVocabIndex];
-            const letters = word.split('');
+            availableLettersArray = word.split('').sort(() => Math.random() - 0.5); // Đảo loạn và cố định
             vocabMeaning.textContent = dictionary[vocabList[currentVocabIndex]];
             vocabProgress.textContent = `${currentVocabIndex + 1}/${vocabList.length}`;
-            selectedLettersArray = [];
-            availableLettersArray = [...letters].sort(() => Math.random() - 0.5); // Đảo loạn
+            selectedIndices = [];
             renderLetters();
 
             prevVocab.disabled = currentVocabIndex === 0;
@@ -1185,13 +1190,20 @@ const quizData = [
             availableLettersDiv.innerHTML = '';
             selectedLettersDiv.classList.remove('correct', 'wrong');
 
-            selectedLettersArray.forEach((letter, index) => {
-                const btn = createLetterButton(letter, () => removeFromSelected(index));
+            // Render selected letters
+            selectedIndices.forEach((availIndex, selIndex) => {
+                const letter = availableLettersArray[availIndex];
+                const btn = createLetterButton(letter, () => removeFromSelected(selIndex));
                 selectedLettersDiv.appendChild(btn);
             });
 
-            availableLettersArray.forEach((letter, index) => {
-                const btn = createLetterButton(letter, () => addToSelected(index));
+            // Render available letters (fixed positions)
+            availableLettersArray.forEach((letter, availIndex) => {
+                const isSelected = selectedIndices.includes(availIndex);
+                const btn = createLetterButton(letter, isSelected ? null : () => addToSelected(availIndex));
+                if (isSelected) {
+                    btn.disabled = true;
+                }
                 availableLettersDiv.appendChild(btn);
             });
         }
@@ -1203,27 +1215,29 @@ const quizData = [
             if (letter === ' ') {
                 btn.classList.add('space');
             }
-            btn.onclick = onClick;
+            if (onClick) {
+                btn.onclick = onClick;
+            } else {
+                btn.disabled = true;
+            }
             return btn;
         }
 
-        function addToSelected(index) {
-            const letter = availableLettersArray.splice(index, 1)[0];
-            selectedLettersArray.push(letter);
+        function addToSelected(availIndex) {
+            selectedIndices.push(availIndex);
             renderLetters();
             checkIfComplete();
         }
 
-        function removeFromSelected(index) {
-            const letter = selectedLettersArray.splice(index, 1)[0];
-            availableLettersArray.push(letter);
+        function removeFromSelected(selIndex) {
+            selectedIndices.splice(selIndex, 1);
             renderLetters();
         }
 
         function checkIfComplete() {
             const word = vocabList[currentVocabIndex];
-            const selectedWord = selectedLettersArray.join('');
-            if (selectedLettersArray.length === word.length) {
+            const selectedWord = selectedIndices.map(i => availableLettersArray[i]).join('');
+            if (selectedIndices.length === word.length) {
                 if (selectedWord === word) {
                     selectedLettersDiv.classList.add('correct');
                     correctAudio.play();
@@ -1237,9 +1251,7 @@ const quizData = [
                     selectedLettersDiv.classList.add('wrong');
                     wrongAudio.play();
                     setTimeout(() => {
-                        availableLettersArray = availableLettersArray.concat(selectedLettersArray);
-                        availableLettersArray.sort(() => Math.random() - 0.5); // Shuffle lại để giống trạng thái ban đầu
-                        selectedLettersArray = [];
+                        selectedIndices = [];
                         renderLetters();
                     }, 1500);
                 }

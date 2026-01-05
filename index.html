@@ -3,107 +3,376 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luyện từ vựng Tiếng Việt - Cải tiến Phân Nhóm</title>
+    <title>Luyện từ vựng Tiếng Việt - Pro Layout</title>
     <style>
+        /* =========================================
+           HỆ THỐNG BIẾN SỐ (DỄ DÀNG THAY ĐỔI)
+           ========================================= */
         :root {
-            --primary-bg: #68838B;
-            --text-color: #D2B48C;
-            --border-color: #ccc;
+            --primary-bg: #4b6b95;
+            --accent-color: #FFD306;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+            --control-bg: #68838B;
+
+            /* Màu sắc thành phần chữ (Giữ nguyên yêu cầu) */
+            --color-main-word: #1A237E;
+            --color-translation: #2E7D32;
+            --color-han-viet: #E65100;
+            --bg-han-viet: #fff9c4;
+
+            /* Kích thước Font động */
+            --fs-word: clamp(22px, 5vw, 25px);
+            --fs-trans: clamp(18px, 4vw, 22px);
+            --fs-han: clamp(16px, 3.5vw, 20px);
+            
+            --radius: 12px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
+        /* =========================================
+           CẤU TRÚC NỀN TẢNG
+           ========================================= */
         body {
             font-family: Arial, sans-serif;
-            margin: 0; padding: 0;
-            background-color: #f4f7f7;
-            padding-bottom: 220px; /* Chừa chỗ cho thanh điều hướng */
+            margin: 0;
+            background-color: #f7fbf3;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        /* --- Khung tiêu đề --- */
-        #infoBox { 
-            width: 95%; max-width: 700px; min-height: 100px; 
-            margin: 10px auto; border: 1px solid var(--border-color); 
-            background: var(--primary-bg); color: var(--text-color); 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: clamp(30px, 5vw, 60px); font-weight: bold; text-align: center;
-        }
-        #contactBox, #instructionBox { 
-            width: 90%; max-width: 700px; min-height: 25px; 
-            margin: 0px auto; border: 1px solid var(--border-color); 
-            background: var(--primary-bg); color: var(--text-color); 
-            display: flex; align-items: center; justify-content: left; 
-            padding: 5px 20px; font-size: clamp(16px, 2vw, 20px); font-weight: bold;
+        /* Header Boxes */
+        #infoBox {
+            width: 100%;
+            background: var(--primary-bg);
+            color: white;
+            padding: 3px;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
         }
 
-        /* --- Vùng hiển thị chính --- */
+        #contactBox {
+            width: 100%;
+            background: #3d5a7a;
+            color: #e0e0e0;
+            padding: 5px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Container Chính - Sử dụng Grid cho màn hình lớn */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr; /* Mặc định 1 cột cho mobile */
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            margin: 20px auto;
+            padding: 0 15px;
+            padding-bottom: 180px; /* Chừa chỗ cho footer mobile */
+        }
+
         #gameContainer {
-            max-width: 800px; margin: 20px auto; padding: 15px;
-            background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center; min-height: 500px;
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            min-height: 450px;
         }
 
-        .vocab-img { max-width: 180px; height: auto; border: 4px solid var(--primary-bg); border-radius: 10px; margin-bottom: 10px; }
+        /* =========================================
+           LOGIC HIỂN THỊ CHỮ (GIỮ NGUYÊN HÀNG NGANG)
+           ========================================= */
+        .vocab-header {
+            margin: 15px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .txt-main-word { color: var(--color-main-word); font-size: var(--fs-word); font-weight: bold; }
         
-        /* Nút chung */
-        .btn-char, .btn-choice, .match-box {
-            border: 2px solid var(--primary-bg); border-radius: 8px;
-            background: white; cursor: pointer; transition: 0.2s; font-weight: bold;
+		.txt-translation { color: var(--color-translation); font-size: var(--fs-trans); font-style: italic; }
+        
+		.txt-han-viet { 
+            color: var(--color-han-viet); font-size: var(--fs-han); 
+            background: var(--bg-han-viet); padding: 2px 8px; 
+            border-radius: 4px; border: 1px solid #ffe082;
         }
 
-        /* Chế độ Cơ bản: Chọn & Hủy */
-        .button-zone { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px auto; padding: 15px; border: 2px solid #eee; border-radius: 10px; min-height: 60px; background: #fafafa; }
-        .btn-char { padding: 10px 15px; font-size: 20px; min-width: 45px; }
-        .btn-char.space { background: #e0e0e0; border-style: dashed; }
-        .btn-char.hidden { visibility: hidden; pointer-events: none; }
+        .vocab-img {
+            max-width: 280px;
+            width: 100%;
+            border: 4px solid var(--primary-bg);
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
 
-        /* Chế độ Ghép cặp (LV2) */
-        .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .match-box { padding: 15px; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .match-box.selected { border-color: #ff5722; background: #fff3e0; }
-        .match-box.correct { visibility: hidden; }
-
-        /* Chế độ Word Search (LV3) */
-        .ws-grid { display: grid; margin: 10px auto; gap: 2px; background: #ccc; border: 2px solid #ccc; width: fit-content; }
-        .ws-cell { width: 35px; height: 35px; background: white; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; font-size: 18px; user-select: none; }
-        .ws-cell.active { background: #FFD306; }
-        .ws-cell.found { background: #4CAF50; color: white; }
-        .ws-hints { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 15px; }
-        .hint-item { padding: 5px 12px; border: 1px solid #666; border-radius: 15px; font-size: 14px; background: #eee; }
-        .hint-item.done { background: #4CAF50; color: white; border-color: #4CAF50; text-decoration: line-through; }
-
-        /* --- Thanh điều hướng 3 hàng --- */
+        /* =========================================
+           HỆ THỐNG ĐIỀU KHIỂN (NAVIGATION)
+           ========================================= */
         #footerNav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #68838B; padding: 10px; display: flex; flex-direction: column; gap: 8px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.3); z-index: 1000;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--control-bg);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
         }
-        .nav-row { display: flex; gap: 10px; justify-content: center; width: 100%; }
-        .btn-mode { flex: 1; max-width: 150px; padding: 10px; font-weight: bold; background: #D2B48C; border: none; border-radius: 5px; cursor: pointer; color: #333; }
-        .btn-mode.active { background: white; outline: 3px solid #FFD306; }
-        .btn-ctrl { padding: 8px 15px; background: #333; color: white; border-radius: 20px; border: none; cursor: pointer; }
+
+        .nav-row { display: flex; justify-content: center; gap: 10px; }
+        
+        .btn-mode, #btnReplay {
+            flex: 1; height: 60px; font-weight: bold; border-radius: 8px;
+            border: none; cursor: pointer; transition: 0.2s; font-size: 28px;
+        }
+
+        .btn-mode { background: #D2B48C; color: #333; }
+        
+		.btn-mode.active { background: white; outline: 3px solid var(--accent-color); }
+        
+		#btnReplay { background: #FFCC80; }
+
+        .ctrl-group {
+            display: flex; align-items: center; background: rgba(0,0,0,0.2);
+            border-radius: 5px; padding: 0 10px; gap: 10px; color: white;
+        }
+        .btn-ctrl { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+
+        /* =========================================
+           THIẾT KẾ CHO MÀN HÌNH LỚN (PC/IPAD NGANG)
+           ========================================= */
+        @media (min-width: 992px) {
+            .main-layout {
+                grid-template-columns: 1fr 320px; /* Chia tỉ lệ khu vực chính và khu vực điều khiển */
+                padding-bottom: 20px;
+            }
+
+            #footerNav {
+                position: sticky; /* Không nổi ở dưới nữa mà nằm trong Grid */
+                top: 20px;
+                height: fit-content;
+                border-radius: var(--radius);
+                background: white;
+                box-shadow: var(--shadow);
+                padding: 20px;
+                border: 1px solid #ddd;
+            }
+
+            .nav-row { flex-direction: column; width: 100%; }
+            
+			.btn-mode, #btnReplay { width: 100%; }
+            
+			.ctrl-group { justify-content: space-between; padding: 10px; background: #f0f0f0; color: #333; }
+        }
+
+        /* Styles cho các chế độ chơi tương tự cũ nhưng tối ưu hiển thị */
+       
+	   .button-zone { display: flex; flex-wrap: wrap; min-height: 50px;justify-content: center; gap: 8px; margin: 3px 0; padding: 15px; background: #fafafa; border: 2px solid #eee; border-radius: 10px; }
+		
+		.btn-char { width: 50px; height: 50px; font-size: 24px; font-weight: bold; border: 2px solid var(--primary-bg); border-radius: 8px; background: white; cursor: pointer; }
+        
+		.btn-char.hidden { visibility: hidden; }
+/*------------các đáp án lv2----------------------------------------*/
+/* Điều chỉnh riêng cho các nút đáp án trong Level 1 */
+#opts .btn-mode {
+    /* Sử dụng clamp để chữ tự co giãn theo màn hình */
+    font-size: clamp(16px, 4vw, 24px); 
+    
+    /* Tăng độ cao nút để dễ bấm trên điện thoại */
+    padding: 12px 20px;
+    min-height: 55px;
+    
+    /* Đảm bảo chữ đậm và rõ nét */
+    font-weight: bold;
+    text-transform: none; /* Giữ nguyên chữ hoa/thường */
+    
+    /* Hiệu ứng bo góc và đổ bóng nhẹ */
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    
+    width: 100%; /* Chiếm hết chiều ngang vùng chứa */
+    max-width: 400px; /* Nhưng không quá rộng trên máy tính */
+}
+
+/* Hiệu ứng khi di chuột vào (trên PC) */
+#opts .btn-mode:hover {
+    filter: brightness(0.9);
+    transform: translateY(-2px);
+}
+/* Container chứa cả 2 cột */
+.match-grid {
+    display: flex;
+    justify-content: center; /* Căn toàn bộ cụm cột vào giữa khung */
+    align-items: flex-start;
+    gap: 10px;               /* Khoảng cách sát nhau giữa 2 cột, chỉnh tùy ý */
+    width: 100%;
+    margin: 20px auto;
+}
+
+/* Từng cột (Trái và Phải) */
+#L, #R {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;               /* Khoảng cách giữa các ô trong cùng một cột */
+    flex: 0 1 auto;          /* Cột sẽ co lại vừa vặn với kích thước ô bên trong */
+}
+
+/* Ô ghép cặp theo yêu cầu của bạn */
+.match-box {
+    padding: 3px;
+    min-height: 90px;
+    width: 160px;            /* Cố định chiều ngang để 2 cột cân xứng */
+    border: 2px solid var(--primary-bg);
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    font-size: 30px;         /* Font chữ lớn */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.match-box.selected {
+    border-color: var(--accent-color);
+    background: #fff9e6;
+    transform: translateY(-2px);
+}
+
+.match-box.correct {
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* Hình ảnh trong ô bên phải */
+.match-img-small {
+    max-height: 60px;
+    width: auto;
+    margin-bottom: 5px;
+}
+/*------------------------------------------------------------*/
+        /* Container cha - "Viền" được tạo ra từ màu nền ở đây */
+.ws-grid {
+    display: grid;
+    gap: 2px;                /* ĐỘ DÀY CỦA VIỀN: Chỉnh số này để viền dày/mỏng */
+    background-color: #bcbcbc; /* MÀU CỦA VIỀN: Thường là màu xám hoặc đen */
+    padding: 2px;            /* Viền bao quanh ngoài cùng */
+    margin: 15px auto;
+    border-radius: 4px;
+    width: fit-content;      /* Để khung ôm sát các ô chữ */
+    max-width: 100%;
+    border: 1px solid #999;  /* Đường viền khung ngoài cùng */
+}
+
+/* Các ô chữ con */
+.ws-cell {
+    /* Kích thước ô vuông */
+    width: clamp(30px, 8vw, 40px); 
+    height: clamp(30px, 8vw, 40px);
+    
+    /* Kích thước và kiểu chữ */
+    font-size: clamp(16px, 4.5vw, 24px); /* Chỉnh chữ to nhỏ tại đây */
+    font-weight: bold;
+    color: #333;
+    
+    /* Căn giữa chữ trong ô */
+    background-color: white; /* Màu nền của ô (để lộ khe hở màu xám làm viền) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    cursor: pointer;
+    user-select: none;       /* Ngăn việc bôi đen chữ khi click nhanh */
+    transition: background 0.2s;
+}
+
+/* Trạng thái đang chọn và đã tìm thấy */
+.ws-cell.active { 
+    background-color: var(--accent-color); 
+    color: #000; 
+}
+
+.ws-cell.found { 
+    background-color: var(--success-color); 
+    color: white; 
+}
+        /* =========================================
+           THIẾT KẾ CHO MÀN HÌNH DI ĐỘNG
+           ========================================= */
+@media (max-width: 768px) {
+		 #footerNav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--control-bg);
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .nav-row { display: flex; justify-content: center; gap: 5px; }
+        .btn-mode {
+            flex: 1; height: 30px; font-weight: bold; border-radius: 8px;
+            border: none; cursor: pointer; transition: 0.2s; font-size: 16px;
+        }
+		#btnReplay { background: #FFCC80; width: 100px; flex: 1; height: 30px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; font-size: 16px;}
+		.ctrl-group {
+            display: flex; align-items: center; background: rgba(0,0,0,0.2);
+            border-radius: 5px; padding: 0 15px; gap: 15px; color: white;
+        }
+    .ws-cell {
+        width: 40px;  /* Cố định kích thước nhỏ để vừa màn hình điện thoại */
+        height: 40px;
+        font-size: 18px; 
+    }
+    .ws-grid {
+        gap: 1px; /* Viền mảnh hơn trên điện thoại để tiết kiệm không gian */
+    }
+}
     </style>
 </head>
 <body>
 
-    <div id="infoBox">习得越南语词汇练习</div>
-    <div id="contactBox">联系: XiDeYueNanYu</div>
-    <div id="instructionBox">说明: 请根据不同模式的要求完成练习</div>
+    <div id="infoBox">习得越南语-词汇练习</div>
+    <div id="contactBox">讲师-阮玉煌 | Weixin：XiDeYueNanYu</div>
 
-    <div id="gameContainer"></div>
+    <div class="main-layout">
+        <div id="gameContainer"></div>
 
-    <div id="footerNav">
-        <div class="nav-row">
-            <button class="btn-ctrl" onclick="changeIndex(-1)">◀</button>
-            <span id="txtProgress" style="color: white; font-weight: bold; min-width: 80px; text-align: center;">0/0</span>
-            <button class="btn-ctrl" onclick="changeIndex(1)">▶</button>
-            <button id="btnReplay" class="btn-ctrl" style="background:#D2B48C; color:#333;" onclick="playAudio()">再听一遍</button>
-        </div>
-        <div class="nav-row">
-            <button class="btn-mode" id="m-basic" onclick="setMode('basic')">基础</button>
-            <button class="btn-mode" id="m-lv1" onclick="setMode('lv1')">第一关</button>
-        </div>
-        <div class="nav-row">
-            <button class="btn-mode" id="m-lv2" onclick="setMode('lv2')">第二关</button>
-            <button class="btn-mode" id="m-lv3" onclick="setMode('lv3')">第三关</button>
+        <div id="footerNav">
+            <div class="nav-row">
+                <div class="ctrl-group">
+                    <button class="btn-ctrl" onclick="changeIndex(-1)">◀</button>
+                    <span id="txtProgress" style="font-weight: bold;">0/0</span>
+                    <button class="btn-ctrl" onclick="changeIndex(1)">▶</button>
+                </div>
+                <button id="btnReplay" onclick="playAudio()">再听一遍</button>
+            </div>
+            
+            <div class="nav-row">
+                <button class="btn-mode" id="m-basic" onclick="setMode('basic')">Cơ bản</button>
+                <button class="btn-mode" id="m-lv1" onclick="setMode('lv1')">Lv 1</button>
+            </div>
+            <div class="nav-row">
+                <button class="btn-mode" id="m-lv2" onclick="setMode('lv2')">Lv 2 (Ghép)</button>
+                <button class="btn-mode" id="m-lv3" onclick="setMode('lv3')">Lv 3 (Tìm)</button>
+            </div>
         </div>
     </div>
 
@@ -111,23 +380,21 @@
     <audio id="audioSfx"></audio>
 
     <script>
-        // DỮ LIỆU TỪ VỰNG GỐC
         const dulieutuvung = [
-            { word: "Giáo viên", audioFile: "Giáo viên.mp3", start: 0, end: 1.5, translation: "老师", hanviet: "教员", picture: "Giáo viên.png" },
-            { word: "Học sinh", audioFile: "Học sinh.mp3", start: 0, end: 1.2, translation: "学生", hanviet: "学生", picture: "Học sinh.png" },
-            { word: "Táo", audioFile: "Táo.mp3", start: 0, end: 1.0, translation: "苹果", hanviet: "", picture: "Táo.png" },
-            { word: "Vui vẻ", audioFile: "Vui vẻ.mp3", start: 0, end: 1.2, translation: "高兴", hanviet: "", picture: "Vui vẻ.png" },
-            { word: "Sách", audioFile: "Sách.mp3", start: 0, end: 1.0, translation: "书", hanviet: "", picture: "Sách.png" },
-            { word: "Máy tính", audioFile: "Máy tính.mp3", start: 0, end: 1.5, translation: "电脑", hanviet: "", picture: "Máy tính.png" },
-            { word: "Bàn", audioFile: "Bàn.mp3", start: 0, end: 0.8, translation: "桌子", hanviet: "", picture: "Bàn.png" },
-            { word: "Ghế", audioFile: "Ghế.mp3", start: 0, end: 0.8, translation: "椅子", hanviet: "", picture: "Ghế.png" },
-            { word: "Cửa", audioFile: "Cửa.mp3", start: 0, end: 0.8, translation: "门", hanviet: "", picture: "Cửa.png" }
+            { word: "Giáo viên", audioFile: "lesson.mp3", start: 0, end: 1.5, translation: "老师", hanviet: "【教员】", picture: "Giáo viên.png" },
+            { word: "Học sinh", audioFile: "lesson.mp3", start: 0, end: 1.2, translation: "学生", hanviet: "【学生】", picture: "Học sinh.png" },
+            { word: "Táo", audioFile: "lesson.mp3", start: 0, end: 1.0, translation: "苹果", hanviet: "", picture: "Táo.png" },
+            { word: "Vui vẻ", audioFile: "lesson.mp3", start: 0, end: 1.2, translation: "高兴", hanviet: "", picture: "Vui vẻ.png" },
+            { word: "Sách", audioFile: "lesson.mp3", start: 0, end: 1.0, translation: "书", hanviet: "【册】", picture: "Sách.png" },
+            { word: "Bàn", audioFile: "lesson.mp3", start: 0, end: 0.8, translation: "桌子", hanviet: "【盘】", picture: "Bàn.png" },
+            { word: "Cửa", audioFile: "lesson.mp3", start: 0, end: 0.8, translation: "门", hanviet: "", picture: "Cửa.png" },
+            { word: "Ghế", audioFile: "lesson.mp3", start: 0, end: 0.8, translation: "椅子", hanviet: "", picture: "Ghế.png" },
+            { word: "Máy tính", audioFile: "lesson.mp3", start: 0, end: 0.8, translation: "电脑", hanviet: "", picture: "Máy tính.png" }
         ];
 
         let currentMode = 'basic';
         let currentIndex = 0;
-        let lv2Groups = []; 
-        let lv3Groups = [];
+        let lv2Groups = [], lv3Groups = [];
         let basicState = { shuffled: [], selectedIds: [] };
         let mState = { L: null, R: null };
         let wsStart = null;
@@ -136,20 +403,13 @@
         const audioMain = document.getElementById('audioMain');
         const audioSfx = document.getElementById('audioSfx');
 
-        // --- THUẬT TOÁN PHÂN NHÓM TỔNG QUÁT ---
-        // size: số từ mỗi nhóm (4 cho LV2, 6 cho LV3)
         function generateGroups(size) {
             let pool = [...dulieutuvung].sort(() => Math.random() - 0.5);
             let groups = [];
             for (let i = 0; i < pool.length; i += size) {
                 let chunk = pool.slice(i, i + size);
-                if (chunk.length < size) {
-                    let needed = size - chunk.length;
-                    // Lấy bù từ các từ còn lại trong danh sách gốc
-                    let extras = pool.filter(item => !chunk.includes(item))
-                                     .sort(() => Math.random() - 0.5)
-                                     .slice(0, needed);
-                    chunk = [...chunk, ...extras];
+                if (chunk.length < size && pool.length >= size) {
+                    chunk = [...chunk, ...pool.filter(p => !chunk.includes(p)).slice(0, size - chunk.length)];
                 }
                 groups.push(chunk);
             }
@@ -160,174 +420,198 @@
             currentMode = m; currentIndex = 0;
             if (m === 'lv2') lv2Groups = generateGroups(4);
             if (m === 'lv3') lv3Groups = generateGroups(6);
-            
             document.querySelectorAll('.btn-mode').forEach(b => b.classList.remove('active'));
-            document.getElementById('m-'+m).classList.add('active');
+            document.getElementById('m-' + m).classList.add('active');
             render();
         }
 
         function changeIndex(step) {
-            let max = 1;
-            if (currentMode === 'basic' || currentMode === 'lv1') max = dulieutuvung.length;
-            else if (currentMode === 'lv2') max = lv2Groups.length;
-            else if (currentMode === 'lv3') max = lv3Groups.length;
-
+            let max = (currentMode === 'basic' || currentMode === 'lv1') ? dulieutuvung.length : 
+                      (currentMode === 'lv2' ? lv2Groups.length : lv3Groups.length);
             currentIndex = (currentIndex + step + max) % max;
             basicState.selectedIds = [];
             render();
         }
 
         function playAudio() {
-            if (currentMode !== 'basic' && currentMode !== 'lv1') return;
-            const d = dulieutuvung[currentIndex];
-            audioMain.src = d.audioFile;
-            audioMain.currentTime = d.start;
-            audioMain.play();
-            setTimeout(() => audioMain.pause(), (d.end - d.start) * 1000);
+            const data = (currentMode === 'lv2' || currentMode === 'lv3') ? null : dulieutuvung[currentIndex];
+            if (!data) return;
+            audioMain.src = data.audioFile; audioMain.currentTime = data.start; audioMain.play();
+            setTimeout(() => audioMain.pause(), (data.end - data.start) * 1000);
         }
 
         function playSfx(isCorrect) {
             audioSfx.src = isCorrect ? 'Dung.mp3' : 'Sai.mp3';
-            audioSfx.play();
+            audioSfx.play().catch(()=>{});
         }
 
         function render() {
             container.innerHTML = "";
-            document.getElementById('btnReplay').style.visibility = (currentMode === 'basic' || currentMode === 'lv1') ? 'visible' : 'hidden';
+            let maxCount = (currentMode === 'basic' || currentMode === 'lv1') ? dulieutuvung.length : 
+                           (currentMode === 'lv2' ? lv2Groups.length : lv3Groups.length);
+            document.getElementById('txtProgress').innerText = `${currentIndex + 1}/${maxCount}`;
+            document.getElementById('btnReplay').style.visibility = (currentMode === 'lv2' || currentMode === 'lv3') ? 'hidden' : 'visible';
+
             if (currentMode === 'basic') renderBasic();
             else if (currentMode === 'lv1') renderLv1();
             else if (currentMode === 'lv2') renderLv2();
             else if (currentMode === 'lv3') renderLv3();
         }
 
-        // --- MODE BASIC: GHÉP CHỮ ---
         function renderBasic() {
             const data = dulieutuvung[currentIndex];
-            document.getElementById('txtProgress').innerText = `${currentIndex + 1}/${dulieutuvung.length}`;
             if (basicState.selectedIds.length === 0) {
                 basicState.shuffled = data.word.split('').map((c, i) => ({ char: c, id: i })).sort(() => Math.random() - 0.5);
+                playAudio();
             }
             container.innerHTML = `
                 <img src="${data.picture}" class="vocab-img">
-                <div style="font-weight:bold; color:var(--primary-bg);">${data.translation}</div>
+                <div class="vocab-header">
+                    <span class="txt-main-word">${data.word}</span>
+                    <span class="txt-translation">(${data.translation})</span>
+                    ${data.hanviet ? `<span class="txt-han-viet">${data.hanviet}</span>` : ''}
+                </div>
                 <div class="button-zone" id="selectedZone"></div>
                 <div class="button-zone" id="poolZone"></div>
             `;
             const sz = document.getElementById('selectedZone');
             basicState.selectedIds.forEach(shIdx => {
-                const item = basicState.shuffled[shIdx];
-                const b = document.createElement('button'); b.className = 'btn-char'+(item.char===' '?' space':'');
-                b.innerText = item.char===' '?'␣':item.char;
+                const b = document.createElement('button'); b.className = 'btn-char'; b.innerText = basicState.shuffled[shIdx].char;
                 b.onclick = () => { basicState.selectedIds = basicState.selectedIds.filter(id => id !== shIdx); renderBasic(); };
                 sz.appendChild(b);
             });
             const pz = document.getElementById('poolZone');
             basicState.shuffled.forEach((item, i) => {
-                const b = document.createElement('button'); b.className = 'btn-char'+(item.char===' '?' space':'');
-                if (basicState.selectedIds.includes(i)) b.classList.add('hidden');
-                b.innerText = item.char===' '?'␣':item.char;
-                b.onclick = () => { basicState.selectedIds.push(i); renderBasic(); checkBasic(); };
+                const b = document.createElement('button'); b.className = 'btn-char'; if (basicState.selectedIds.includes(i)) b.classList.add('hidden');
+                b.innerText = item.char; b.onclick = () => { basicState.selectedIds.push(i); renderBasic(); checkBasic(); };
                 pz.appendChild(b);
             });
-            if (basicState.selectedIds.length === 0) playAudio();
         }
 
         function checkBasic() {
             const data = dulieutuvung[currentIndex];
             if (basicState.selectedIds.length === basicState.shuffled.length) {
                 const res = basicState.selectedIds.map(idx => basicState.shuffled[idx].char).join('');
-                if (res.toLowerCase() === data.word.toLowerCase()) { playSfx(true); setTimeout(() => changeIndex(1), 1200); }
-                else { playSfx(false); document.getElementById('selectedZone').style.borderColor = 'red'; setTimeout(() => { basicState.selectedIds=[]; renderBasic(); }, 1000); }
+                if (res.toLowerCase() === data.word.toLowerCase()) { playSfx(true); setTimeout(() => changeIndex(1), 1000); }
+                else { playSfx(false); setTimeout(() => { basicState.selectedIds = []; renderBasic(); }, 800); }
             }
         }
 
-        // --- MODE LV1: TRẮC NGHIỆM ---
         function renderLv1() {
             const data = dulieutuvung[currentIndex];
-            document.getElementById('txtProgress').innerText = `${currentIndex + 1}/${dulieutuvung.length}`;
             let opts = [data.translation];
-            while(opts.length < 3) { let r = dulieutuvung[Math.floor(Math.random()*dulieutuvung.length)].translation; if(!opts.includes(r)) opts.push(r); }
+            while (opts.length < 3) {
+                let r = dulieutuvung[Math.floor(Math.random() * dulieutuvung.length)].translation;
+                if (!opts.includes(r)) opts.push(r);
+            }
             opts.sort(() => Math.random() - 0.5);
-            container.innerHTML = `<img src="${data.picture}" class="vocab-img"><div style="font-size:22px; font-weight:bold; margin:15px;">${data.word}</div><div id="opts" style="display:flex; flex-direction:column; gap:10px; align-items:center;"></div>`;
+// Trong hàm renderLv1()
+container.innerHTML = `
+    <img src="${data.picture}" class="vocab-img">
+    <div class="vocab-header">
+        <span class="txt-main-word">${data.word}</span>
+        ${data.hanviet ? `<span class="txt-han-viet">${data.hanviet}</span>` : ''}
+    </div>
+    <div id="opts" style="display:flex; flex-direction:column; gap:12px; align-items:center;"></div>
+`;
             opts.forEach(o => {
-                const b = document.createElement('button'); b.className = 'btn-mode'; b.style.width = "80%"; b.innerText = o;
-                b.onclick = () => { if(o === data.translation){ b.style.background='#4CAF50'; playSfx(true); setTimeout(()=>changeIndex(1), 1000); } else { b.style.background='#f44336'; playSfx(false); } };
+                const b = document.createElement('button'); b.className = 'btn-mode'; b.style.width = "100%"; b.innerText = o;
+                b.onclick = () => { if (o === data.translation) { b.style.background = 'var(--success-color)'; b.style.color='white'; playSfx(true); setTimeout(() => changeIndex(1), 1000); } else { b.style.background = 'var(--error-color)'; b.style.color='white'; playSfx(false); } };
                 document.getElementById('opts').appendChild(b);
             });
             playAudio();
         }
 
-        // --- MODE LV2: GHÉP CẶP (NHÓM 4) ---
-        function renderLv2() {
-            const items = lv2Groups[currentIndex];
-            document.getElementById('txtProgress').innerText = `组 ${currentIndex + 1} / ${lv2Groups.length}`;
-            container.innerHTML = `<div class="match-grid"><div id="L"></div><div id="R"></div></div>`;
-            const Ls = [...items].sort(() => Math.random() - 0.5);
-            const Rs = [...items].sort(() => Math.random() - 0.5);
-            Ls.forEach(it => {
-                const d = document.createElement('div'); d.className = 'match-box'; d.innerText = it.word;
-                d.onclick = () => { document.querySelectorAll('#L .match-box').forEach(b=>b.classList.remove('selected')); d.classList.add('selected'); mState.L = {el:d, val:it.word}; checkMatch(); };
-                document.getElementById('L').appendChild(d);
-            });
-            Rs.forEach(it => {
-                const d = document.createElement('div'); d.className = 'match-box'; d.innerHTML = `<img src="${it.picture}" style="width:40px;"><br><small>${it.translation}</small>`;
-                d.onclick = () => { document.querySelectorAll('#R .match-box').forEach(b=>b.classList.remove('selected')); d.classList.add('selected'); mState.R = {el:d, val:it.word}; checkMatch(); };
-                document.getElementById('R').appendChild(d);
-            });
-        }
+function renderLv2() {
+    const items = lv2Groups[currentIndex];
+    // Tạo 2 "giỏ" chứa riêng biệt
+    container.innerHTML = `
+        <div class="match-grid">
+            <div id="L"></div>
+            <div id="R"></div>
+        </div>
+    `;
+
+    const Ls = [...items].sort(() => Math.random() - 0.5);
+    const Rs = [...items].sort(() => Math.random() - 0.5);
+
+    // Cột Trái: Chỉ hiển thị chữ (Word)
+    Ls.forEach(it => {
+        const d = document.createElement('div');
+        d.className = 'match-box';
+        d.innerText = it.word;
+        d.onclick = () => {
+            document.querySelectorAll('#L .match-box').forEach(b => b.classList.remove('selected'));
+            d.classList.add('selected');
+            mState.L = { el: d, val: it.word };
+            checkMatch();
+        };
+        document.getElementById('L').appendChild(d);
+    });
+
+    // Cột Phải: Hiển thị ảnh và nghĩa
+    Rs.forEach(it => {
+        const d = document.createElement('div');
+        d.className = 'match-box';
+        d.innerHTML = `
+            <img src="${it.picture}" class="match-img-small">
+            <span style="font-size: 16px; color: var(--color-translation); font-weight: bold;">${it.translation}</span>
+        `;
+        d.onclick = () => {
+            document.querySelectorAll('#R .match-box').forEach(b => b.classList.remove('selected'));
+            d.classList.add('selected');
+            mState.R = { el: d, val: it.word };
+            checkMatch();
+        };
+        document.getElementById('R').appendChild(d);
+    });
+}
 
         function checkMatch() {
-            if(mState.L && mState.R) {
-                if(mState.L.val === mState.R.val){ playSfx(true); mState.L.el.classList.add('correct'); mState.R.el.classList.add('correct'); if(document.querySelectorAll('.match-box:not(.correct)').length === 0) setTimeout(()=>changeIndex(1), 1000); }
+            if (mState.L && mState.R) {
+                if (mState.L.val === mState.R.val) { playSfx(true); mState.L.el.classList.add('correct'); mState.R.el.classList.add('correct'); if (document.querySelectorAll('.match-box:not(.correct)').length === 0) setTimeout(() => changeIndex(1), 1000); }
                 else playSfx(false);
-                mState = {L:null, R:null}; document.querySelectorAll('.match-box').forEach(b=>b.classList.remove('selected'));
+                mState = { L: null, R: null }; document.querySelectorAll('.match-box').forEach(b => b.classList.remove('selected'));
             }
         }
 
-        // --- MODE LV3: TÌM TỪ (NHÓM 6 - CẢI TIẾN) ---
         function renderLv3() {
             const items = lv3Groups[currentIndex];
-            document.getElementById('txtProgress').innerText = `Puzzle ${currentIndex + 1} / ${lv3Groups.length}`;
-            const size = 10;
-            const grid = Array(size).fill().map(() => Array(size).fill(''));
+            const size = 10; const grid = Array(size).fill().map(() => Array(size).fill(''));
             const words = items.map(it => it.word.replace(/\s/g, '').toUpperCase());
-
             words.forEach(w => {
                 let placed = false;
-                while(!placed) {
-                    let isV = Math.random() > 0.5, r = Math.floor(Math.random()*(size - (isV?w.length:0))), c = Math.floor(Math.random()*(size - (isV?0:w.length))), ok = true;
-                    for(let i=0; i<w.length; i++){ let ch = isV?grid[r+i][c]:grid[r][c+i]; if(ch !== '' && ch !== w[i]){ ok=false; break; } }
-                    if(ok){ for(let i=0; i<w.length; i++){ if(isV) grid[r+i][c]=w[i]; else grid[r][c+i]=w[i]; } placed=true; }
+                while (!placed) {
+                    let isV = Math.random() > 0.5, r = Math.floor(Math.random() * (size - (isV ? w.length : 0))), c = Math.floor(Math.random() * (isV ? size : (size - w.length))), ok = true;
+                    for (let i = 0; i < w.length; i++) { let ch = isV ? grid[r + i][c] : grid[r][c + i]; if (ch !== '' && ch !== w[i]) { ok = false; break; } }
+                    if (ok) { for (let i = 0; i < w.length; i++) { if (isV) grid[r + i][c] = w[i]; else grid[r][c + i] = w[i]; } placed = true; }
                 }
             });
             const alpha = "ABCDEGHIJKLMNOPQRSTUVXY";
-            for(let r=0; r<size; r++) for(let c=0; c<size; c++) if(!grid[r][c]) grid[r][c] = alpha[Math.floor(Math.random()*23)];
-
-            container.innerHTML = `<div class="ws-grid" id="wsGrid" style="grid-template-columns: repeat(${size}, 1fr)"></div><div class="ws-hints" id="wsHints"></div>`;
+            for (let r = 0; r < size; r++) for (let c = 0; c < size; c++) if (!grid[r][c]) grid[r][c] = alpha[Math.floor(Math.random() * 23)];
+            container.innerHTML = `<div class="ws-grid" id="wsGrid" style="grid-template-columns: repeat(${size}, 1fr)"></div><div class="button-zone" id="wsHints"></div>`;
             grid.forEach((row, r) => row.forEach((char, c) => {
                 const cell = document.createElement('div'); cell.className = 'ws-cell'; cell.innerText = char; cell.dataset.r = r; cell.dataset.c = c;
-                cell.onclick = () => handleWS(cell, words);
-                document.getElementById('wsGrid').appendChild(cell);
+                cell.onclick = () => handleWS(cell, words); document.getElementById('wsGrid').appendChild(cell);
             }));
             items.forEach(it => {
-                const s = document.createElement('div'); s.className = 'hint-item';
-                s.id = "h-" + it.word.replace(/\s/g, '').toUpperCase(); s.innerText = it.translation;
+                const s = document.createElement('div'); s.className = 'txt-han-viet'; s.id = "h-" + it.word.replace(/\s/g, '').toUpperCase(); s.innerText = it.translation;
                 document.getElementById('wsHints').appendChild(s);
             });
         }
 
         function handleWS(cell, words) {
-            if(!wsStart){ wsStart = cell; cell.classList.add('active'); }
+            if (!wsStart) { wsStart = cell; cell.classList.add('active'); }
             else {
                 let r1 = +wsStart.dataset.r, c1 = +wsStart.dataset.c, r2 = +cell.dataset.r, c2 = +cell.dataset.c, str = "", path = [];
-                if(r1 === r2) for(let i=Math.min(c1,c2); i<=Math.max(c1,c2); i++) { let el=document.querySelector(`[data-r="${r1}"][data-c="${i}"]`); str+=el.innerText; path.push(el); }
-                else if(c1 === c2) for(let i=Math.min(r1,r2); i<=Math.max(r1,r2); i++) { let el=document.querySelector(`[data-r="${i}"][data-c="${c1}"]`); str+=el.innerText; path.push(el); }
+                if (r1 === r2) { for (let i = Math.min(c1, c2); i <= Math.max(c1, c2); i++) { let el = document.querySelector(`[data-r="${r1}"][data-c="${i}"]`); str += el.innerText; path.push(el); } }
+                else if (c1 === c2) { for (let i = Math.min(r1, r2); i <= Math.max(r1, r2); i++) { let el = document.querySelector(`[data-r="${i}"][data-c="${c1}"]`); str += el.innerText; path.push(el); } }
                 let rev = str.split('').reverse().join('');
-                if(words.includes(str) || words.includes(rev)){
+                if (words.includes(str) || words.includes(rev)) {
                     playSfx(true); path.forEach(e => e.classList.add('found'));
-                    const target = words.includes(str) ? str : rev;
-                    document.getElementById("h-"+target).classList.add('done');
-                    if(document.querySelectorAll('.hint-item.done').length === words.length) setTimeout(()=>changeIndex(1), 1500);
+                    document.getElementById("h-" + (words.includes(str) ? str : rev)).style.background = 'var(--success-color)';
+                    document.getElementById("h-" + (words.includes(str) ? str : rev)).style.color = 'white';
+                    if (document.querySelectorAll('[id^="h-"][style*="success"]').length === words.length) setTimeout(() => changeIndex(1), 1500);
                 } else playSfx(false);
                 document.querySelectorAll('.ws-cell').forEach(c => c.classList.remove('active')); wsStart = null;
             }

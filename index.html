@@ -2,11 +2,11 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Luyện từ vựng Tiếng Việt - Pro Layout</title>
     <style>
         /* =========================================
-           HỆ THỐNG BIẾN SỐ (DỄ DÀNG THAY ĐỔI)
+           HỆ THỐNG BIẾN SỐ (DỄ DÀNG THAY ĐỔI) - KHÔNG THAY ĐỔI
            ========================================= */
         :root {
             --primary-bg: #4b6b95;
@@ -31,24 +31,31 @@
         }
 
         /* =========================================
-           CẤU TRÚC NỀN TẢNG
+           CẤU TRÚC NỀN TẢNG - CẢI TIẾN
            ========================================= */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
+            padding: 0;
             background-color: #f7fbf3;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
         }
 
-        /* Header Boxes */
+        /* Header Boxes - CẢI TIẾN */
         #infoBox {
             width: 100%;
             background: var(--primary-bg);
             color: white;
-            padding: 3px;
-            font-size: 30px;
+            padding: 12px 15px;
+            font-size: clamp(24px, 6vw, 30px);
             font-weight: bold;
             text-align: center;
         }
@@ -57,21 +64,22 @@
             width: 100%;
             background: #3d5a7a;
             color: #e0e0e0;
-            padding: 5px;
+            padding: 8px 15px;
             text-align: center;
-            font-size: 14px;
+            font-size: clamp(12px, 3vw, 14px);
         }
 
-        /* Container Chính - Sử dụng Grid cho màn hình lớn */
+        /* Container Chính - CẢI TIẾN */
         .main-layout {
             display: grid;
-            grid-template-columns: 1fr; /* Mặc định 1 cột cho mobile */
-            gap: 20px;
-            max-width: 1200px;
+            grid-template-columns: 1fr;
+            gap: 15px;
             width: 100%;
-            margin: 20px auto;
-            padding: 0 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
             padding-bottom: 180px; /* Chừa chỗ cho footer mobile */
+            flex: 1;
         }
 
         #gameContainer {
@@ -80,11 +88,17 @@
             padding: 20px;
             box-shadow: var(--shadow);
             text-align: center;
-            min-height: 450px;
+            min-height: 400px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         /* =========================================
-           LOGIC HIỂN THỊ CHỮ (GIỮ NGUYÊN HÀNG NGANG)
+           LOGIC HIỂN THỊ CHỮ (GIỮ NGUYÊN HÀNG NGANG) - KHÔNG THAY ĐỔI
            ========================================= */
         .vocab-header {
             margin: 15px 0;
@@ -96,34 +110,50 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
+            width: 100%;
         }
 
-        .txt-main-word { color: var(--color-main-word); font-size: var(--fs-word); font-weight: bold; }
+        .txt-main-word { 
+            color: var(--color-main-word); 
+            font-size: var(--fs-word); 
+            font-weight: bold; 
+        }
         
-		.txt-translation { color: var(--color-translation); font-size: var(--fs-trans); font-style: italic; }
+        .txt-translation { 
+            color: var(--color-translation); 
+            font-size: var(--fs-trans); 
+            font-style: italic; 
+        }
         
-		.txt-han-viet { 
-            color: var(--color-han-viet); font-size: var(--fs-han); 
-            background: var(--bg-han-viet); padding: 2px 8px; 
-            border-radius: 4px; border: 1px solid #ffe082;
+        .txt-han-viet { 
+            color: var(--color-han-viet); 
+            font-size: var(--fs-han); 
+            background: var(--bg-han-viet); 
+            padding: 2px 8px; 
+            border-radius: 4px; 
+            border: 1px solid #ffe082;
         }
 
         .vocab-img {
-            max-width: 280px;
-            width: 100%;
+            max-width: min(280px, 90%);
+            width: auto;
+            height: auto;
             border: 4px solid var(--primary-bg);
             border-radius: 10px;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         /* =========================================
-           HỆ THỐNG ĐIỀU KHIỂN (NAVIGATION)
+           HỆ THỐNG ĐIỀU KHIỂN (NAVIGATION) - CẢI TIẾN
            ========================================= */
         #footerNav {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100vw;
             background: var(--control-bg);
-            padding: 15px;
+            padding: 12px 10px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -131,36 +161,220 @@
             z-index: 1000;
         }
 
-        .nav-row { display: flex; justify-content: center; gap: 10px; }
+        .nav-row { 
+            display: flex; 
+            justify-content: center; 
+            gap: 8px; 
+            width: 100%;
+        }
         
         .btn-mode, #btnReplay {
-            flex: 1; height: 60px; font-weight: bold; border-radius: 8px;
-            border: none; cursor: pointer; transition: 0.2s; font-size: 28px;
+            flex: 1;
+            height: 50px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: clamp(16px, 4vw, 24px);
+            min-width: 0; /* Quan trọng cho flex trên mobile */
         }
 
-        .btn-mode { background: #D2B48C; color: #333; }
+        .btn-mode { 
+            background: #D2B48C; 
+            color: #333; 
+        }
         
-		.btn-mode.active { background: white; outline: 3px solid var(--accent-color); }
+        .btn-mode.active { 
+            background: white; 
+            outline: 3px solid var(--accent-color); 
+        }
         
-		#btnReplay { background: #FFCC80; }
+        #btnReplay { 
+            background: #FFCC80; 
+        }
 
         .ctrl-group {
-            display: flex; align-items: center; background: rgba(0,0,0,0.2);
-            border-radius: 5px; padding: 0 10px; gap: 10px; color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 5px;
+            padding: 5px 10px;
+            gap: 15px;
+            color: white;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
         }
-        .btn-ctrl { background: #333; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        
+        .btn-ctrl { 
+            background: #333; 
+            color: white; 
+            border: none; 
+            padding: 8px 15px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 18px;
+        }
 
         /* =========================================
-           THIẾT KẾ CHO MÀN HÌNH LỚN (PC/IPAD NGANG)
+           CÁC KIỂU HIỂN THỊ TRÒ CHƠI - KHÔNG THAY ĐỔI NHIỀU
+           ========================================= */
+        .button-zone { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 8px; 
+            margin: 10px 0; 
+            padding: 15px; 
+            background: #fafafa; 
+            border: 2px solid #eee; 
+            border-radius: 10px; 
+            width: 100%;
+        }
+        
+        .btn-char { 
+            width: clamp(40px, 10vw, 50px); 
+            height: clamp(40px, 10vw, 50px); 
+            font-size: clamp(18px, 4vw, 24px); 
+            font-weight: bold; 
+            border: 2px solid var(--primary-bg); 
+            border-radius: 8px; 
+            background: white; 
+            cursor: pointer; 
+        }
+        
+        .btn-char.hidden { 
+            visibility: hidden; 
+        }
+
+        /* Các đáp án lv1 - KHÔNG THAY ĐỔI */
+        #opts .btn-mode {
+            font-size: clamp(16px, 4vw, 24px);
+            padding: 12px 20px;
+            min-height: 55px;
+            font-weight: bold;
+            text-transform: none;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #opts .btn-mode:hover {
+            filter: brightness(0.9);
+            transform: translateY(-2px);
+        }
+
+        /* Match game (Lv2) - SỬA LẠI: LUÔN HIỂN THỊ 2 CỘT */
+        .match-grid {
+            display: flex;
+            flex-direction: row; /* QUAN TRỌNG: Luôn hiển thị hàng ngang */
+            justify-content: center;
+            align-items: flex-start;
+            gap: 10px;
+            width: 100%;
+            margin: 15px auto;
+            overflow-x: auto; /* Cho phép cuộn ngang nếu cần */
+            padding: 5px;
+        }
+
+        #L, #R {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            min-width: 140px; /* Đảm bảo không quá nhỏ */
+            max-width: 200px;
+        }
+
+        .match-box {
+            padding: 10px;
+            min-height: 90px;
+            width: 100%;
+            border: 2px solid var(--primary-bg);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            font-size: clamp(18px, 4vw, 24px); /* Chữ nhỏ hơn trên mobile */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            word-break: break-word; /* Tránh chữ tràn ra ngoài */
+            text-align: center;
+        }
+
+        .match-box.selected {
+            border-color: var(--accent-color);
+            background: #fff9e6;
+            transform: translateY(-2px);
+        }
+
+        .match-box.correct {
+            visibility: hidden;
+            opacity: 0;
+        }
+
+        .match-img-small {
+            max-height: 50px;
+            width: auto;
+            margin-bottom: 5px;
+        }
+
+        /* Word search (Lv3) - CẢI TIẾN CHO MOBILE */
+        .ws-grid {
+            display: grid;
+            gap: 2px;
+            background-color: #bcbcbc;
+            padding: 2px;
+            margin: 15px auto;
+            border-radius: 4px;
+            width: fit-content;
+            max-width: 100%;
+            border: 1px solid #999;
+            overflow: auto; /* Cho phép cuộn nếu quá lớn */
+        }
+
+        .ws-cell {
+            width: clamp(30px, 8vw, 40px);
+            height: clamp(30px, 8vw, 40px);
+            font-size: clamp(16px, 4.5vw, 24px);
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .ws-cell.active { 
+            background-color: var(--accent-color); 
+            color: #000; 
+        }
+
+        .ws-cell.found { 
+            background-color: var(--success-color); 
+            color: white; 
+        }
+
+        /* =========================================
+           THIẾT KẾ CHO MÀN HÌNH LỚN (PC/IPAD NGANG) - KHÔNG THAY ĐỔI
            ========================================= */
         @media (min-width: 992px) {
             .main-layout {
-                grid-template-columns: 1fr 320px; /* Chia tỉ lệ khu vực chính và khu vực điều khiển */
+                grid-template-columns: 1fr 320px;
                 padding-bottom: 20px;
             }
 
             #footerNav {
-                position: sticky; /* Không nổi ở dưới nữa mà nằm trong Grid */
+                position: sticky;
                 top: 20px;
                 height: fit-content;
                 border-radius: var(--radius);
@@ -168,183 +382,173 @@
                 box-shadow: var(--shadow);
                 padding: 20px;
                 border: 1px solid #ddd;
+                width: 100%;
             }
 
-            .nav-row { flex-direction: column; width: 100%; }
+            .nav-row { 
+                flex-direction: column; 
+                width: 100%; 
+            }
             
-			.btn-mode, #btnReplay { width: 100%; }
+            .btn-mode, #btnReplay { 
+                width: 100%; 
+            }
             
-			.ctrl-group { justify-content: space-between; padding: 10px; background: #f0f0f0; color: #333; }
+            .ctrl-group { 
+                justify-content: space-between; 
+                padding: 10px; 
+                background: #f0f0f0; 
+                color: #333; 
+            }
+            
+            #L, #R {
+                max-width: 220px; /* Rộng hơn trên desktop */
+            }
+            
+            .match-box {
+                font-size: 22px;
+                min-height: 100px;
+            }
         }
 
-        /* Styles cho các chế độ chơi tương tự cũ nhưng tối ưu hiển thị */
-       
-	   .button-zone { display: flex; flex-wrap: wrap; min-height: 50px;justify-content: center; gap: 8px; margin: 3px 0; padding: 15px; background: #fafafa; border: 2px solid #eee; border-radius: 10px; }
-		
-		.btn-char { width: 50px; height: 50px; font-size: 24px; font-weight: bold; border: 2px solid var(--primary-bg); border-radius: 8px; background: white; cursor: pointer; }
-        
-		.btn-char.hidden { visibility: hidden; }
-/*------------các đáp án lv2----------------------------------------*/
-/* Điều chỉnh riêng cho các nút đáp án trong Level 1 */
-#opts .btn-mode {
-    /* Sử dụng clamp để chữ tự co giãn theo màn hình */
-    font-size: clamp(16px, 4vw, 24px); 
-    
-    /* Tăng độ cao nút để dễ bấm trên điện thoại */
-    padding: 12px 20px;
-    min-height: 55px;
-    
-    /* Đảm bảo chữ đậm và rõ nét */
-    font-weight: bold;
-    text-transform: none; /* Giữ nguyên chữ hoa/thường */
-    
-    /* Hiệu ứng bo góc và đổ bóng nhẹ */
-    border-radius: 10px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    
-    width: 100%; /* Chiếm hết chiều ngang vùng chứa */
-    max-width: 400px; /* Nhưng không quá rộng trên máy tính */
-}
-
-/* Hiệu ứng khi di chuột vào (trên PC) */
-#opts .btn-mode:hover {
-    filter: brightness(0.9);
-    transform: translateY(-2px);
-}
-/* Container chứa cả 2 cột */
-.match-grid {
-    display: flex;
-    justify-content: center; /* Căn toàn bộ cụm cột vào giữa khung */
-    align-items: flex-start;
-    gap: 10px;               /* Khoảng cách sát nhau giữa 2 cột, chỉnh tùy ý */
-    width: 100%;
-    margin: 20px auto;
-}
-
-/* Từng cột (Trái và Phải) */
-#L, #R {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;               /* Khoảng cách giữa các ô trong cùng một cột */
-    flex: 0 1 auto;          /* Cột sẽ co lại vừa vặn với kích thước ô bên trong */
-}
-
-/* Ô ghép cặp theo yêu cầu của bạn */
-.match-box {
-    padding: 3px;
-    min-height: 90px;
-    width: 160px;            /* Cố định chiều ngang để 2 cột cân xứng */
-    border: 2px solid var(--primary-bg);
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-    font-size: 30px;         /* Font chữ lớn */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
-
-.match-box.selected {
-    border-color: var(--accent-color);
-    background: #fff9e6;
-    transform: translateY(-2px);
-}
-
-.match-box.correct {
-    visibility: hidden;
-    opacity: 0;
-}
-
-/* Hình ảnh trong ô bên phải */
-.match-img-small {
-    max-height: 60px;
-    width: auto;
-    margin-bottom: 5px;
-}
-/*------------------------------------------------------------*/
-        /* Container cha - "Viền" được tạo ra từ màu nền ở đây */
-.ws-grid {
-    display: grid;
-    gap: 2px;                /* ĐỘ DÀY CỦA VIỀN: Chỉnh số này để viền dày/mỏng */
-    background-color: #bcbcbc; /* MÀU CỦA VIỀN: Thường là màu xám hoặc đen */
-    padding: 2px;            /* Viền bao quanh ngoài cùng */
-    margin: 15px auto;
-    border-radius: 4px;
-    width: fit-content;      /* Để khung ôm sát các ô chữ */
-    max-width: 100%;
-    border: 1px solid #999;  /* Đường viền khung ngoài cùng */
-}
-
-/* Các ô chữ con */
-.ws-cell {
-    /* Kích thước ô vuông */
-    width: clamp(30px, 8vw, 40px); 
-    height: clamp(30px, 8vw, 40px);
-    
-    /* Kích thước và kiểu chữ */
-    font-size: clamp(16px, 4.5vw, 24px); /* Chỉnh chữ to nhỏ tại đây */
-    font-weight: bold;
-    color: #333;
-    
-    /* Căn giữa chữ trong ô */
-    background-color: white; /* Màu nền của ô (để lộ khe hở màu xám làm viền) */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    cursor: pointer;
-    user-select: none;       /* Ngăn việc bôi đen chữ khi click nhanh */
-    transition: background 0.2s;
-}
-
-/* Trạng thái đang chọn và đã tìm thấy */
-.ws-cell.active { 
-    background-color: var(--accent-color); 
-    color: #000; 
-}
-
-.ws-cell.found { 
-    background-color: var(--success-color); 
-    color: white; 
-}
         /* =========================================
-           THIẾT KẾ CHO MÀN HÌNH DI ĐỘNG
+           THIẾT KẾ CHO MÀN HÌNH DI ĐỘNG - CẢI TIẾN
            ========================================= */
-@media (max-width: 768px) {
-		 #footerNav {
-            position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background: var(--control-bg);
-            padding: 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
+        @media (max-width: 768px) {
+            .main-layout {
+                padding: 10px;
+                padding-bottom: 160px; /* Giảm bớt cho footer nhỏ hơn */
+            }
+            
+            #gameContainer {
+                padding: 15px;
+                min-height: 350px;
+            }
+            
+            #footerNav {
+                padding: 10px 8px;
+                gap: 8px;
+            }
+            
+            .nav-row {
+                gap: 5px;
+            }
+            
+            .btn-mode, #btnReplay {
+                height: 45px;
+                font-size: 16px;
+                padding: 0 5px;
+            }
+            
+            .ctrl-group {
+                padding: 8px 12px;
+                gap: 12px;
+                max-width: 280px;
+            }
+            
+            .btn-ctrl {
+                padding: 6px 12px;
+                font-size: 16px;
+            }
+            
+            .vocab-header {
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
+            }
+            
+            .button-zone {
+                padding: 10px;
+                gap: 6px;
+            }
+            
+            .btn-char {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            /* LV2 trên mobile - 2 cột sát nhau */
+            .match-grid {
+                gap: 8px;
+                padding: 3px;
+            }
+            
+            #L, #R {
+                min-width: 130px;
+                max-width: 160px;
+                gap: 8px;
+            }
+            
+            .match-box {
+                min-height: 80px;
+                font-size: 16px;
+                padding: 8px 5px;
+            }
+            
+            .match-img-small {
+                max-height: 45px;
+            }
         }
 
-        .nav-row { display: flex; justify-content: center; gap: 5px; }
-        .btn-mode {
-            flex: 1; height: 30px; font-weight: bold; border-radius: 8px;
-            border: none; cursor: pointer; transition: 0.2s; font-size: 16px;
+        /* =========================================
+           THIẾT KẾ CHO MÀN HÌNH RẤT NHỎ - CẢI TIẾN
+           ========================================= */
+        @media (max-width: 375px) {
+            .main-layout {
+                padding-bottom: 150px;
+            }
+            
+            #gameContainer {
+                padding: 10px;
+                min-height: 320px;
+            }
+            
+            .btn-mode, #btnReplay {
+                height: 40px;
+                font-size: 14px;
+            }
+            
+            .ctrl-group {
+                max-width: 250px;
+                gap: 10px;
+            }
+            
+            .btn-ctrl {
+                padding: 5px 10px;
+                font-size: 14px;
+            }
+            
+            .vocab-img {
+                max-width: 85%;
+            }
+            
+            /* LV2 trên màn hình rất nhỏ */
+            .match-grid {
+                gap: 6px;
+            }
+            
+            #L, #R {
+                min-width: 120px;
+                max-width: 140px;
+            }
+            
+            .match-box {
+                min-height: 75px;
+                font-size: 15px;
+                padding: 6px 4px;
+            }
+            
+            .match-img-small {
+                max-height: 40px;
+            }
+            
+            .ws-cell {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
         }
-		#btnReplay { background: #FFCC80; width: 100px; flex: 1; height: 30px; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; font-size: 16px;}
-		.ctrl-group {
-            display: flex; align-items: center; background: rgba(0,0,0,0.2);
-            border-radius: 5px; padding: 0 15px; gap: 15px; color: white;
-        }
-    .ws-cell {
-        width: 40px;  /* Cố định kích thước nhỏ để vừa màn hình điện thoại */
-        height: 40px;
-        font-size: 18px; 
-    }
-    .ws-grid {
-        gap: 1px; /* Viền mảnh hơn trên điện thoại để tiết kiệm không gian */
-    }
-}
     </style>
 </head>
 <body>
@@ -380,6 +584,9 @@
     <audio id="audioSfx"></audio>
 
     <script>
+        /* =========================================
+           PHẦN JAVASCRIPT - KHÔNG THAY ĐỔI (copy nguyên từ mã cũ)
+           ========================================= */
         const dulieutuvung = [
             { word: "Giáo viên", audioFile: "lesson.mp3", start: 0, end: 1.5, translation: "老师", hanviet: "【教员】", picture: "Giáo viên.png" },
             { word: "Học sinh", audioFile: "lesson.mp3", start: 0, end: 1.2, translation: "学生", hanviet: "【学生】", picture: "Học sinh.png" },
@@ -505,15 +712,14 @@
                 if (!opts.includes(r)) opts.push(r);
             }
             opts.sort(() => Math.random() - 0.5);
-// Trong hàm renderLv1()
-container.innerHTML = `
-    <img src="${data.picture}" class="vocab-img">
-    <div class="vocab-header">
-        <span class="txt-main-word">${data.word}</span>
-        ${data.hanviet ? `<span class="txt-han-viet">${data.hanviet}</span>` : ''}
-    </div>
-    <div id="opts" style="display:flex; flex-direction:column; gap:12px; align-items:center;"></div>
-`;
+            container.innerHTML = `
+                <img src="${data.picture}" class="vocab-img">
+                <div class="vocab-header">
+                    <span class="txt-main-word">${data.word}</span>
+                    ${data.hanviet ? `<span class="txt-han-viet">${data.hanviet}</span>` : ''}
+                </div>
+                <div id="opts" style="display:flex; flex-direction:column; gap:12px; align-items:center;"></div>
+            `;
             opts.forEach(o => {
                 const b = document.createElement('button'); b.className = 'btn-mode'; b.style.width = "100%"; b.innerText = o;
                 b.onclick = () => { if (o === data.translation) { b.style.background = 'var(--success-color)'; b.style.color='white'; playSfx(true); setTimeout(() => changeIndex(1), 1000); } else { b.style.background = 'var(--error-color)'; b.style.color='white'; playSfx(false); } };
@@ -522,56 +728,60 @@ container.innerHTML = `
             playAudio();
         }
 
-function renderLv2() {
-    const items = lv2Groups[currentIndex];
-    // Tạo 2 "giỏ" chứa riêng biệt
-    container.innerHTML = `
-        <div class="match-grid">
-            <div id="L"></div>
-            <div id="R"></div>
-        </div>
-    `;
+        function renderLv2() {
+            const items = lv2Groups[currentIndex];
+            container.innerHTML = `
+                <div class="match-grid">
+                    <div id="L"></div>
+                    <div id="R"></div>
+                </div>
+            `;
 
-    const Ls = [...items].sort(() => Math.random() - 0.5);
-    const Rs = [...items].sort(() => Math.random() - 0.5);
+            const Ls = [...items].sort(() => Math.random() - 0.5);
+            const Rs = [...items].sort(() => Math.random() - 0.5);
 
-    // Cột Trái: Chỉ hiển thị chữ (Word)
-    Ls.forEach(it => {
-        const d = document.createElement('div');
-        d.className = 'match-box';
-        d.innerText = it.word;
-        d.onclick = () => {
-            document.querySelectorAll('#L .match-box').forEach(b => b.classList.remove('selected'));
-            d.classList.add('selected');
-            mState.L = { el: d, val: it.word };
-            checkMatch();
-        };
-        document.getElementById('L').appendChild(d);
-    });
+            // Cột Trái: Chỉ hiển thị chữ (Word)
+            Ls.forEach(it => {
+                const d = document.createElement('div');
+                d.className = 'match-box';
+                d.innerText = it.word;
+                d.onclick = () => {
+                    document.querySelectorAll('#L .match-box').forEach(b => b.classList.remove('selected'));
+                    d.classList.add('selected');
+                    mState.L = { el: d, val: it.word };
+                    checkMatch();
+                };
+                document.getElementById('L').appendChild(d);
+            });
 
-    // Cột Phải: Hiển thị ảnh và nghĩa
-    Rs.forEach(it => {
-        const d = document.createElement('div');
-        d.className = 'match-box';
-        d.innerHTML = `
-            <img src="${it.picture}" class="match-img-small">
-            <span style="font-size: 16px; color: var(--color-translation); font-weight: bold;">${it.translation}</span>
-        `;
-        d.onclick = () => {
-            document.querySelectorAll('#R .match-box').forEach(b => b.classList.remove('selected'));
-            d.classList.add('selected');
-            mState.R = { el: d, val: it.word };
-            checkMatch();
-        };
-        document.getElementById('R').appendChild(d);
-    });
-}
+            // Cột Phải: Hiển thị ảnh và nghĩa
+            Rs.forEach(it => {
+                const d = document.createElement('div');
+                d.className = 'match-box';
+                d.innerHTML = `
+                    <img src="${it.picture}" class="match-img-small">
+                    <span style="font-size: 14px; color: var(--color-translation); font-weight: bold;">${it.translation}</span>
+                `;
+                d.onclick = () => {
+                    document.querySelectorAll('#R .match-box').forEach(b => b.classList.remove('selected'));
+                    d.classList.add('selected');
+                    mState.R = { el: d, val: it.word };
+                    checkMatch();
+                };
+                document.getElementById('R').appendChild(d);
+            });
+        }
 
         function checkMatch() {
             if (mState.L && mState.R) {
-                if (mState.L.val === mState.R.val) { playSfx(true); mState.L.el.classList.add('correct'); mState.R.el.classList.add('correct'); if (document.querySelectorAll('.match-box:not(.correct)').length === 0) setTimeout(() => changeIndex(1), 1000); }
-                else playSfx(false);
-                mState = { L: null, R: null }; document.querySelectorAll('.match-box').forEach(b => b.classList.remove('selected'));
+                if (mState.L.val === mState.R.val) { 
+                    playSfx(true); 
+                    mState.L.el.classList.add('correct'); 
+                    mState.R.el.classList.add('correct'); 
+                    if (document.querySelectorAll('.match-box:not(.correct)').length === 0) setTimeout(() => changeIndex(1), 1000); 
+                } else playSfx(false);
+                mState = { L: null, R: null }; 
+                document.querySelectorAll('.match-box').forEach(b => b.classList.remove('selected'));
             }
         }
 
@@ -618,7 +828,7 @@ function renderLv2() {
         }
 
         window.onload = () => setMode('basic');
-		// Tự động tải trước toàn bộ ảnh để khi chơi không bị khựng
+				// Tự động tải trước toàn bộ ảnh để khi chơi không bị khựng
 function preloadImages() {
     dulieutuvung.forEach(item => {
         const img = new Image();

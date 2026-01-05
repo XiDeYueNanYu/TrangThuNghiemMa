@@ -618,6 +618,14 @@ function renderLv2() {
         }
 
         window.onload = () => setMode('basic');
+		// Tự động tải trước toàn bộ ảnh để khi chơi không bị khựng
+function preloadImages() {
+    dulieutuvung.forEach(item => {
+        const img = new Image();
+        img.src = item.picture;
+    });
+}
+window.addEventListener('load', preloadImages);
     </script>
 </body>
 </html>

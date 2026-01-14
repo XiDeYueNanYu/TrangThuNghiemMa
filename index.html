@@ -363,8 +363,13 @@
         }
 
         /* Mobile styles */
-@media (max-width: 768px) { 
-    #vocabContainer {
+        @media (max-width: 768px) { 
+            .content-box { font-size: 19px; padding: 20px; line-height: 3.5; }
+            #infoBox { width: 90%; font-size: 40px; }
+            #contactBox { width: 90%; font-size: 14px; }
+            
+            /* SỬA LỖI MA TRẬN TẠI ĐÂY */
+#vocabContainer {
         max-width: 100%;                /* Chiếm hết chiều rộng màn hình */
         padding: 10px 5px;              /* Giảm padding ngang để rộng hơn */
     }
@@ -399,7 +404,7 @@
         padding: 8px 10px; 
         font-size: 16px; 
     }
-}
+        }
     </style>
 </head>
 <body>

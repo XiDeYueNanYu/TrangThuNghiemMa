@@ -3,343 +3,1209 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luyện Tập Thảo Thư</title>
+    <title>学习越南语请联系Wx:XiDeYueNanYu</title>
     <style>
-        :root {
-            --primary-color: #8B4513;
-            --accent-color: #D2B48C;
-            --bg-color: #383135;
-            --success: #27ae60;
-            --error: #e74c3c;
-        }
-
-        * { box-sizing: border-box; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
-        
         body {
-            background-color: var(--bg-color);
-            margin: 0; padding: 20px;
-            padding-bottom: 180px; /* Khoảng trống để không bị thanh nổi che */
-            min-height: 100vh;
+            background-color: #f6faf7;
+            margin-bottom: 60px;
         }
-
-        .container {
-            max-width: 1000px; margin: 0 auto; background: white;
-            border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            padding: 20px; min-height: 400px;
-        }
-
-        /* ---------------------------------------------------------
-           1. MÀU SẮC Ô MA TRẬN KHI KHÔNG CÓ ẢNH (FALLBACK)
-           --------------------------------------------------------- */
-        .hanzi-cell .fallback-text {
-            font-size: 40px;
-            color: #545B47;              /* <-- MÀU CHỮ HÁN thay thế */
-            background-color: #E9E7CD;   /* <-- MÀU NỀN CỦA Ô khi không có ảnh */
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* ---------------------------------------------------------
-           2. KHOẢNG CÁCH CỤM TRẮC NGHIỆM SO VỚI LỀ TRÊN
-           --------------------------------------------------------- */
-        #quizSection { 
-            display: none; 
-            flex-direction: column; 
-            align-items: center; 
+        #infoBox { 
             width: 100%; 
-            margin-top: 20px;           /* <-- ĐIỀU CHỈNH KHOẢNG CÁCH LỀ TRÊN TẠI ĐÂY (Vd: 20px, 50px...) */
+            max-width: 700px;
+            height: 100px; 
+            margin: 0 auto; 
+            border: 1px solid #88a5a2; 
+            background: #6b8f8b; 
+            color: #ffffff; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: clamp(40px, 5vw, 80px);
+            font-weight: bold;
         }
-
-        /* Mã nguồn bổ trợ khác */
-        textarea {
-            width: 100%; height: 80px; padding: 15px;
-            border: 2px solid var(--accent-color); border-radius: 10px;
-            font-size: 18px; background: #FFF8DC; margin-bottom: 20px;
+        #contactBox { 
+            width: 100%; 
+            max-width: 700px;
+            height: 45px; 
+            margin: 0px auto; 
+            border: 1px solid #88a5a2; 
+            background: #6b8f8b; 
+            color: #f4f8a6; 
+            display: flex; 
+            align-items: center; 
+            justify-content: left; 
+            padding-left: 20px;
+            font-size: clamp(12px, 2vw, 15px); 
+            font-weight: bold;
         }
-
-        .matrix-grid {
-            display: grid; grid-template-columns: repeat(7, 100px);
-            gap: 0; border: 1px solid var(--accent-color);
-            width: fit-content; margin: 0 auto; background: white;
+        .image-frame {
+            max-width: 700px;
+            margin: 20px auto 0 auto;
+            border: 8px solid #88a5a2;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none;
+            overflow: hidden;
+        }
+        .image-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .content-box {
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 50px;
+            border: 8px solid #88a5a2;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 30px;
+            font-family: Arial;
+            color: #222322;
+            line-height: 3;
+            text-align: justify;
+        }
+        .translated-word {
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            line-height: 1.3;
+            background-color: #e6f0e7;
+            color: #000000;
+            padding: 4px 4px;
+            border-radius: 2px;
+        }
+        .translation {
+            position: absolute;
+            top: -29px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            background-color: #cfd8cf;
+            color: #313a2d;
+            padding: 4px 4px;
+            border-radius: 1px;
+            white-space: nowrap;
+            z-index: 1;
+            line-height: 1;
+        }
+        .original {
+            display: inline;
+            line-height: 1;
+        }
+		.floating-controls {
+			position: fixed;
+			bottom: 80px;
+			right: 20px;
+			background-color: #f0f0f0;
+			padding: 10px;
+			border-radius: 5px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+			text-align: center;
+			display: block;
+			z-index: 1000;
+		}
+        #audioPlayer {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .time-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .time-box-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .floating-controls p#timeDisplay {
+            font-size: 28px;
+            color: #FFFFFF;
+            background-color: #000000;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0;
+        }
+        .floating-controls .time-box {
+            font-size: 16px;
+            color: #FFFFFF;
+            background-color: #555555;
+            padding: 5px 10px;
+            border-radius: 5px;
+            min-width: 60px;
+        }
+        .tua-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .control-button {
+            width: 50px;
+            height: 50px;
+            background-color: #363535;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .control-button:disabled {
+            background-color: #888888;
+            cursor: not-allowed;
+        }
+        .control-button:hover:not(:disabled) {
+            background-color: #000000;
+        }
+        .pause-play-button {
+            background-color: #FF4500;
+        }
+        .pause-play-button:hover {
+            background-color: #CC3700;
+        }
+        .toggle-button {
+            background-color: #4682B4;
+        }
+        .toggle-button:hover {
+            background-color: #36648B;
+        }
+        .loop-button {
+            background-color: #3c923c;
+        }
+        .loop-button:hover {
+            background-color: #347d34;
+        }
+        .clear-button {
+            background-color: #bc3f13;
+        }
+        .clear-button:hover {
+            background-color: #d15124;
+        }
+        .active {
+            background-color: #ffffff; 
+            border-radius: 5px;
         }
         
-        .hanzi-cell {
-            width: 100px; height: 100px; border: 0.5px solid #b6d7a8;
-            display: flex; align-items: center; justify-content: center;
+        #quizContainer {
+            display: none;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0px auto;
+            padding: 10px;
+            color: #88a5a2;
+            font-size: 20px;
+            font-weight: bold;
         }
-        .hanzi-cell img { width: 100%; height: 100%; object-fit: contain; }
-
-        /* Floating Bottom Menu */
-        .floating-menu {
-            position: fixed; bottom: 20px; left: 50%;
+        .question {
+            margin-bottom: 20px;
+            padding: 18px;
+            color: #21292c;
+            border: 5px solid #88a5a2;
+            border-radius: 10px;
+            background-color: #ffffff;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 15px 0;
+            cursor: pointer;
+            color: #21292c;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            display: none;
+            border: 5px solid #88a5a2;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #ffffff;
+            color: #007a33;
+        }
+        .wrong-answer {
+            color: #f65936;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        #submitQuiz {
+            font-family: Arial, sans-serif;
+            padding: 10px 20px;
+			margin-bottom: 20px;
+            border: 3px solid #88a5a2;
+            background-color: #ff5a36;
+            border-radius: 5px;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #submitQuiz:hover {
+            background-color: #ff844a;
+        }
+        .floating-mode-bar {
+            position: fixed;
+            bottom: 0px;
+            left: 50%;
             transform: translateX(-50%);
-            z-index: 3000; width: 95%; max-width: 500px;
-            display: flex; flex-direction: column; gap: 10px;
+            background-color: #6b8f8b;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0px 5px rgba(0, 0, 0, 1);
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            width: 100%;
+            max-width: 900px;
+        }
+        .mode-button {
+            padding: 10px 20px;
+            border: 2px solid #c3d2d0;
+            background: #d2dddc;
+            color: #202a29;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: border-color 0.5s;
+        }
+        .mode-button.active {
+            border: 2px solid #ffffff;
+            background: #f9f9f9;
+            color: #202a29;
         }
 
-        /* ---------------------------------------------------------
-           3. KÍCH THƯỚC THANH ĐIỀU HƯỚNG TRẮC NGHIỆM (THANH NỔI)
-           --------------------------------------------------------- */
-#quizNavArea {
-    display: none; /* Sẽ được JS chuyển thành flex */
-    background: rgba(255, 255, 255, 0.95);
-    padding: 10px 20px;
-    border-radius: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    
-    /* Căn giữa các phần tử bên trong thanh */
-    align-items: center; 
-    justify-content: space-between;
-    
-    border: 1px solid var(--accent-color);
-    
-    /* CĂN GIỮA CHÍNH THANH NÀY */
-    width: 80%;           /* Độ rộng bạn đã chọn */
-    margin: 0 auto;       /* Đẩy lề trái và phải tự động để vào giữa */
-}
+        /* 词汇 (Word Search) Styles */
+        #vocabContainer {
+            display: none;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #88a5a2;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .ws-grid {
+            display: grid; /* Luôn đảm bảo là grid */
+            gap: 2px;
+            background-color: #bcbcbc;
+            padding: 2px;
+            margin: 15px auto;
+            border-radius: 4px;
+            width: fit-content;
+            border: 2px solid #88a5a2;
+            overflow: hidden;
+        }
+        .ws-cell {
+            width: 40px;
+            height: 40px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .ws-cell.active { background-color: #FFD306; color: #000; }
+        .ws-cell.found { background-color: #93c47d; color: white; }
 
-        .nav-arrow {
-            background: #322c2f; color: white; border: none;
-            width: 40px; height: 40px;  /* <-- KÍCH THƯỚC NÚT < và > */
-            border-radius: 50%; cursor: pointer; font-weight: bold;
+        .hints-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px auto;
+        }
+        .hint-item {
+            background-color: #f8fcf8;
+            color: #2E7D32;
+            font-size: 16px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #a5d6a7;
+            text-align: center;
+            min-width: 100px;
+        }
+        .hint-item.found {
+            background-color: #93c47d;
+            color: white;
+            border-color: #6aa84f;
         }
 
-        /* Main Action Buttons */
-        .main-buttons {
-            background: rgba(255, 255, 255, 0.98);
-            padding: 10px 15px; border-radius: 50px;
-            display: flex; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border: 1px solid #ddd;
-        }
-
-        .main-buttons button {
-            flex: 1; padding: 12px 5px; border: none; border-radius: 25px;
-            font-weight: bold; cursor: pointer; color: white; transition: 0.2s;
-            font-size: 13px; text-transform: uppercase;
-        }
-
-        #btnCreate { background: #322c2f; }
-        #btnCapture { background: #322c2f; }
-        #btnQuiz { background: #322c2f; }
-
-        /* Quiz UI Elements */
-        .quiz-card {
-            aspect-ratio: 1 / 1; 
-            width: 100%; max-width: 300px;
-            margin: 0 auto 20px auto;
-            border: 3px solid var(--accent-color); border-radius: 15px;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
-        .quiz-card img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
-
-        .options-container { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 350px; }
-        .option-btn {
-            padding: 14px; font-size: 24px; border: 2px solid #eee;
-            border-radius: 12px; background: #fff; cursor: pointer;
-        }
-        .option-btn.correct { background: var(--success) !important; color: white; }
-        .option-btn.wrong { background: var(--error) !important; color: white; }
-
-        /* Responsive Mobile */
-        @media (max-width: 768px) {
-            .matrix-grid { grid-template-columns: repeat(7, 1fr) !important; width: 100% !important; }
-            .hanzi-cell { width: auto !important; height: auto !important; aspect-ratio: 1/1; }
-            .hanzi-cell .fallback-text { font-size: 5vw; }
-            .quiz-card { 
-        width: 70vw;           /* Chiếm 70% chiều ngang màn hình */
-        height: auto;          /* Để height tự động tính toán theo aspect-ratio */
-        aspect-ratio: 1 / 1;   /* Ép khung luôn vuông tuyệt đối */
-        max-width: 280px;      /* Giới hạn kích thước tối đa để không quá to */
+        /* Mobile styles */
+@media (max-width: 768px) { 
+    #vocabContainer {
+        max-width: 100%;                /* Chiếm hết chiều rộng màn hình */
+        padding: 10px 5px;              /* Giảm padding ngang để rộng hơn */
     }
-            #quizSection { margin-top: 90px; } /* Lề trên trắc nghiệm trên mobile */
-        }
+
+    .ws-grid {
+        display: grid !important;
+        width: 100%;                    /* Stretch đầy chiều rộng */
+        gap: 2px;                       /* Gap nhỏ để vừa */
+        padding: 2px;
+        margin: 15px 0;                 /* Không auto để không căn giữa thừa */
+        aspect-ratio: auto;             /* Không ép ratio cho grid, để tự điều chỉnh */
+    }
+
+    .ws-cell {
+        aspect-ratio: 1 / 1;            /* ÉP Ô VUÔNG: width = height */
+        width: auto;                    /* Để grid chia 1fr tự động */
+        height: auto;                   /* Height theo width nhờ aspect-ratio */
+        font-size: clamp(12px, 3.5vw, 16px); /* Font nhỏ hơn để chữ vừa ô vuông */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;                     /* Loại bỏ padding thừa */
+    }
+
+    /* Nếu font vẫn to quá, có thể thêm */
+    .ws-cell span {                     /* Nếu chữ bị cắt, wrap hoặc scale */
+        font-size: inherit;
+        line-height: 1;
+    }
+
+    .mode-button { 
+        padding: 8px 10px; 
+        font-size: 16px; 
+    }
+}
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <div id="mainView">
-            <h1 style="color:var(--primary-color); text-align:center; font-size:1.2rem;">TẬP TỰ THẢO THƯ</h1>
-            <textarea id="hanziInput" placeholder="Nhập chữ Hán tại đây...">書法藝術</textarea>
-            <div id="matrixContainer"><div id="matrixContent"></div></div>
+    <div id="infoBox">习得越南语</div>
+    <div id="contactBox">讲师-阮玉煌 | Weixin：XiDeYueNanYu</div>
+    <div id="contentContainer">
+        <div class="image-frame" id="imageFrame">
+            <img id="contentImage" src="" alt="Content Image">
         </div>
-
-        <div id="quizSection">
-            <div class="quiz-card" id="quizImageContainer"></div>
-            <div class="options-container" id="quizOptions"></div>
+        <div class="content-box" id="content"></div>
+    </div>
+    <div id="quizContainer">
+        <h1>回答下面问题</h1>
+        <form id="quizForm">
+            <div id="questions"></div>
+            <button type="button" id="submitQuiz" onclick="checkAnswers()">提交</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <div id="vocabContainer">
+        <div class="vocab-navigation" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px;">
+            <button class="nav-button" id="prevVocab" style="padding: 10px 20px; border: 2px solid #88a5a2; background: #d2dddc; border-radius: 5px; font-weight: bold;">◀ 上一组</button>
+            <span id="vocabProgress" style="font-size: 20px; color: #ff7f50;"></span>
+            <button class="nav-button" id="nextVocab" style="padding: 10px 20px; border: 2px solid #88a5a2; background: #d2dddc; border-radius: 5px; font-weight: bold;">下一组 ▶</button>
         </div>
+        <div class="lv3-title" id="lv3Title" style="text-align: center; color: #2E7D32; margin-bottom: 10px; background: #f0f8f0; padding: 10px; border-radius: 10px;">在网格中找出以下词语</div>
+        <div id="wsGrid" class="ws-grid"></div>
+        <div class="hints-container" id="hintsContainer"></div>
     </div>
 
-    <div class="floating-menu">
-        <div id="quizNavArea">
-            <button class="nav-arrow" id="prevQuiz">&lt;</button>
-            <div class="quiz-counter" style="font-weight: bold;">
-                Câu <input type="number" id="currentIdxInput" min="1" style="width:45px; text-align:center; border:1px solid #ccc;">
-                / <span id="totalQuiz">0</span>
+    <div class="floating-controls" id="floatingControls">
+        <audio id="audioPlayer" src="lesson.mp3" controls></audio>
+        <div class="time-row">
+            <p id="timeDisplay">00:00</p>
+            <div class="time-box-group">
+                <span class="time-box" id="loopStart">--:--</span>
+                <span class="time-box" id="loopEnd">--:--</span>
             </div>
-            <button class="nav-arrow" id="nextQuiz">&gt;</button>
+            <div class="button-group">
+                <button class="control-button loop-button" id="loopButton">听</button>
+                <button class="control-button clear-button" id="clearButton">删</button>
+            </div>
         </div>
-
-        <div class="main-buttons">
-            <button id="btnCreate">TẠO</button>
-            <button id="btnCapture">CHỤP</button>
-            <button id="btnQuiz">TRẮC NGHIỆM</button>
+        <div class="tua-buttons">
+            <button class="control-button" id="rewind5sButton">-5s</button>
+            <button class="control-button" id="rewind1sButton">-1s</button>
+            <button class="control-button" id="forward1sButton">+1s</button>
+            <button class="control-button" id="forward5sButton">+5s</button>
+        </div>
+        <div class="action-buttons">
+            <button class="control-button pause-play-button" id="pausePlayButton">播</button>
+            <button class="control-button toggle-button" id="toggleControlsButton">藏</button>
         </div>
     </div>
 
-    <audio id="sndDung" src="Dung.mp3"></audio>
-    <audio id="sndSai" src="Sai.mp3"></audio>
+    <div class="floating-mode-bar">
+        <button class="mode-button active" id="contentMode">内容</button>
+        <button class="mode-button" id="quizMode">回答问题</button>
+        <button class="mode-button" id="vocabMode">词汇</button>
+    </div>
 
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script>
-        const imageDir = 'image/';
-        const ext = '.png';
-        let quizList = [];
-        let currentQuizIdx = 0;
-        let validCharsWithImages = [];
+    <audio id="correctAudio" src="Dung.mp3"></audio>
+    <audio id="wrongAudio" src="Sai.mp3"></audio>
 
-        // HÀM TẠO MA TRẬN & KIỂM TRA ẢNH
-        async function generateMatrix() {
-            showView('main');
-            const rawText = document.getElementById('hanziInput').value.trim();
-            const content = document.getElementById('matrixContent');
-            content.innerHTML = '';
-            validCharsWithImages = []; 
+<script>
+    const textContentData = [`HƯỚNG DẪN XIN VISA SANG VIỆT NAM\nĐể có visa sang Việt Nam, bạn có thể xin trực tiếp tại Đại sứ quán (hoặc Lãnh sự quán) Việt Nam tại nước bạn, hoặc liên hệ với trường ở Việt Nam – nơi bạn sẽ đến học tập. Trường sẽ làm thủ tục để bạn được cấp visa.\nTrong trường hợp này, bạn cần gửi sang trường ở Việt Nam các giấy tờ sau:\n- Một bản lý lịch\n- Một bản photo hộ chiếu\n- Hai ảnh cỡ 4x6 cm\n- Hai đơn xin visa và đơn xin học ở Việt Nam\n* Lưu ý: Hộ chiếu của bạn phải còn thời hạn ít nhất 6 tháng.\nBạn cần gửi toàn bộ hồ sơ sang Việt Nam ít nhất 15 ngày trước thời điểm dự định đến.\nSau khi hồ sơ xin cấp visa được gửi đến Cục Xuất nhập cảnh, tại đó họ sẽ đồng ý cấp visa cho bạn. Họ sẽ fax thông tin về visa sang Sứ quán Việt Nam tại nước bạn đang xin visa. Trường học ở Việt Nam sẽ gửi cho bạn số fax đó qua email. Bạn mang số đó đến Sứ quán hoặc Lãnh sự quán nơi bạn đã đăng ký để nhận visa.\nBạn cần tự tìm chỗ ở, hoặc nhờ bạn bè hay trường ở Việt Nam hỗ trợ tìm chỗ ở.\nViệc còn lại của bạn là chuẩn bị mọi thứ cần thiết để sang Việt Nam sinh sống và học tập.\nHy vọng bạn sẽ gặp nhiều thuận lợi trong chuyến đi này!`];
+    
+const dictionary = {
+    "HƯỚNG DẪN": "指导,说明-[向引]",  
+    "visa": "签证",  
+    "Việt Nam": "越南",  
+    "xin": "申请",  
+    "trực tiếp": "直接",  
+    "Đại sứ quán": "大使馆",  
+    "Lãnh sự quán": "领事馆",  
+    "liên hệ": "联系",  
+    "trường": "学校",  
+    "học tập": "学习",  
+    "làm": "办理",  
+    "thủ tục": "手续",  
+    "cấp": "发, 供给",  
+    "trường hợp": "情况",  
+    "gửi": "寄送",  
+    "giấy tờ": "文件",  
+    "bản": "份-[本]",  
+    "lý lịch": "履历, 个人简历",  
+    "photo": "复印件",  
+    "hộ chiếu": "护照",  
+    "ảnh": "照片",  
+    "cỡ": "尺寸",  
+    "đơn": "申请表",  
+    "xin visa": "申请签证",  
+    "xin học": "申请学习",  
+    "lưu ý": "注意",  
+    "thời hạn": "期限",  
+    "ít nhất": "至少",  
+    "ngày": "天",  
+    "trước": "之前",  
+    "thời điểm": "时间点",  
+    "dự định": "预计",  
+    "đến": "到达",  
+    "hồ sơ": "档案",  
+    "Cục Xuất nhập cảnh": "出入境管理局",  
+    "đồng ý": "同意",  
+    "fax": "传真",  
+    "thông tin": "信息",  
+    "Sứ quán": "使馆",  
+    "số fax": "传真号",  
+    "email": "电子邮件",  
+    "mang": "携带",  
+    "đăng ký": "登记",  
+    "nhận": "领取",  
+    "tự": "自己",  
+    "tìm": "寻找",  
+    "chỗ ở": "住宿",  
+    "nhờ": "托, 拜托",  
+    "bạn bè": "朋友",  
+    "hỗ trợ": "帮助-[互助]",  
+    "việc": "事情",  
+    "còn lại": "剩下",  
+    "chuẩn bị": "准备",  
+    "mọi thứ": "一切",  
+    "cần thiết": "必要",  
+    "sinh sống": "生活",  
+    "hy vọng": "希望",  
+    "gặp": "遇到",  
+    "thuận lợi": "顺利",  
+    "chuyến đi": "旅程"  
+};
 
-            if (!rawText) return;
+    const quizData = [
+        {
+            question: "Theo bài đọc, người xin visa cần gửi hồ sơ đến đâu để được cấp visa?",
+            options: ["Bộ Giáo dục và Đào tạo Việt Nam", "Cơ quan Công an tại Việt Nam", "Cục Xuất nhập cảnh Việt Nam", "Đại sứ quán Việt Nam ở nước sở tại"],
+            correct: "Cục Xuất nhập cảnh Việt Nam"
+        },
+        {
+            question: "Điều kiện nào bắt buộc đối với hộ chiếu của người xin visa?",
+            options: ["Phải có ít nhất 3 trang trắng", "Phải được dịch công chứng sang tiếng Việt", "Phải còn thời hạn tối thiểu 6 tháng", "Phải có visa của nước thứ ba"],
+            correct: "Phải còn thời hạn tối thiểu 6 tháng"
+        },
+        {
+            question: "Tại sao cần gửi hồ sơ xin visa ít nhất 15 ngày trước ngày dự định đến Việt Nam?",
+            options: ["Để tránh bị trễ học kỳ mới", "Để có thời gian chuẩn bị hành lý", "Vì đó là yêu cầu bắt buộc trong quá trình xét duyệt", "Để trường có thời gian đặt vé máy bay cho sinh viên"],
+            correct: "Vì đó là yêu cầu bắt buộc trong quá trình xét duyệt"
+        },
+        {
+            question: "Thông tin nào sau đây đúng về việc nhận visa?",
+            options: ["Người xin visa sẽ được gửi visa qua đường bưu điện", "Visa được cấp trực tiếp tại trường học Việt Nam", "Trường học sẽ gửi bản in visa cho người học", "Người xin visa cần đến Đại sứ quán để nhận visa sau khi có số fax"],
+            correct: "Người xin visa cần đến Đại sứ quán để nhận visa sau khi có số fax"
+        },
+        {
+            question: "Theo bài, hình thức hỗ trợ nào được trường học ở Việt Nam cung cấp?",
+            options: ["Tìm kiếm chỗ ở nếu người học cần", "Trả phí visa cho sinh viên", "Đặt vé máy bay khứ hồi", "Hỗ trợ học phí năm đầu tiên"],
+            correct: "Tìm kiếm chỗ ở nếu người học cần"
+        },
+        {
+            question: "Mục đích chính của văn bản trên là gì?",
+            options: ["Quảng bá hệ thống giáo dục Việt Nam đến sinh viên nước ngoài", "Hướng dẫn các bước cụ thể để xin visa du lịch Việt Nam", "Giới thiệu những loại hình chỗ ở tại Việt Nam", "Cung cấp quy trình xin visa du học Việt Nam một cách rõ ràng"],
+            correct: "Cung cấp quy trình xin visa du học Việt Nam một cách rõ ràng"
+        },
+        {
+            question: "Từ “hồ sơ” trong bài gần nghĩa nhất với từ nào sau đây?",
+            options: ["Chứng minh thư", "Giấy tờ cần nộp", "Lý lịch cá nhân", "Sổ hộ khẩu"],
+            correct: "Giấy tờ cần nộp"
+        },
+        {
+            question: "Theo bài, yếu tố nào KHÔNG nằm trong bộ hồ sơ xin visa?",
+            options: ["Một bản lý lịch", "Một bản sao học bạ", "Hai ảnh cỡ 4x6", "Hai đơn xin visa và đơn xin học"],
+            correct: "Một bản sao học bạ"
+        },
+        {
+            question: "Thái độ của tác giả trong đoạn kết của bài là gì?",
+            options: ["Trung lập và thông báo", "Mỉa mai và chỉ trích", "Lạc quan và khích lệ", "Lo lắng và thận trọng"],
+            correct: "Lạc quan và khích lệ"
+        },
+        {
+            question: "Điều gì xảy ra ngay sau khi Cục Xuất nhập cảnh đồng ý cấp visa?",
+            options: ["Visa được gửi về nhà người xin", "Số fax được gửi đến Đại sứ quán Việt Nam", "Người xin visa phải đến trường nộp học phí", "Đại sứ quán gọi điện trực tiếp cho người xin"],
+            correct: "Số fax được gửi đến Đại sứ quán Việt Nam"
+        },
+        {
+            question: "Dòng nào sau đây mô tả đúng quy trình cấp visa theo bài?",
+            options: ["Trường học → Người học → Cục Xuất nhập cảnh → Đại sứ quán", "Người học → Trường học → Cục Xuất nhập cảnh → Đại sứ quán", "Người học → Đại sứ quán → Trường học → Cục Xuất nhập cảnh", "Trường học → Cục Xuất nhập cảnh → Người học → Đại sứ quán"],
+            correct: "Người học → Trường học → Cục Xuất nhập cảnh → Đại sứ quán"
+        },
+        {
+            question: "Cụm từ “việc còn lại của bạn” trong bài có hàm ý gì?",
+            options: ["Bạn không cần làm gì thêm", "Từ thời điểm đó, bạn phải tự lo toàn bộ mọi thứ", "Chỉ cần chuẩn bị những điều nhỏ nhặt", "Những bước quan trọng nhất đã hoàn tất, bạn cần chuẩn bị để sang Việt Nam"],
+            correct: "Những bước quan trọng nhất đã hoàn tất, bạn cần chuẩn bị để sang Việt Nam"
+        }
+    ];
 
-            const grid = document.createElement('div');
-            grid.className = 'matrix-grid';
-            const chars = rawText.replace(/\s/g, '').split('');
+    // ───────────────────────────────────────────────
+    //          WORD SEARCH VARIABLES & FUNCTIONS
+    // ───────────────────────────────────────────────
+    const vocabList = Object.keys(dictionary);
+    let currentVocabIndex = 0;
+    let lv3Groups = [];
+    let wsStart = null;
+    let foundWordsInCurrentGroup = new Set();
 
-            for (const char of chars) {
-                const cell = await createCell(char);
-                grid.appendChild(cell);
+    function generateGroups(size) {
+        // Xáo trộn danh sách từ
+        let pool = vocabList.map(k => ({ word: k, translation: dictionary[k] })).sort(() => Math.random() - 0.5);
+        let groups = [];
+        for (let i = 0; i < pool.length; i += size) {
+            let group = pool.slice(i, i + size);
+            // Nếu nhóm cuối có ít hơn size, thêm từ các từ ngẫu nhiên từ pool để đủ size (không lặp trong nhóm)
+            if (group.length < size) {
+                let remaining = size - group.length;
+                let available = pool.filter(item => !group.some(g => g.word === item.word));
+                available.sort(() => Math.random() - 0.5); // Xáo trộn để random
+                group = group.concat(available.slice(0, remaining));
             }
-            // Điền ô trống cho đủ hàng 7
-            const remainder = chars.length % 7;
-            if (remainder !== 0) {
-                for (let i = 0; i < 7 - remainder; i++) grid.appendChild(await createCell('', true));
+            groups.push(group);
+        }
+        return groups;
+    }
+
+    function resetCurrentGroupTracking() {
+        foundWordsInCurrentGroup.clear();
+    }
+
+    function checkIfGroupCompleted(words) {
+        return words.every(w => foundWordsInCurrentGroup.has(w));
+    }
+
+    function renderLv3() {
+        resetCurrentGroupTracking();
+
+        const wsGrid = document.getElementById('wsGrid');
+        const hintsContainer = document.getElementById('hintsContainer');
+        const items = lv3Groups[currentVocabIndex];
+        const words = items.map(it => it.word.replace(/\s/g, '').toUpperCase());
+
+        // Tính toán độ dài từ lớn nhất
+        const maxWordLength = Math.max(...words.map(w => w.length));
+
+        // Số cột cố định là 10
+        const cols = 10;
+
+        // Số hàng tùy vào độ dài từ
+        let rows;
+        if (maxWordLength <= 10) {
+            rows = 10;
+        } else {
+            rows = maxWordLength + 1;
+        }
+
+        const grid = Array(rows).fill().map(() => Array(cols).fill(''));
+
+        words.forEach(w => {
+            let placed = false;
+            let attempts = 0;
+            const maxAttempts = 100;
+
+            while (!placed && attempts < maxAttempts) {
+                attempts++;
+
+                // Chọn hướng: 50% dọc, 50% ngang
+                let isVertical = Math.random() < 0.5;
+
+                let startRow, startCol;
+
+                if (isVertical) {
+                    // Đặt dọc: cần đủ hàng cho từ
+                    if (w.length > rows) {
+                        isVertical = false; // Nếu từ quá dài, chuyển sang ngang
+                    } else {
+                        startRow = Math.floor(Math.random() * (rows - w.length + 1));
+                        startCol = Math.floor(Math.random() * cols);
+                    }
+                } else {
+                    // Đặt ngang: cần đủ cột cho từ
+                    if (w.length > cols) {
+                        // Nếu từ quá dài cho ngang, chuyển sang dọc (nếu có thể)
+                        if (w.length <= rows) {
+                            isVertical = true;
+                            startRow = Math.floor(Math.random() * (rows - w.length + 1));
+                            startCol = Math.floor(Math.random() * cols);
+                        } else {
+                            // Không thể đặt, bỏ qua hoặc cắt bớt
+                            console.warn(`Từ "${w}" quá dài, không thể đặt.`);
+                            return;
+                        }
+                    } else {
+                        startRow = Math.floor(Math.random() * rows);
+                        startCol = Math.floor(Math.random() * (cols - w.length + 1));
+                    }
+                }
+
+                // Kiểm tra vị trí có hợp lệ
+                let valid = true;
+                for (let i = 0; i < w.length; i++) {
+                    let checkRow = isVertical ? startRow + i : startRow;
+                    let checkCol = isVertical ? startCol : startCol + i;
+                    if (checkRow >= rows || checkCol >= cols) {
+                        valid = false;
+                        break;
+                    }
+                    let char = grid[checkRow][checkCol];
+                    if (char !== '' && char !== w[i]) {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                // Nếu hợp lệ, đặt từ
+                if (valid) {
+                    for (let i = 0; i < w.length; i++) {
+                        let rr = isVertical ? startRow + i : startRow;
+                        let cc = isVertical ? startCol : startCol + i;
+                        grid[rr][cc] = w[i];
+                    }
+                    placed = true;
+                }
             }
-            content.appendChild(grid);
+
+            // Nếu không đặt được sau nhiều lần thử, ép đặt (ưu tiên ngang, cắt bớt nếu cần)
+            if (!placed) {
+                console.warn(`Không thể đặt từ "${w}" sau ${maxAttempts} lần thử, ép đặt...`);
+
+                const canPlaceHorizontal = w.length <= cols;
+                let startRow, startCol;
+
+                if (canPlaceHorizontal) {
+                    // Ép đặt ngang
+                    startRow = Math.floor(Math.random() * rows);
+                    startCol = Math.max(0, Math.floor(Math.random() * (cols - w.length + 1)));
+                    for (let i = 0; i < w.length; i++) {
+                        grid[startRow][startCol + i] = w[i];
+                    }
+                } else if (w.length <= rows) {
+                    // Ép đặt dọc
+                    startRow = Math.max(0, Math.floor(Math.random() * (rows - w.length + 1)));
+                    startCol = Math.floor(Math.random() * cols);
+                    for (let i = 0; i < w.length; i++) {
+                        grid[startRow + i][startCol] = w[i];
+                    }
+                } else {
+                    // Từ quá dài: cắt bớt và đặt ngang
+                    const truncatedWord = w.substring(0, cols);
+                    startRow = Math.floor(Math.random() * rows);
+                    startCol = 0;
+                    for (let i = 0; i < truncatedWord.length; i++) {
+                        grid[startRow][startCol + i] = truncatedWord[i];
+                    }
+                }
+            }
+        });
+
+        const alpha = "ABCDEGHIJKLMNOPQRSTUVXY";
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                if (grid[r][c] === '') {
+                    grid[r][c] = alpha[Math.floor(Math.random() * alpha.length)];
+                }
+            }
         }
 
-        async function createCell(char, isBlank = false) {
-            const cell = document.createElement('div');
-            cell.className = 'hanzi-cell';
-            const img = document.createElement('img');
-            img.src = isBlank ? `${imageDir}OTrong${ext}` : `${imageDir}${encodeURIComponent(char)}${ext}`;
-            
-            return new Promise((resolve) => {
-                img.onload = () => {
-                    if(!isBlank) validCharsWithImages.push(char);
-                    cell.appendChild(img);
-                    resolve(cell);
-                };
-                img.onerror = () => {
-                    if(!isBlank) cell.innerHTML = `<div class="fallback-text">${char}</div>`;
-                    resolve(cell);
-                };
-            });
+        wsGrid.innerHTML = '';
+        wsGrid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'ws-cell';
+                cell.innerText = grid[r][c];
+                cell.dataset.r = r;
+                cell.dataset.c = c;
+                cell.onclick = () => handleWSClick(cell, words);
+                wsGrid.appendChild(cell);
+            }
         }
 
-        // HÀM CHỤP ẢNH
-        function capture() {
-            showView('main');
-            html2canvas(document.getElementById('matrixContainer'), { scale: 2 }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'thao-thu.png';
-                link.href = canvas.toDataURL();
-                link.click();
-            });
+        hintsContainer.innerHTML = items.map(it => {
+            const key = it.word.replace(/\s/g, '').toUpperCase();
+            return `<div class="hint-item" id="h-${key}">${it.translation}</div>`;
+        }).join('');
+
+        document.getElementById('vocabProgress').textContent = `${currentVocabIndex + 1}/${lv3Groups.length}`;
+        document.getElementById('lv3Title').textContent = `在网格中找出以下词语 (${currentVocabIndex + 1}/${lv3Groups.length})`;
+
+        // Xóa thông báo cũ nếu có
+        const existingMessage = document.getElementById('completionMessage');
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+    }
+
+    function handleWSClick(cell, words) {
+        if (!wsStart) {
+            wsStart = cell;
+            cell.classList.add('active');
+            return;
         }
 
-        // HÀM TRẮC NGHIỆM
-        function startQuiz() {
-            const uniqueValidChars = [...new Set(validCharsWithImages)];
-            if (uniqueValidChars.length === 0) return alert("Vui lòng nhấn TẠO trước!");
+        let r1 = +wsStart.dataset.r, c1 = +wsStart.dataset.c;
+        let r2 = +cell.dataset.r, c2 = +cell.dataset.c;
+        let path = [];
 
-            quizList = uniqueValidChars.map(char => ({ 
-                char: char,
-                options: generateOptions(char, uniqueValidChars)
-            }));
-            quizList.sort(() => Math.random() - 0.5); // Đảo lộn trật tự câu hỏi
-            
-            currentQuizIdx = 0;
-            document.getElementById('totalQuiz').textContent = quizList.length;
-            showView('quiz');
-            showQuestion();
+        if (r1 === r2) {
+            const min = Math.min(c1, c2), max = Math.max(c1, c2);
+            for (let i = min; i <= max; i++) {
+                path.push(document.querySelector(`[data-r="${r1}"][data-c="${i}"]`));
+            }
+        } else if (c1 === c2) {
+            const min = Math.min(r1, r2), max = Math.max(r1, r2);
+            for (let i = min; i <= max; i++) {
+                path.push(document.querySelector(`[data-r="${i}"][data-c="${c1}"]`));
+            }
         }
 
-        function generateOptions(correctChar, allChars) {
-            let opts = [correctChar];
-            let pool = allChars.filter(c => c !== correctChar).sort(() => Math.random() - 0.5);
-            opts.push(...pool.slice(0, 2));
-            while(opts.length < 3) opts.push("?");
-            return opts.sort(() => Math.random() - 0.5);
-        }
+        if (path.length > 1) {
+            let str = path.map(e => e.innerText).join('');
+            let rev = str.split('').reverse().join('');
+            let foundWord = null;
 
-        function showQuestion() {
-            const current = quizList[currentQuizIdx];
-            document.getElementById('currentIdxInput').value = currentQuizIdx + 1;
-            
-            const imgCont = document.getElementById('quizImageContainer');
-            imgCont.innerHTML = `<img src="${imageDir}${encodeURIComponent(current.char)}${ext}">`;
+            if (words.includes(str)) foundWord = str;
+            else if (words.includes(rev)) foundWord = rev;
 
-            const optCont = document.getElementById('quizOptions');
-            optCont.innerHTML = '';
-            current.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = opt;
-                btn.onclick = () => checkAnswer(opt, current.char, btn);
-                optCont.appendChild(btn);
-            });
+            if (foundWord) {
+                document.getElementById('correctAudio').play();
+                path.forEach(e => e.classList.add('found'));
+                document.getElementById(`h-${foundWord}`).classList.add('found');
 
-            document.getElementById('prevQuiz').disabled = currentQuizIdx === 0;
-            document.getElementById('nextQuiz').disabled = currentQuizIdx === quizList.length - 1;
-        }
+                foundWordsInCurrentGroup.add(foundWord);
 
-        function checkAnswer(selected, correct, btn) {
-            if (selected === correct) {
-                btn.classList.add('correct');
-                document.getElementById('sndDung').play();
-                setTimeout(() => {
-                    if (currentQuizIdx < quizList.length - 1) {
-                        currentQuizIdx++;
-                        showQuestion();
-                    } else alert("Bạn đã hoàn thành chữ cuối cùng!");
-                }, 600);
+                if (checkIfGroupCompleted(words)) {
+                    setTimeout(() => {
+                        if (currentVocabIndex < lv3Groups.length - 1) {
+                            currentVocabIndex++;
+                            renderLv3();
+                        } else {
+                            // Hiển thị thông báo dưới hintsContainer thay vì alert
+                            const completionMessage = document.createElement('div');
+                            completionMessage.id = 'completionMessage';
+                            completionMessage.style.textAlign = 'center';
+                            completionMessage.style.marginTop = '20px';
+                            completionMessage.style.fontSize = '20px';
+                            completionMessage.style.color = '#2E7D32';
+                            completionMessage.style.fontWeight = 'bold';
+                            completionMessage.textContent = 'Chúc mừng bạn đã tìm được tất cả các từ vựng!';
+                            document.getElementById('hintsContainer').after(completionMessage);
+
+                            document.querySelectorAll('.ws-cell').forEach(c => {
+                                c.onclick = null;
+                                c.style.cursor = 'default';
+                            });
+                        }
+                    }, 1200);
+                }
             } else {
-                btn.classList.add('wrong');
-                document.getElementById('sndSai').play();
-                setTimeout(() => {
-                    btn.classList.remove('wrong');
-                    quizList[currentQuizIdx].options.sort(() => Math.random() - 0.5);
-                    showQuestion();
-                }, 600);
+                document.getElementById('wrongAudio').play();
             }
         }
 
-        // Điều hướng tự do
-        document.getElementById('prevQuiz').onclick = () => { if(currentQuizIdx > 0) { currentQuizIdx--; showQuestion(); }};
-        document.getElementById('nextQuiz').onclick = () => { if(currentQuizIdx < quizList.length - 1) { currentQuizIdx++; showQuestion(); }};
-        document.getElementById('currentIdxInput').onchange = (e) => {
-            let val = parseInt(e.target.value) - 1;
-            if (val >= 0 && val < quizList.length) { currentQuizIdx = val; showQuestion(); }
-            else e.target.value = currentQuizIdx + 1;
-        };
+        document.querySelectorAll('.ws-cell').forEach(c => c.classList.remove('active'));
+        wsStart = null;
+    }
 
-        function showView(view) {
-            const isQuiz = (view === 'quiz');
-            document.getElementById('mainView').style.display = isQuiz ? 'none' : 'block';
-            document.getElementById('quizSection').style.display = isQuiz ? 'flex' : 'none';
-            document.getElementById('quizNavArea').style.display = isQuiz ? 'flex' : 'none';
+    // ───────────────────────────────────────────────
+    //                  MODE SWITCHING
+    // ───────────────────────────────────────────────
+    document.getElementById('contentMode').onclick = () => {
+        showSection('contentContainer');
+        document.getElementById('floatingControls').style.display = 'block';
+    };
+
+    document.getElementById('quizMode').onclick = () => {
+        showSection('quizContainer');
+        document.getElementById('floatingControls').style.display = 'none';
+        loadQuiz();
+    };
+
+    document.getElementById('vocabMode').onclick = () => {
+        showSection('vocabContainer');
+        document.getElementById('floatingControls').style.display = 'none';
+        if (lv3Groups.length === 0) {
+            lv3Groups = generateGroups(6);
+            currentVocabIndex = 0;
         }
+        renderLv3();
+    };
 
-        document.getElementById('btnCreate').onclick = generateMatrix;
-        document.getElementById('btnCapture').onclick = capture;
-        document.getElementById('btnQuiz').onclick = startQuiz;
-    </script>
+    function showSection(id) {
+        ['contentContainer', 'quizContainer', 'vocabContainer'].forEach(s => {
+            document.getElementById(s).style.display = s === id ? 'block' : 'none';
+        });
+        document.querySelectorAll('.mode-button').forEach(b => {
+            b.classList.toggle('active', b.id === id.replace('Container', '') + 'Mode');
+        });
+    }
+
+    // ───────────────────────────────────────────────
+    //                  TEXT RENDERING
+    // ───────────────────────────────────────────────
+function renderText() {
+    let html = textContentData[0].replace(/\n/g, "<br>");
+    
+    // Sắp xếp key theo độ dài giảm dần để ưu tiên cụm dài trước
+    const sortedKeys = Object.keys(dictionary).sort((a, b) => b.length - a.length);
+    
+    // Lưu tất cả vị trí khớp để lọc chồng lấn
+    const matches = [];
+    
+    sortedKeys.forEach(key => {
+        // Regex tìm từ nguyên vẹn, cho phép dấu câu/khoảng trắng ở đầu/cuối
+        const regex = new RegExp(`(\\b|[^\\w\\s]|^)(${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})(\\b|[^\\w\\s]|$)`, 'gi');
+        let match;
+        while ((match = regex.exec(html)) !== null) {
+            const fullMatch = match[0];
+            const prefix = match[1] || '';
+            const word = match[2];
+            const suffix = match[3] || '';
+            const start = match.index + prefix.length;
+            const end = start + word.length;
+            
+            matches.push({
+                start,
+                end,
+                prefix,
+                word,
+                suffix,
+                translation: dictionary[key]
+            });
+        }
+    });
+    
+    // Sắp xếp theo vị trí bắt đầu
+    matches.sort((a, b) => a.start - b.start);
+    
+    // Lọc bỏ các match chồng lấn (giữ match dài nhất hoặc đầu tiên nếu trùng)
+    const filtered = [];
+    let lastEnd = -Infinity;
+    for (const m of matches) {
+        if (m.start >= lastEnd) {
+            filtered.push(m);
+            lastEnd = m.end;
+        }
+    }
+    
+    // Thay thế từ cuối về đầu để tránh lệch chỉ số
+    for (let i = filtered.length - 1; i >= 0; i--) {
+        const { start, end, prefix, word, suffix, translation } = filtered[i];
+        
+        const wrapped = `${prefix}<span class="translated-word">` +
+                        `<span class="translation">${translation}</span>` +
+                        `<span class="original">${word}</span>` +
+                        `</span>${suffix}`;
+        
+        html = html.slice(0, start - prefix.length) + wrapped + html.slice(end + suffix.length);
+    }
+    
+    document.getElementById('content').innerHTML = html;
+}
+
+    // ───────────────────────────────────────────────
+    //                     QUIZ
+    // ───────────────────────────────────────────────
+    function loadQuiz() {
+        const questionsDiv = document.getElementById('questions');
+        questionsDiv.innerHTML = '';
+
+        quizData.forEach((q, index) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question';
+
+            let html = `<p>${index + 1}. ${q.question}</p>`;
+
+            q.options.forEach((opt, i) => {
+                const id = `q${index}_${i}`;
+                html += `
+                    <label for="${id}">
+                        <input type="radio" name="question${index}" value="${opt}" id="${id}">
+                        ${opt}
+                    </label><br>
+                `;
+            });
+
+            qDiv.innerHTML = html;
+            questionsDiv.appendChild(qDiv);
+        });
+
+        const resultDiv = document.getElementById('result');
+        resultDiv.style.display = 'none';
+        resultDiv.innerHTML = '';
+    }
+
+    function checkAnswers() {
+    let score = 0;
+    const total = quizData.length;
+    let wrongAnswers = [];
+    
+    quizData.forEach((item, index) => {
+        const selected = document.querySelector(`input[name="question${index}"]:checked`);
+        if (selected) {
+            if (selected.value === item.correct) {
+                score++;
+            } else {
+                wrongAnswers.push({
+                    question: item.question,
+                    selected: selected.value,
+                    correct: item.correct
+                });
+            }
+        } else {
+            wrongAnswers.push({
+                question: item.question,
+                selected: "未选择",
+                correct: item.correct
+            });
+        }
+    });
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = `
+        <h3>YD-Visa-结果: ${score}/${total} 答案正确</h3>
+        <p>比例: ${(score/total * 100).toFixed(2)}%</p>
+    `;
+
+    if (wrongAnswers.length > 0) {
+        resultDiv.innerHTML += '<h4>错误答案:</h4>';
+        wrongAnswers.forEach((wrong) => {
+            const qIndex = quizData.findIndex(q => q.question === wrong.question) + 1;
+            resultDiv.innerHTML += `
+                <div class="wrong-answer">
+                    Câu ${qIndex}: ${wrong.question}<br>
+                    你的选择: ${wrong.selected} - 正确答案: ${wrong.correct}
+                </div>
+            `;
+        });
+    } else {
+        resultDiv.innerHTML += '<p>回答正确所有问题</p>';
+    }
+
+    resultDiv.scrollIntoView({ behavior: 'smooth' });
+    isSubmitted = true;
+
+    // Phát âm thanh
+    if (score === quizData.length) {
+        document.getElementById('correctAudio').play();
+    } else {
+        document.getElementById('wrongAudio').play();
+    }
+}
+
+    // ───────────────────────────────────────────────
+    //                   AUDIO CONTROLS
+    // ───────────────────────────────────────────────
+    const audio = document.getElementById('audioPlayer');
+    const timeDisplay = document.getElementById('timeDisplay');
+    const loopStart = document.getElementById('loopStart');
+    const loopEnd = document.getElementById('loopEnd');
+    const loopButton = document.getElementById('loopButton');
+    const clearButton = document.getElementById('clearButton');
+    const rewind5sButton = document.getElementById('rewind5sButton');
+    const rewind1sButton = document.getElementById('rewind1sButton');
+    const forward1sButton = document.getElementById('forward1sButton');
+    const forward5sButton = document.getElementById('forward5sButton');
+    const pausePlayButton = document.getElementById('pausePlayButton');
+    const toggleControlsButton = document.getElementById('toggleControlsButton');
+    const tuaButtons = document.querySelector('.tua-buttons');
+    const timeBoxGroup = document.querySelector('.time-box-group');
+    const buttonGroup = document.querySelector('.button-group');
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateTimeDisplay() {
+        timeDisplay.textContent = formatTime(audio.currentTime);
+    }
+
+    let customLoopStart = null;
+    let customLoopEnd = null;
+    let clickCount = 0;
+    let isLooping = false;
+
+    const updateInterval = setInterval(updateTimeDisplay, 1000);
+
+    audio.ontimeupdate = () => {
+        updateTimeDisplay();
+        if (isLooping && customLoopStart !== null && customLoopEnd !== null) {
+            if (audio.currentTime >= customLoopEnd) {
+                audio.currentTime = customLoopStart;
+            }
+        }
+    };
+
+    timeDisplay.onclick = () => {
+        if (audio.paused) {
+            clickCount++;
+            if (clickCount === 1) {
+                customLoopStart = audio.currentTime;
+                loopStart.textContent = formatTime(customLoopStart);
+            } else if (clickCount === 2) {
+                customLoopEnd = audio.currentTime;
+                if (customLoopEnd <= customLoopStart) {
+                    customLoopEnd = null;
+                    loopEnd.textContent = "--:--";
+                } else {
+                    loopEnd.textContent = formatTime(customLoopEnd);
+                }
+                clickCount = 0;
+            }
+        }
+    };
+
+    rewind5sButton.onclick = () => {
+        if (!isLooping) {
+            audio.currentTime = Math.max(0, audio.currentTime - 5);
+            updateTimeDisplay();
+        }
+    };
+
+    rewind1sButton.onclick = () => {
+        if (!isLooping) {
+            audio.currentTime = Math.max(0, audio.currentTime - 1);
+            updateTimeDisplay();
+        }
+    };
+
+    forward1sButton.onclick = () => {
+        if (!isLooping) {
+            audio.currentTime += 1;
+            updateTimeDisplay();
+        }
+    };
+
+    forward5sButton.onclick = () => {
+        if (!isLooping) {
+            audio.currentTime += 5;
+            updateTimeDisplay();
+        }
+    };
+
+    pausePlayButton.onclick = () => {
+        if (audio.paused) {
+            audio.play();
+            pausePlayButton.textContent = "停";
+        } else {
+            audio.pause();
+            pausePlayButton.textContent = "播";
+        }
+    };
+
+    loopButton.onclick = () => {
+        if (customLoopStart !== null && customLoopEnd !== null) {
+            audio.currentTime = customLoopStart;
+            audio.play();
+            isLooping = true;
+            rewind5sButton.disabled = true;
+            rewind1sButton.disabled = true;
+            forward1sButton.disabled = true;
+            forward5sButton.disabled = true;
+        }
+    };
+
+    clearButton.onclick = () => {
+        customLoopStart = null;
+        customLoopEnd = null;
+        loopStart.textContent = "--:--";
+        loopEnd.textContent = "--:--";
+        clickCount = 0;
+        isLooping = false;
+        rewind5sButton.disabled = false;
+        rewind1sButton.disabled = false;
+        forward1sButton.disabled = false;
+        forward5sButton.disabled = false;
+    };
+
+    let controlsVisible = true;
+    toggleControlsButton.onclick = () => {
+        if (controlsVisible) {
+            timeDisplay.style.display = 'none';
+            tuaButtons.style.display = 'none';
+            pausePlayButton.style.display = 'none';
+            timeBoxGroup.style.display = 'none';
+            buttonGroup.style.display = 'none';
+            toggleControlsButton.textContent = "示";
+            controlsVisible = false;
+        } else {
+            timeDisplay.style.display = 'block';
+            tuaButtons.style.display = 'flex';
+            pausePlayButton.style.display = 'inline-flex';
+            timeBoxGroup.style.display = 'flex';
+            buttonGroup.style.display = 'flex';
+            toggleControlsButton.textContent = "藏";
+            controlsVisible = true;
+        }
+    };
+
+    audio.onpause = audio.onended = () => {
+        pausePlayButton.textContent = "播";
+    };
+
+    // ───────────────────────────────────────────────
+    //                     INIT
+    // ───────────────────────────────────────────────
+    renderText();
+    lv3Groups = generateGroups(6);
+</script>
 </body>
 </html>

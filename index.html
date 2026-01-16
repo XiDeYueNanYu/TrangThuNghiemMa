@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typography Audio Sync - Original Effect Restored</title>
+    <title>Typography Pro - Color Switch Logic</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -27,7 +27,6 @@
             white-space: nowrap;
         }
 
-        /* Logic bản dịch đồng bộ chân chữ */
         .word-wrapper {
             display: inline-flex; flex-direction: column; align-items: center;
             justify-content: flex-end; margin: 0 0.12em; vertical-align: bottom;
@@ -55,49 +54,58 @@
     <div id="master-container"></div>
 
     <script>
-        const DICTIONARY = {
-            "kế hoạch": "计划", "tiếng Việt": "越南语", "Câu lạc bộ": "俱乐部",
-            "thư viện": "图书馆", "nấu ăn": "做饭", "thể thao": "体育",
-            "ten nít": "网球", "Hôm nay": "今天"
+        // 1. TÙY CHỈNH MÀU SẮC
+        const COLOR_MAP = {
+            '@': '#ff4757', // Đỏ
+            '#': '#ffa502', // Cam
+            '$': '#2ed573', // Xanh lá
+            '&': '#eccc68', // Vàng
+            '%': '#ffffff'  // Khôi phục màu mặc định (Trắng)
         };
 
+        const DICTIONARY = {
+            "kế hoạch": "计划", "tiếng Việt": "越南语", "thư viện": "图书馆",
+            "nấu ăn": "做饭", "thể thao": "体育", "Hôm nay": "今天"
+        };
+
+        // Ví dụ: @Linda bắt đầu màu đỏ, gặp #kế hoạch đổi sang màu cam, gặp % quay về trắng
         const CONTENT = `
-            Linda
-tuần này 
-kế hoạch của cậu 
+            @Linda
+#tuần này 
+$kế hoạch của cậu 
 thế nào?
-Hôm nay 
-là thứ Hai nhỉ? 
-Hôm nay và ngày mai 
-mình học tiếng Việt 
-ở Viện. 
-Ngày kia 
-sẽ học Vẽ 
-ở Câu lạc bộ
-Ngày kìa 
-học Đàn bầu 
-ở nhà cô Tâm
-Còn thứ Sáu 
+#Hôm nay 
+là #thứ Hai %nhỉ? 
+#Hôm nay %và #ngày mai 
+mình học $tiếng Việt 
+ở $Viện. 
+#Ngày kia 
+sẽ học $Vẽ 
+ở $Câu lạc bộ
+#Ngày kìa 
+học $Đàn bầu 
+ở nhà @cô Tâm
+Còn #thứ Sáu 
 mình có hẹn 
-với cô giáo rồi
-Thứ Bảy và Chủ nhật 
-mình ở nhà
-Còn Mary 
+với @cô giáo %rồi
+#Thứ Bảy %và #Chủ nhật 
+mình ở $nhà
+Còn @Mary 
 thế nào?
-Mình cũng bận lắm
-Từ thứ Hai đến thứ Sáu 
-mình đọc sách 
-ở thư viện
-Thứ Bảy mình sẽ 
+Mình cũng @bận lắm
+Từ #thứ Hai %đến #thứ Sáu 
+mình #đọc sách 
+ở $thư viện
+#Thứ Bảy %mình sẽ 
 học nấu ăn 
-ở nhà chị Kim Anh
+ở nhà chị @Kim Anh
 Mình 
 thích nấu ăn lắm
 Còn
-Chủ nhật 
+#Chủ nhật 
 mình sẽ chơi thể thao một chút
 Thế à? 
-Mary 
+@Mary 
 biết chơi ten nít không?
 Biết
 Nhưng không giỏi lắm.
@@ -105,9 +113,9 @@ Nhưng không giỏi lắm.
 
         const CONFIG = {
             maxFontSize: 100,
-            lineSpacing: 2.2,
-            oldLineSizeMultiplier: 0.7, // Tỉ lệ dòng cũ so với dòng hiện tại
-            manualDuration: 38 
+            lineSpacing: 2.3,
+            oldLineMultiplier: 0.7,
+            manualDuration: 39 // Giây (0 là lấy theo audio)
         };
 
         const stage = document.getElementById('master-container');
@@ -119,65 +127,83 @@ Nhưng không giỏi lắm.
         let linesWithTiming = [];
         let isPlaying = false;
         let timer = null;
-        let currentFontSize = 0; // Lưu trữ font size của dòng hiện tại
 
-        function applyDictionary(text) {
-            let temp = text;
+        // HÀM XỬ LÝ LOGIC MÀU TIẾP DIỄN (STATE-BASED)
+        function processLine(text) {
+            const words = text.trim().split(/\s+/);
             const sortedKeys = Object.keys(DICTIONARY).sort((a, b) => b.length - a.length);
-            const matches = [];
+            
+            let currentColor = '#ffffff'; // Mặc định ban đầu là trắng
+            let finalHTML = "";
 
+            // Xử lý cụm từ điển trước bằng cách tạm thời thay thế để không bị chia cắt bởi dấu cách
+            let tempText = text;
+            const dictMatches = [];
             sortedKeys.forEach((key, i) => {
                 const regex = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                temp = temp.replace(regex, (m) => {
-                    const id = `##${i}##`;
-                    matches[id] = { o: m, t: DICTIONARY[key] };
+                tempText = tempText.replace(regex, (m) => {
+                    const id = `__DICT${i}__`;
+                    dictMatches[id] = { o: m, t: DICTIONARY[key] };
                     return id;
                 });
             });
 
-            return temp.split(/\s+/).map(token => {
-                const data = matches[token];
-                return `<span class="word-wrapper">
-                    <span class="translation">${data ? data.t : ''}</span>
-                    <span class="original">${data ? data.o : token}</span>
-                </span>`;
-            }).join(' ');
+            // Duyệt từng từ để áp dụng màu tiếp diễn
+            const tokens = tempText.split(/\s+/);
+            tokens.forEach(token => {
+                let cleanToken = token;
+                
+                // Kiểm tra xem từ có bắt đầu bằng ký hiệu màu không
+                const firstChar = cleanToken[0];
+                if (COLOR_MAP[firstChar]) {
+                    currentColor = COLOR_MAP[firstChar]; // Cập nhật màu hiện tại (công tắc)
+                    cleanToken = cleanToken.substring(1); // Loại bỏ ký hiệu khỏi chữ hiển thị
+                }
+
+                if (cleanToken === "") return; // Bỏ qua nếu chỉ có ký hiệu màu đơn lẻ
+
+                let displayWord = cleanToken;
+                let translation = "";
+
+                // Kiểm tra nếu token là từ điển đã ẩn
+                if (dictMatches[cleanToken]) {
+                    displayWord = dictMatches[cleanToken].o;
+                    translation = dictMatches[cleanToken].t;
+                }
+
+                finalHTML += `
+                <span class="word-wrapper">
+                    <span class="translation">${translation}</span>
+                    <span class="original" style="color: ${currentColor}">${displayWord}</span>
+                </span> `;
+            });
+
+            return finalHTML;
         }
 
         audio.onloadedmetadata = () => {
-            const lines = CONTENT.trim().split('\n').map(l => l.trim());
+            const rawLines = CONTENT.trim().split('\n').map(l => l.trim());
             const duration = CONFIG.manualDuration > 0 ? CONFIG.manualDuration : audio.duration;
-            const timePerLine = (duration / lines.length) * 1000;
-            linesWithTiming = lines.map(text => ({ text, time: timePerLine }));
+            const timePerLine = (duration / rawLines.length) * 1000;
+            linesWithTiming = rawLines.map(text => ({ text, time: timePerLine }));
             btn.textContent = "Bắt đầu";
         };
 
         function updateStage() {
             if (lineElements.length === 0) return;
             const vH = window.innerHeight;
-            
-            // 1. Tính toán font size cho dòng mới nhất (dòng hiện tại)
-            const latestLine = lineElements[lineElements.length - 1];
-            currentFontSize = Math.min(CONFIG.maxFontSize, Math.floor(window.innerWidth / (latestLine.text.length * 0.7)));
+            const currentLineObj = lineElements[lineElements.length - 1];
+            const baseFS = Math.min(CONFIG.maxFontSize, Math.floor(window.innerWidth / (currentLineObj.rawText.length * 0.75)));
 
-            // 2. Cập nhật tất cả các dòng dựa trên currentFontSize
             lineElements.forEach((obj, i) => {
                 const distance = lineElements.length - 1 - i;
-                const element = obj.element;
+                const el = obj.element;
+                const fs = (distance === 0) ? baseFS : baseFS * CONFIG.oldLineMultiplier;
                 
-                if (distance === 0) {
-                    element.style.fontSize = `${currentFontSize}px`;
-                    element.className = 'text-line current-line';
-                    element.style.top = `50%`;
-                    element.style.opacity = '1';
-                } else {
-                    const oldSize = currentFontSize * CONFIG.oldLineSizeMultiplier;
-                    element.style.fontSize = `${oldSize}px`;
-                    element.className = 'text-line old-line';
-                    // Đẩy các dòng trước lên dựa trên kích thước đã thu nhỏ
-                    element.style.top = `calc(50% - ${distance * oldSize * CONFIG.lineSpacing}px)`;
-                    element.style.opacity = Math.max(0, 1 - distance * 0.3);
-                }
+                el.className = `text-line ${distance === 0 ? 'current-line' : 'old-line'}`;
+                el.style.fontSize = `${fs}px`;
+                el.style.top = `calc(50% - ${distance * fs * CONFIG.lineSpacing}px)`;
+                el.style.opacity = Math.max(0, 1 - distance * 0.3);
             });
         }
 
@@ -187,10 +213,10 @@ Nhưng không giỏi lắm.
             const data = linesWithTiming[currentIndex];
             const el = document.createElement('div');
             el.className = 'text-line';
-            el.innerHTML = applyDictionary(data.text);
+            el.innerHTML = processLine(data.text);
             stage.appendChild(el);
 
-            lineElements.push({ element: el, text: data.text });
+            lineElements.push({ element: el, rawText: data.text });
             if (lineElements.length > 6) lineElements.shift().element.remove();
 
             updateStage();
@@ -203,10 +229,7 @@ Nhưng không giỏi lắm.
                 isPlaying = true;
                 audio.play();
                 btn.textContent = "Tạm dừng";
-                // Nếu đang ở giữa chừng, gọi lại timer
-                if (currentIndex < linesWithTiming.length) {
-                   next();
-                }
+                next();
             } else {
                 isPlaying = false;
                 audio.pause();

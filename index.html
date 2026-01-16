@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typography Pro - Color Switch Logic</title>
+    <title>Typography Pro - Bracket & Translation Fix</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -54,68 +54,68 @@
     <div id="master-container"></div>
 
     <script>
-        // 1. TÙY CHỈNH MÀU SẮC
-        const COLOR_MAP = {
-            '@': '#ff4757', // Đỏ
-            '#': '#ffa502', // Cam
-            '$': '#2ed573', // Xanh lá
-            '&': '#eccc68', // Vàng
-            '%': '#ffffff'  // Khôi phục màu mặc định (Trắng)
+        const BRACKET_COLOR_MAP = {
+            '【': { end: '】', color: '#ff4757' },
+            '\\[': { end: '\\]', color: '#ffa502' },
+            '《': { end: '》', color: '#2ed573' },
+            '〖': { end: '〗', color: '#eccc68' },
+            '«':  { end: '»',  color: '#FF69B4' },
+            '{':  { end: '}',  color: '#00ced1' },
+            '「': { end: '」', color: '#fa8072' }
         };
 
         const DICTIONARY = {
-            "kế hoạch": "计划", "tiếng Việt": "越南语", "thư viện": "图书馆",
-            "nấu ăn": "做饭", "thể thao": "体育", "Hôm nay": "今天"
+            "kế hoạch": "计划", "tiếng Việt": "越南语", "Câu lạc bộ": "俱乐部",
+            "thư viện": "图书馆", "nấu ăn": "做饭", "thể thao": "体育"
         };
 
-        // Ví dụ: @Linda bắt đầu màu đỏ, gặp #kế hoạch đổi sang màu cam, gặp % quay về trắng
         const CONTENT = `
-            @Linda
-#tuần này 
-$kế hoạch của cậu 
+            【Linda】
+tuần này 
+【kế hoạch】 của cậu 
 thế nào?
-#Hôm nay 
-là #thứ Hai %nhỉ? 
-#Hôm nay %và #ngày mai 
-mình học $tiếng Việt 
-ở $Viện. 
-#Ngày kia 
-sẽ học $Vẽ 
-ở $Câu lạc bộ
-#Ngày kìa 
-học $Đàn bầu 
-ở nhà @cô Tâm
-Còn #thứ Sáu 
+【Hôm nay】 
+là 【thứ Hai】 nhỉ? 
+【Hôm nay】 và 【ngày mai】 
+mình học 【tiếng Việt】 
+ở 【Viện】. 
+【Ngày kia】 
+sẽ học 【Vẽ】 
+ở 【Câu lạc bộ】
+Ngày kìa 
+học Đàn bầu 
+ở nhà cô Tâm
+Còn thứ Sáu 
 mình có hẹn 
-với @cô giáo %rồi
-#Thứ Bảy %và #Chủ nhật 
-mình ở $nhà
-Còn @Mary 
+với cô giáo rồi
+Thứ Bảy và Chủ nhật 
+mình ở nhà
+Còn Mary 
 thế nào?
-Mình cũng @bận lắm
-Từ #thứ Hai %đến #thứ Sáu 
-mình #đọc sách 
-ở $thư viện
-#Thứ Bảy %mình sẽ 
+Mình cũng bận lắm
+Từ thứ Hai đến thứ Sáu 
+mình đọc sách 
+ở thư viện
+Thứ Bảy mình sẽ 
 học nấu ăn 
-ở nhà chị @Kim Anh
+ở nhà chị Kim Anh
 Mình 
 thích nấu ăn lắm
 Còn
-#Chủ nhật 
+Chủ nhật 
 mình sẽ chơi thể thao một chút
 Thế à? 
-@Mary 
+Mary 
 biết chơi ten nít không?
 Biết
 Nhưng không giỏi lắm.
         `;
 
         const CONFIG = {
-            maxFontSize: 100,
-            lineSpacing: 2.3,
-            oldLineMultiplier: 0.7,
-            manualDuration: 39 // Giây (0 là lấy theo audio)
+            maxFontSize: 100, 
+			lineSpacing: 2.3, 
+			oldLineMultiplier: 0.7, 
+			manualDuration: 39 
         };
 
         const stage = document.getElementById('master-container');
@@ -128,57 +128,65 @@ Nhưng không giỏi lắm.
         let isPlaying = false;
         let timer = null;
 
-        // HÀM XỬ LÝ LOGIC MÀU TIẾP DIỄN (STATE-BASED)
+        // HÀM XỬ LÝ TEXT MỚI: ĐẢM BẢO NHẬN DIỆN DỊCH TRONG NGOẶC
         function processLine(text) {
-            const words = text.trim().split(/\s+/);
-            const sortedKeys = Object.keys(DICTIONARY).sort((a, b) => b.length - a.length);
-            
-            let currentColor = '#ffffff'; // Mặc định ban đầu là trắng
-            let finalHTML = "";
+            let processedText = text;
 
-            // Xử lý cụm từ điển trước bằng cách tạm thời thay thế để không bị chia cắt bởi dấu cách
-            let tempText = text;
+            // Bước 1: Bảo vệ các từ trong từ điển bằng cách thay thế trước
+            const sortedKeys = Object.keys(DICTIONARY).sort((a, b) => b.length - a.length);
             const dictMatches = [];
             sortedKeys.forEach((key, i) => {
                 const regex = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                tempText = tempText.replace(regex, (m) => {
+                processedText = processedText.replace(regex, (m) => {
                     const id = `__DICT${i}__`;
                     dictMatches[id] = { o: m, t: DICTIONARY[key] };
                     return id;
                 });
             });
 
-            // Duyệt từng từ để áp dụng màu tiếp diễn
-            const tokens = tempText.split(/\s+/);
-            tokens.forEach(token => {
-                let cleanToken = token;
-                
-                // Kiểm tra xem từ có bắt đầu bằng ký hiệu màu không
-                const firstChar = cleanToken[0];
-                if (COLOR_MAP[firstChar]) {
-                    currentColor = COLOR_MAP[firstChar]; // Cập nhật màu hiện tại (công tắc)
-                    cleanToken = cleanToken.substring(1); // Loại bỏ ký hiệu khỏi chữ hiển thị
-                }
+            // Bước 2: Nhận diện màu sắc theo cặp dấu
+            for (const start in BRACKET_COLOR_MAP) {
+                const end = BRACKET_COLOR_MAP[start].end;
+                const color = BRACKET_COLOR_MAP[start].color;
+                const regex = new RegExp(`${start}(.*?)${end}`, 'g');
+                processedText = processedText.replace(regex, (match, content) => {
+                    return `<span style="color: ${color}">${content}</span>`;
+                });
+            }
 
-                if (cleanToken === "") return; // Bỏ qua nếu chỉ có ký hiệu màu đơn lẻ
-
-                let displayWord = cleanToken;
+            // Bước 3: Tách thành các token và tạo cấu trúc word-wrapper
+            // Tách dựa trên khoảng trắng nhưng giữ lại các thẻ span
+            const tokens = processedText.match(/(<span[^>]*>.*?<\/span>|[^ ]+)/g) || [];
+            
+            return tokens.map(token => {
+                let color = '#fff';
+                let displayWord = token;
                 let translation = "";
 
-                // Kiểm tra nếu token là từ điển đã ẩn
-                if (dictMatches[cleanToken]) {
-                    displayWord = dictMatches[cleanToken].o;
-                    translation = dictMatches[cleanToken].t;
+                // Trường hợp 1: Token là một thẻ màu (chứa nội dung trong ngoặc)
+                if (token.startsWith('<span style="color:')) {
+                    const colorMatch = token.match(/color: (#[a-fA-F0-9]+)/);
+                    const contentMatch = token.match(/>(.*)<\/span>/);
+                    if (colorMatch) color = colorMatch[1];
+                    if (contentMatch) displayWord = contentMatch[1];
                 }
 
-                finalHTML += `
+                // Kiểm tra xem displayWord (dù là text thuần hay content trong ngoặc) có chứa ID từ điển không
+                for (const id in dictMatches) {
+                    if (displayWord.includes(id)) {
+                        translation = dictMatches[id].t;
+                        displayWord = displayWord.replace(new RegExp(id, 'g'), dictMatches[id].o);
+                    }
+                }
+
+                // Xử lý nốt các dấu câu còn dính vào token (ví dụ "Linda.")
+                // Không bọc dấu câu vào bản dịch
+                return `
                 <span class="word-wrapper">
                     <span class="translation">${translation}</span>
-                    <span class="original" style="color: ${currentColor}">${displayWord}</span>
-                </span> `;
-            });
-
-            return finalHTML;
+                    <span class="original" style="color: ${color}">${displayWord}</span>
+                </span>`;
+            }).join(' ');
         }
 
         audio.onloadedmetadata = () => {
@@ -192,14 +200,15 @@ Nhưng không giỏi lắm.
         function updateStage() {
             if (lineElements.length === 0) return;
             const vH = window.innerHeight;
-            const currentLineObj = lineElements[lineElements.length - 1];
-            const baseFS = Math.min(CONFIG.maxFontSize, Math.floor(window.innerWidth / (currentLineObj.rawText.length * 0.75)));
+            const latest = lineElements[lineElements.length - 1];
+            // Loại bỏ tất cả ký hiệu đặc biệt để tính font size chuẩn
+            const cleanText = latest.rawText.replace(/[【】\[\]《》〖〗«»{}「」]/g, '');
+            const baseFS = Math.min(CONFIG.maxFontSize, Math.floor(window.innerWidth / (cleanText.length * 0.75)));
 
             lineElements.forEach((obj, i) => {
                 const distance = lineElements.length - 1 - i;
                 const el = obj.element;
                 const fs = (distance === 0) ? baseFS : baseFS * CONFIG.oldLineMultiplier;
-                
                 el.className = `text-line ${distance === 0 ? 'current-line' : 'old-line'}`;
                 el.style.fontSize = `${fs}px`;
                 el.style.top = `calc(50% - ${distance * fs * CONFIG.lineSpacing}px)`;
@@ -209,16 +218,13 @@ Nhưng không giỏi lắm.
 
         function next() {
             if (!isPlaying || currentIndex >= linesWithTiming.length) return;
-
             const data = linesWithTiming[currentIndex];
             const el = document.createElement('div');
             el.className = 'text-line';
             el.innerHTML = processLine(data.text);
             stage.appendChild(el);
-
             lineElements.push({ element: el, rawText: data.text });
             if (lineElements.length > 6) lineElements.shift().element.remove();
-
             updateStage();
             currentIndex++;
             timer = setTimeout(next, data.time);

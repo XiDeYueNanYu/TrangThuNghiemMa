@@ -28,8 +28,7 @@
         }
 
         #master-container {
-            width: 90vw;
-            max-width: 1000px;
+            width: 100vw;
             height: 100vh;
             position: relative;
             opacity: 0; /* Ẩn cho đến khi bắt đầu */
@@ -39,12 +38,15 @@
         .text-line {
             position: absolute;
             left: 0;
-            text-align: left;
+            right: 0;
+            text-align: center;
             white-space: nowrap;
             font-weight: 800;
             text-transform: uppercase;
             transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             will-change: transform, opacity, font-size;
+            padding: 0 20px;
+            transform: translateY(-50%);
         }
         
         .current-line {
@@ -56,6 +58,7 @@
         .old-line {
             filter: blur(2px);
             color: #666;
+            opacity: 0.6;
         }
 
         /* Nút bắt đầu nổi */
@@ -85,6 +88,41 @@
         #start-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        /* Responsive cho mobile */
+        @media (max-width: 768px) {
+            .text-line {
+                white-space: normal;
+                word-wrap: break-word;
+                word-break: keep-all;
+                line-height: 1.2;
+                padding: 0 15px;
+            }
+            
+            .current-line {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            }
+            
+            #start-btn {
+                bottom: 20px;
+                padding: 12px 30px;
+                font-size: 1rem;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            #start-btn:hover {
+                transform: translateX(-50%) scale(1.1);
+            }
+        }
+        
+        /* Cho màn hình rất nhỏ */
+        @media (max-width: 480px) {
+            .text-line {
+                padding: 0 10px;
+                line-height: 1.1;
+            }
         }
     </style>
 </head>
@@ -140,11 +178,13 @@
         `];
 
         const CONFIG = {
-            padding: 40,
+            padding: 20,
             maxFontSize: 120,
             minFontSize: 20,
-            lineSpacing: 1.2,
-            transitionTime: 400
+            lineSpacing: 1.5,
+            transitionTime: 400,
+            mobileMaxFontSize: 80,
+            mobileMinFontSize: 16
         };
         
         const stage = document.getElementById('master-container');
@@ -156,6 +196,12 @@
         let globalFontSize = 0;
         let linesWithTiming = [];
         let totalDuration = 0;
+        let isMobile = window.innerWidth <= 768;
+
+        // CẬP NHẬT TRẠNG THÁI MOBILE KHI RESIZE
+        function updateMobileStatus() {
+            isMobile = window.innerWidth <= 768;
+        }
 
         // 1. CHỜ AUDIO LOAD ĐỂ LẤY THỜI GIAN
         audio.addEventListener('loadedmetadata', () => {
@@ -190,30 +236,94 @@
         }
 
         function calculateFontSize(text) {
-            const stageWidth = stage.offsetWidth - (CONFIG.padding * 2);
-            let idealSize = Math.floor(stageWidth / (text.length * 0.6));
-            return Math.max(CONFIG.minFontSize, Math.min(CONFIG.maxFontSize, idealSize));
+            // Lấy kích thước màn hình hiện tại
+            const screenWidth = window.innerWidth;
+            const isMobileNow = screenWidth <= 768;
+            
+            // Thiết lập giới hạn kích thước chữ
+            const maxSize = isMobileNow ? CONFIG.mobileMaxFontSize : CONFIG.maxFontSize;
+            const minSize = isMobileNow ? CONFIG.mobileMinFontSize : CONFIG.minFontSize;
+            
+            // Tính chiều rộng có thể sử dụng (trừ padding)
+            const usableWidth = screenWidth - (CONFIG.padding * 2);
+            
+            if (isMobileNow) {
+                // Trên mobile: tính font size để vừa với chiều rộng
+                // Ước tính mỗi ký tự chiếm khoảng 0.6 lần font size (tùy chỉnh)
+                const approxCharWidth = 0.6;
+                let fontSize = Math.floor(usableWidth / (text.length * approxCharWidth));
+                
+                // Giới hạn font size
+                fontSize = Math.max(minSize, Math.min(maxSize, fontSize));
+                
+                // Đảm bảo không quá nhỏ
+                return fontSize;
+            } else {
+                // Trên desktop: giữ logic cũ
+                let idealSize = Math.floor(usableWidth / (text.length * 0.6));
+                return Math.max(minSize, Math.min(maxSize, idealSize));
+            }
+        }
+
+        function getLinePosition(index, fontSize) {
+            const viewportHeight = window.innerHeight;
+            
+            if (isMobile) {
+                // Trên mobile: dòng hiện tại luôn ở giữa màn hình
+                // Các dòng cũ dịch lên trên
+                if (index === lineElements.length - 1) {
+                    // Dòng hiện tại
+                    return viewportHeight * 0.5;
+                } else {
+                    // Các dòng cũ
+                    const distance = lineElements.length - 1 - index;
+                    const offset = distance * (fontSize * CONFIG.lineSpacing * 0.8);
+                    return (viewportHeight * 0.5) - offset;
+                }
+            } else {
+                // Trên desktop: logic cũ
+                const centerY = viewportHeight / 2;
+                const distance = lineElements.length - 1 - index;
+                const offset = distance * (fontSize * CONFIG.lineSpacing);
+                return centerY - offset;
+            }
         }
 
         function updateStage() {
-            const centerY = window.innerHeight / 2;
+            // Cập nhật trạng thái mobile
+            updateMobileStatus();
+            
+            // Chỉ tính lại font size cho dòng hiện tại
+            if (lineElements.length > 0) {
+                const currentLineObj = lineElements[lineElements.length - 1];
+                globalFontSize = calculateFontSize(currentLineObj.text);
+            }
 
+            // Cập nhật tất cả các dòng
             lineElements.forEach((lineObj, index) => {
                 const { element } = lineObj;
                 const distance = lineElements.length - 1 - index;
                 
+                // Áp dụng font size
                 element.style.fontSize = `${globalFontSize}px`;
-                const offset = distance * (globalFontSize * CONFIG.lineSpacing);
-                const targetY = centerY - offset;
-
-                element.style.transform = `translateY(-50%)`;
+                
+                // Tính vị trí
+                const targetY = getLinePosition(index, globalFontSize);
                 element.style.top = `${targetY}px`;
                 
-                element.style.opacity = distance === 0 ? 1 : Math.max(0, 1 - distance * 0.35);
+                // Điều chỉnh opacity
+                if (isMobile) {
+                    element.style.opacity = distance === 0 ? 1 : Math.max(0.3, 0.9 - distance * 0.2);
+                } else {
+                    element.style.opacity = distance === 0 ? 1 : Math.max(0, 1 - distance * 0.35);
+                }
+                
+                // Thêm/loại bỏ class
                 element.classList.toggle('current-line', distance === 0);
                 element.classList.toggle('old-line', distance > 0);
 
-                if (targetY < -150) {
+                // Xóa dòng khi ra khỏi màn hình (chỉ trên mobile)
+                if (isMobile && targetY < -100) {
                     setTimeout(() => {
                         if (element.parentNode) {
                             element.remove();
@@ -230,17 +340,24 @@
             }
 
             const currentData = linesWithTiming[currentIndex];
-            globalFontSize = calculateFontSize(currentData.text);
-
+            
             const el = document.createElement('div');
             el.className = 'text-line';
             el.textContent = currentData.text;
-            el.style.top = '120%'; 
+            
+            // Đặt vị trí ban đầu ở dưới màn hình
+            el.style.top = `${window.innerHeight + 100}px`;
+            el.style.opacity = '0';
+            
             stage.appendChild(el);
 
             lineElements.push({ element: el, text: currentData.text });
             
-            updateStage();
+            // Cập nhật hiển thị
+            setTimeout(() => {
+                updateStage();
+            }, 50);
+            
             currentIndex++;
 
             setTimeout(next, currentData.displayTime);
@@ -254,11 +371,26 @@
             next();
         });
 
+        // XỬ LÝ RESIZE VỚI DEBOUNCE
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            if (lineElements.length > 0) {
-                globalFontSize = calculateFontSize(lineElements[lineElements.length - 1].text);
-                updateStage();
-            }
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                updateMobileStatus();
+                if (lineElements.length > 0) {
+                    updateStage();
+                }
+            }, 250);
+        });
+
+        // XỬ LÝ ORIENTATION CHANGE
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                updateMobileStatus();
+                if (lineElements.length > 0) {
+                    updateStage();
+                }
+            }, 300);
         });
     </script>
 </body>

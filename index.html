@@ -3,468 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typography Audio Sync</title>
+    <title>Typography Audio Sync - Original Effect Restored</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
             color: #fff;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
         }
-        
-        #text-stage {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #master-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            opacity: 0;
-            transition: opacity 1s;
-            overflow: hidden;
-        }
+        #master-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
         
         .text-line {
             position: absolute;
-            left: 0;
-            right: 0;
+            left: 0; right: 0;
             text-align: center;
-            white-space: nowrap;
             font-weight: 800;
             text-transform: uppercase;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            will-change: transform, opacity, font-size;
-            padding: 0 10px;
-            transform: translateY(-50%);
-        }
-        
-        .current-line {
-            opacity: 1;
-            z-index: 10;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
-            white-space: normal;
-            word-wrap: break-word;
-            word-break: keep-all;
-        }
-        
-        .old-line {
-            filter: blur(2px);
-            color: #666;
-            opacity: 0.6;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: transform, opacity, top, font-size;
+            display: flex; justify-content: center; align-items: flex-end;
             white-space: nowrap;
-            overflow: visible;
         }
 
-        /* Nút bắt đầu nổi */
-        #start-btn {
-            position: fixed;
-            bottom: 40px;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            z-index: 100;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.3s;
+        /* Logic bản dịch đồng bộ chân chữ */
+        .word-wrapper {
+            display: inline-flex; flex-direction: column; align-items: center;
+            justify-content: flex-end; margin: 0 0.12em; vertical-align: bottom;
         }
+        .translation {
+            font-size: 0.45em; line-height: 1; color: #00d2ff;
+            text-transform: none; font-weight: 400;
+            margin-bottom: 0.35em; min-height: 1.1em;
+        }
+        .old-line .translation { visibility: hidden; }
+        .original { line-height: 1; }
 
-        #start-btn:hover {
-            transform: scale(1.1);
-            background: #00d2ff;
-            color: #fff;
+        #control-btn {
+            position: fixed; bottom: 30px; z-index: 1000;
+            padding: 15px 35px; font-size: 1.1rem; font-weight: bold;
+            border-radius: 50px; border: none; cursor: pointer;
+            background: #fff; color: #000; transition: 0.3s;
         }
-
-        #start-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Responsive cho mobile */
-        @media (max-width: 768px) {
-            .current-line {
-                white-space: normal;
-                word-wrap: break-word;
-                word-break: keep-all;
-                line-height: 1.2;
-                padding: 0 15px;
-            }
-            
-            .old-line {
-                white-space: nowrap;
-                padding: 0 5px;
-            }
-            
-            .current-line {
-                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-            }
-            
-            #start-btn {
-                bottom: 20px;
-                padding: 12px 30px;
-                font-size: 1rem;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-            
-            #start-btn:hover {
-                transform: translateX(-50%) scale(1.1);
-            }
-        }
+        #control-btn:hover { background: #00d2ff; color: #fff; }
     </style>
 </head>
 <body>
 
-    <button id="start-btn">Đang tải âm thanh...</button>
-
-    <div id="text-stage">
-        <div id="master-container"></div>
-    </div>
+    <button id="control-btn">Đang tải...</button>
+    <div id="master-container"></div>
 
     <script>
-        const CONTENT_SOURCE = [`
+        const DICTIONARY = {
+            "kế hoạch": "计划", "tiếng Việt": "越南语", "Câu lạc bộ": "俱乐部",
+            "thư viện": "图书馆", "nấu ăn": "做饭", "thể thao": "体育",
+            "ten nít": "网球", "Hôm nay": "今天"
+        };
+
+        const CONTENT = `
             Linda
-            tuần này 
-            kế hoạch của cậu 
-            thế nào?
-            Hôm nay 
-            là thứ Hai nhỉ? 
-            Hôm nay và ngày mai 
-            mình học tiếng Việt 
-            ở Viện. 
-            Ngày kia 
-            sẽ học Vẽ 
-            ở Câu lạc bộ
-            Ngày kìa 
-            học Đàn bầu 
-            ở nhà cô Tâm
-            Còn thứ Sáu 
-            mình có hẹn 
-            với cô giáo rồi
-            Thứ Bảy và Chủ nhật 
-            mình ở nhà
-            Còn Mary 
-            thế nào?
-            Mình cũng bận lắm
-            Từ thứ Hai đến thứ Sáu 
-            mình đọc sách 
-            ở thư viện
-            Thứ Bảy mình sẽ 
-            học nấu ăn 
-            ở nhà chị Kim Anh
-            Mình 
-            thích nấu ăn lắm
-            Còn
-            Chủ nhật 
-            mình sẽ chơi thể thao một chút
-            Thế à? 
-            Mary 
-            biết chơi ten nít không?
-            Biết
-            Nhưng không giỏi lắm.
-        `];
+tuần này 
+kế hoạch của cậu 
+thế nào?
+Hôm nay 
+là thứ Hai nhỉ? 
+Hôm nay và ngày mai 
+mình học tiếng Việt 
+ở Viện. 
+Ngày kia 
+sẽ học Vẽ 
+ở Câu lạc bộ
+Ngày kìa 
+học Đàn bầu 
+ở nhà cô Tâm
+Còn thứ Sáu 
+mình có hẹn 
+với cô giáo rồi
+Thứ Bảy và Chủ nhật 
+mình ở nhà
+Còn Mary 
+thế nào?
+Mình cũng bận lắm
+Từ thứ Hai đến thứ Sáu 
+mình đọc sách 
+ở thư viện
+Thứ Bảy mình sẽ 
+học nấu ăn 
+ở nhà chị Kim Anh
+Mình 
+thích nấu ăn lắm
+Còn
+Chủ nhật 
+mình sẽ chơi thể thao một chút
+Thế à? 
+Mary 
+biết chơi ten nít không?
+Biết
+Nhưng không giỏi lắm.
+        `;
 
         const CONFIG = {
-            padding: 20,
-            maxFontSize: 120,
-            minFontSize: 20,
-            lineSpacing: 1.5,
-            transitionTime: 400,
-            mobileMaxFontSize: 80,
-            mobileMinFontSize: 16,
-            oldLineFontSizeMultiplier: 0.9, // Dòng cũ nhỏ hơn dòng hiện tại
-            maxVisibleOldLines: 5 // Số dòng cũ tối đa hiển thị
+            maxFontSize: 100,
+            lineSpacing: 2.2,
+            oldLineSizeMultiplier: 0.7, // Tỉ lệ dòng cũ so với dòng hiện tại
+            manualDuration: 0 
         };
-        
+
         const stage = document.getElementById('master-container');
-        const startBtn = document.getElementById('start-btn');
+        const btn = document.getElementById('control-btn');
         const audio = new Audio('hoithoai.mp3');
-        
+
         let lineElements = [];
         let currentIndex = 0;
-        let currentFontSize = 0;
         let linesWithTiming = [];
-        let totalDuration = 0;
-        let isMobile = window.innerWidth <= 768;
+        let isPlaying = false;
+        let timer = null;
+        let currentFontSize = 0; // Lưu trữ font size của dòng hiện tại
 
-        // CẬP NHẬT TRẠNG THÁI MOBILE
-        function updateMobileStatus() {
-            isMobile = window.innerWidth <= 768;
-        }
+        function applyDictionary(text) {
+            let temp = text;
+            const sortedKeys = Object.keys(DICTIONARY).sort((a, b) => b.length - a.length);
+            const matches = [];
 
-        // 1. CHỜ AUDIO LOAD
-        audio.addEventListener('loadedmetadata', () => {
-            totalDuration = audio.duration;
-            startBtn.textContent = "Bắt đầu";
-            prepareLines();
-        });
-
-        audio.addEventListener('error', () => {
-            console.error("Không tìm thấy file hoithoai.mp3. Sử dụng thời gian mặc định 60s.");
-            totalDuration = 60; 
-            startBtn.textContent = "Bắt đầu (Không có âm thanh)";
-            prepareLines();
-        });
-
-        function prepareLines() {
-            const rawLines = CONTENT_SOURCE[0]
-                .split('\n')
-                .map(line => line.trim())
-                .filter(line => line.length > 0);
-
-            const totalChars = rawLines.reduce((acc, line) => acc + line.length, 0);
-
-            linesWithTiming = rawLines.map(line => {
-                const ratio = line.length / totalChars;
-                return {
-                    text: line,
-                    displayTime: ratio * totalDuration * 1000 
-                };
+            sortedKeys.forEach((key, i) => {
+                const regex = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+                temp = temp.replace(regex, (m) => {
+                    const id = `##${i}##`;
+                    matches[id] = { o: m, t: DICTIONARY[key] };
+                    return id;
+                });
             });
+
+            return temp.split(/\s+/).map(token => {
+                const data = matches[token];
+                return `<span class="word-wrapper">
+                    <span class="translation">${data ? data.t : ''}</span>
+                    <span class="original">${data ? data.o : token}</span>
+                </span>`;
+            }).join(' ');
         }
 
-function calculateFontSizeForCurrentLine(text) {
-    const screenWidth = window.innerWidth;
-    const isMobileNow = screenWidth <= 768;
-    
-    const maxSize = isMobileNow ? CONFIG.mobileMaxFontSize : CONFIG.maxFontSize;
-    const minSize = isMobileNow ? CONFIG.mobileMinFontSize : CONFIG.minFontSize;
-    
-    const usableWidth = screenWidth - (CONFIG.padding * 2);
-    
-    if (isMobileNow) {
-        // TÍNH TOÁN FONT SIZE - ĐIỀU CHỈNH TỈ LỆ NHỎ HƠN
-        const avgCharWidth = 0.65; // TĂNG TỪ 0.5 LÊN 0.65 (chữ sẽ nhỏ hơn)
-        let fontSize = Math.floor(usableWidth / (text.length * avgCharWidth));
-        
-        // Giới hạn trong khoảng cho phép
-        fontSize = Math.max(minSize, Math.min(maxSize, fontSize));
-        
-        // THÊM MARGIN AN TOÀN: nhân với hệ số an toàn 0.9 để chữ nhỏ hơn một chút
-        const safetyMargin = 0.85; // GIẢM CÒN 85% thay vì 100%
-        fontSize = Math.floor(fontSize * safetyMargin);
-        
-        // Kiểm tra lại với canvas để chính xác
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        context.font = `800 ${fontSize}px 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
-        const textWidth = context.measureText(text).width;
-        
-        // Nếu vẫn quá rộng, giảm tiếp với hệ số an toàn bổ sung
-        if (textWidth > usableWidth * 0.95 && fontSize > minSize) { // 95% thay vì 100%
-            fontSize = Math.floor(fontSize * (usableWidth * 0.9 / textWidth)); // 90% thay vì 100%
-            fontSize = Math.max(minSize, fontSize);
-        }
-        
-        return fontSize;
-    } else {
-        // Trên desktop - cũng điều chỉnh tỉ lệ
-        const avgCharWidth = 0.75; // TĂNG TỪ 0.6 LÊN 0.75
-        let fontSize = Math.floor(usableWidth / (text.length * avgCharWidth));
-        
-        // THÊM MARGIN AN TOÀN
-        const safetyMargin = 0.85; // GIẢM CÒN 85%
-        fontSize = Math.floor(fontSize * safetyMargin);
-        
-        return Math.max(minSize, Math.min(maxSize, fontSize));
-    }
-}
-
-        function getOldLineFontSize() {
-            return currentFontSize * CONFIG.oldLineFontSizeMultiplier;
-        }
-
-        function getLinePosition(index) {
-            const viewportHeight = window.innerHeight;
-            const isCurrentLine = (index === lineElements.length - 1);
-            
-            if (isCurrentLine) {
-                // DÒNG HIỆN TẠI: Luôn ở giữa màn hình
-                return viewportHeight * 0.5;
-            } else {
-                // DÒNG CŨ: Dịch lên trên
-                const distanceFromCurrent = lineElements.length - 1 - index;
-                const oldLineFontSize = getOldLineFontSize();
-                const offset = distanceFromCurrent * (oldLineFontSize * CONFIG.lineSpacing);
-                return (viewportHeight * 0.5) - offset - (oldLineFontSize * 0.5);
-            }
-        }
-
-        function updateLineElement(lineObj, index) {
-            const element = lineObj.element;
-            const isCurrentLine = (index === lineElements.length - 1);
-            
-            if (isCurrentLine) {
-                // DÒNG HIỆN TẠI
-                currentFontSize = calculateFontSizeForCurrentLine(lineObj.text);
-                element.style.fontSize = `${currentFontSize}px`;
-                element.classList.add('current-line');
-                element.classList.remove('old-line');
-            } else {
-                // DÒNG CŨ
-                const oldFontSize = getOldLineFontSize();
-                element.style.fontSize = `${oldFontSize}px`;
-                element.classList.add('old-line');
-                element.classList.remove('current-line');
-            }
-            
-            // Vị trí
-            const targetY = getLinePosition(index);
-            element.style.top = `${targetY}px`;
-            
-            // Opacity
-            const distance = lineElements.length - 1 - index;
-            if (isMobile) {
-                element.style.opacity = isCurrentLine ? 1 : Math.max(0.2, 1 - distance * 0.2);
-            } else {
-                element.style.opacity = isCurrentLine ? 1 : Math.max(0.1, 1 - distance * 0.25);
-            }
-            
-            // Đảm bảo dòng cũ không xuống dòng
-            if (!isCurrentLine) {
-                element.style.whiteSpace = 'nowrap';
-            }
-        }
+        audio.onloadedmetadata = () => {
+            const lines = CONTENT.trim().split('\n').map(l => l.trim());
+            const duration = CONFIG.manualDuration > 0 ? CONFIG.manualDuration : audio.duration;
+            const timePerLine = (duration / lines.length) * 1000;
+            linesWithTiming = lines.map(text => ({ text, time: timePerLine }));
+            btn.textContent = "Bắt đầu";
+        };
 
         function updateStage() {
-            updateMobileStatus();
-            
             if (lineElements.length === 0) return;
+            const vH = window.innerHeight;
             
-            // Giới hạn số dòng cũ hiển thị
-            const maxTotalLines = CONFIG.maxVisibleOldLines + 1; // +1 cho dòng hiện tại
-            
-            // Xóa dòng cũ vượt quá giới hạn
-            if (lineElements.length > maxTotalLines) {
-                const linesToRemove = lineElements.slice(0, lineElements.length - maxTotalLines);
-                linesToRemove.forEach(lineObj => {
-                    if (lineObj.element.parentNode) {
-                        lineObj.element.remove();
-                    }
-                });
-                lineElements = lineElements.slice(-maxTotalLines);
-            }
-            
-            // Cập nhật tất cả các dòng
-            lineElements.forEach((lineObj, index) => {
-                updateLineElement(lineObj, index);
-            });
-            
-            // Xóa dòng cũ khi ra khỏi màn hình (an toàn)
-            lineElements.forEach((lineObj, index) => {
-                if (index < lineElements.length - 1) { // Chỉ kiểm tra dòng cũ
-                    const element = lineObj.element;
-                    const rect = element.getBoundingClientRect();
-                    
-                    if (rect.bottom < -100 || rect.top > window.innerHeight + 100) {
-                        setTimeout(() => {
-                            if (element.parentNode && element.classList.contains('old-line')) {
-                                element.remove();
-                                lineElements = lineElements.filter(item => item.element !== element);
-                                updateStage();
-                            }
-                        }, CONFIG.transitionTime);
-                    }
+            // 1. Tính toán font size cho dòng mới nhất (dòng hiện tại)
+            const latestLine = lineElements[lineElements.length - 1];
+            currentFontSize = Math.min(CONFIG.maxFontSize, Math.floor(window.innerWidth / (latestLine.text.length * 0.7)));
+
+            // 2. Cập nhật tất cả các dòng dựa trên currentFontSize
+            lineElements.forEach((obj, i) => {
+                const distance = lineElements.length - 1 - i;
+                const element = obj.element;
+                
+                if (distance === 0) {
+                    element.style.fontSize = `${currentFontSize}px`;
+                    element.className = 'text-line current-line';
+                    element.style.top = `50%`;
+                    element.style.opacity = '1';
+                } else {
+                    const oldSize = currentFontSize * CONFIG.oldLineSizeMultiplier;
+                    element.style.fontSize = `${oldSize}px`;
+                    element.className = 'text-line old-line';
+                    // Đẩy các dòng trước lên dựa trên kích thước đã thu nhỏ
+                    element.style.top = `calc(50% - ${distance * oldSize * CONFIG.lineSpacing}px)`;
+                    element.style.opacity = Math.max(0, 1 - distance * 0.3);
                 }
             });
-        }
-
-        function createAndShowLine(text) {
-            const el = document.createElement('div');
-            el.className = 'text-line';
-            el.textContent = text;
-            
-            // Xuất hiện ngay tại vị trí giữa
-            el.style.top = '50%';
-            el.style.opacity = '0';
-            stage.appendChild(el);
-
-            lineElements.push({ element: el, text: text });
-            
-            // Hiệu ứng fade in
-            setTimeout(() => {
-                el.style.opacity = '1';
-                updateStage();
-            }, 50);
         }
 
         function next() {
-            if (currentIndex >= linesWithTiming.length) {
-                console.log("Đã hết nội dung");
-                return;
-            }
+            if (!isPlaying || currentIndex >= linesWithTiming.length) return;
 
-            const currentData = linesWithTiming[currentIndex];
-            
-            // Tạo và hiển thị dòng mới NGAY LẬP TỨC
-            createAndShowLine(currentData.text);
-            
+            const data = linesWithTiming[currentIndex];
+            const el = document.createElement('div');
+            el.className = 'text-line';
+            el.innerHTML = applyDictionary(data.text);
+            stage.appendChild(el);
+
+            lineElements.push({ element: el, text: data.text });
+            if (lineElements.length > 6) lineElements.shift().element.remove();
+
+            updateStage();
             currentIndex++;
-
-            // Lên lịch cho dòng tiếp theo
-            setTimeout(next, currentData.displayTime);
+            timer = setTimeout(next, data.time);
         }
 
-        // SỰ KIỆN BẮT ĐẦU
-        startBtn.addEventListener('click', () => {
-            startBtn.style.display = 'none';
-            stage.style.opacity = '1';
-            
-            // Bắt đầu audio
-            audio.play().catch(e => {
-                console.log("Lỗi phát audio:", e);
-                // Vẫn tiếp tục hiển thị text nếu không có audio
-                next();
-            });
-            
-            // Bắt đầu hiển thị text
-            next();
-        });
-
-        // XỬ LÝ RESIZE VỚI DEBOUNCE
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                updateMobileStatus();
-                if (lineElements.length > 0) {
-                    // Chỉ tính lại cho dòng hiện tại
-                    currentFontSize = calculateFontSizeForCurrentLine(
-                        lineElements[lineElements.length - 1].text
-                    );
-                    updateStage();
+        btn.onclick = () => {
+            if (!isPlaying) {
+                isPlaying = true;
+                audio.play();
+                btn.textContent = "Tạm dừng";
+                // Nếu đang ở giữa chừng, gọi lại timer
+                if (currentIndex < linesWithTiming.length) {
+                   next();
                 }
-            }, 250);
-        });
+            } else {
+                isPlaying = false;
+                audio.pause();
+                btn.textContent = "Tiếp tục";
+                if (timer) clearTimeout(timer);
+            }
+        };
 
-        // XỬ LÝ ORIENTATION CHANGE
-        window.addEventListener('orientationchange', () => {
-            setTimeout(() => {
-                updateMobileStatus();
-                if (lineElements.length > 0) {
-                    updateStage();
-                }
-            }, 300);
-        });
+        audio.onended = () => {
+            isPlaying = false;
+            btn.textContent = "Bắt đầu lại";
+            currentIndex = 0;
+            lineElements = [];
+            stage.innerHTML = '';
+            if (timer) clearTimeout(timer);
+        };
 
-        // KHỞI TẠO
-        updateMobileStatus();
+        window.onresize = updateStage;
     </script>
 </body>
 </html>

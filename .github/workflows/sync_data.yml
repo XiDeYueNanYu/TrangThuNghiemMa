@@ -29,9 +29,9 @@ jobs:
                   if not date: continue
                   if date not in data: data[date] = []
                   data[date].append({
-                      "hanzi": row['Hán tự'],
-                      "q1": json.loads(row['Quiz 1']),
-                      "q2": json.loads(row['Quiz 2'])
+                      "hanzi": row['DanhSachChuHan'],
+                      "q1": json.loads(row['Trắc Nghiệm 1']),
+                      "q2": json.loads(row['Trắc nghiệm 2'])
                   })
           with open('data/quiz_data.json', 'w', encoding='utf-8') as f:
               json.dump(data, f, ensure_ascii=False, indent=2)

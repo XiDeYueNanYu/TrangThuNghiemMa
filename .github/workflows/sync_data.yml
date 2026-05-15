@@ -33,7 +33,7 @@ jobs:
                   reader = csv.DictReader(f)
                   for row in reader:
                       # Lấy ngày làm Key chính (Lưu ý: Tên cột phải khớp chính xác với Sheet)
-                      date = row.get('Ngày')
+                      date = row.get('Date')
                       if not date or not date.strip():
                           continue
                           
@@ -44,8 +44,8 @@ jobs:
                       try:
                           data[date].append({
                               "hanzi": row.get('DanhSachChuHan', ''),
-                              "q1": json.loads(row.get('Trắc Nghiệm 1', '{}')),
-                              "q2": json.loads(row.get('Trắc Nghiệm 2', '{}'))
+                              "q1": json.loads(row.get('Qz1', '{}')),
+                              "q2": json.loads(row.get('Qz2', '{}'))
                           })
                       except Exception as parse_e:
                           print(f"Bỏ qua một dòng do lỗi JSON Quiz: {parse_e}")

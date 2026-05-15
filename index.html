@@ -12,27 +12,31 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header class="header-area">
-            <h1>Hán Tự Quiz Pro</h1>
-            <p>Luyện tập trắc nghiệm từ dữ liệu AI</p>
-            <div class="row">
-                <div class="column column-60 column-offset-20">
-                    <select id="dateSelect">
-                        <option value="">-- Đang tải dữ liệu... --</option>
-                    </select>
-                </div>
-            </div>
-        </header>
+	<div class="container">
+		<header class="header-area">
+			<h1>Hán Tự Quiz Pro</h1>
+			<div class="row">
+				<div class="column column-60 column-offset-20">
+					<!-- ID phải là dateSelect -->
+					<select id="dateSelect">
+						<option value="">-- Đang nạp dữ liệu... --</option>
+					</select>
+				</div>
+			</div>
+		</header>
 
-        <div id="mainContent">
-            <div class="welcome-msg">Chọn một ngày để bắt đầu thử thách!</div>
-        </div>
-        
-        <div id="actionArea" style="display:none; text-align: center; margin-bottom: 80px;">
-           <button class="button button-large" onclick="checkAnswers()">Nộp bài & Kiểm tra</button>
-        </div>
-    </div>
+		<!-- Khu vực hiện câu hỏi -->
+		<div id="mainContent">
+			<div class="welcome-msg" style="text-align: center; padding: 50px; color: #999;">
+				Vui lòng chọn ngày học để bắt đầu ôn tập.
+			</div>
+		</div>
+		
+		<!-- Nút nộp bài -->
+		<div id="actionArea" style="display:none; text-align: center; margin: 40px 0 100px 0;">
+		   <button class="button button-large" onclick="checkAnswers()">Nộp bài & Xem giải thích</button>
+		</div>
+	</div>
     <script src="script.js"></script>
 </body>
 </html>

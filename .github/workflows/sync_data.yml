@@ -1,8 +1,8 @@
 name: Sync Quiz Data
 on:
   schedule:
-    - cron: '0 * * * *' # Chạy mỗi tiếng một lần
-  workflow_dispatch:      # Cho phép chạy thủ công
+    - cron: '0 * * * *' # Chạy tự động mỗi tiếng 1 lần
+  workflow_dispatch:      # Cho phép bạn nhấn nút chạy bằng tay
 
 jobs:
   build:
@@ -13,33 +13,62 @@ jobs:
 
       - name: Fetch Data from Google Sheet
         run: |
-          # Dán URL xuất CSV từ Google Sheet của bạn vào đây
+          # URL xuất CSV từ Google Sheet của bạn
           CSV_URL="https://docs.google.com/spreadsheets/d/1zo-OA3GSLmQ-RUSTuTC95-IU4AcR3aY9VGDN5i0B_KY/export?format=csv&gid=0"
-          curl -L $CSV_URL -o data.csv
-
+          curl -L "$CSV_URL" -o data.csv
+          
       - name: Convert CSV to JSON
         shell: python
         run: |
-          import csv, json
+          import csv, json, os
+          
+          # Đảm bảo thư mục data luôn tồn tại
+          if not os.path.exists('data'):
+              os.makedirs('data')
+
           data = {}
-          with open('data.csv', mode='r', encoding='utf-8') as f:
-              reader = csv.DictReader(f)
-              for row in reader:
-                  date = row['Ngày'] # Tên cột trong Sheet
-                  if not date: continue
-                  if date not in data: data[date] = []
-                  data[date].append({
-                      "hanzi": row['DanhSachChuHan'],
-                      "q1": json.loads(row['Trắc Nghiệm 1']),
-                      "q2": json.loads(row['Trắc nghiệm 2'])
-                  })
-          with open('data/quiz_data.json', 'w', encoding='utf-8') as f:
-              json.dump(data, f, ensure_ascii=False, indent=2)
+          try:
+              # Đọc file CSV vừa tải về
+              with open('data.csv', mode='r', encoding='utf-8') as f:
+                  reader = csv.DictReader(f)
+                  for row in reader:
+                      # Lấy ngày làm Key chính (Lưu ý: Tên cột phải khớp chính xác với Sheet)
+                      date = row.get('Ngày')
+                      if not date or not date.strip():
+                          continue
+                          
+                      if date not in data:
+                          data[date] = []
+                      
+                      # Thêm dữ liệu chữ Hán và Quiz vào mảng của ngày đó
+                      try:
+                          data[date].append({
+                              "hanzi": row.get('DanhSachChuHan', ''),
+                              "q1": json.loads(row.get('Trắc Nghiệm 1', '{}')),
+                              "q2": json.loads(row.get('Trắc Nghiệm 2', '{}'))
+                          })
+                      except Exception as parse_e:
+                          print(f"Bỏ qua một dòng do lỗi JSON Quiz: {parse_e}")
+
+              # Ghi dữ liệu ra file JSON duy nhất
+              with open('data/quiz_data.json', 'w', encoding='utf-8') as f:
+                  json.dump(data, f, ensure_ascii=False, indent=2)
+              
+              print("Chuyển đổi thành công!")
+          except Exception as e:
+              print(f"Lỗi thực thi Python: {e}")
+              exit(1)
 
       - name: Commit and Push
         run: |
-          git config --global user.name "GitHub Action"
+          git config --global user.name "GitHub Action Bot"
           git config --global user.email "action@github.com"
+          
+          # Chỉ commit nếu file có sự thay đổi
           git add data/quiz_data.json
-          git commit -m "Update quiz data from Google Sheets" || exit 0
-          git push
+          if git diff --staged --quiet; then
+            echo "Không có thay đổi mới trong dữ liệu."
+          else
+            git commit -m "Cập nhật dữ liệu trắc nghiệm tự động"
+            git push
+          fi

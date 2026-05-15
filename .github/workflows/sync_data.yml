@@ -1,0 +1,45 @@
+name: Sync Quiz Data
+on:
+  schedule:
+    - cron: '0 * * * *' # Chạy mỗi tiếng một lần
+  workflow_dispatch:      # Cho phép chạy thủ công
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fetch Data from Google Sheet
+        run: |
+          # Dán URL xuất CSV từ Google Sheet của bạn vào đây
+          CSV_URL="https://docs.google.com/spreadsheets/d/1zo-OA3GSLmQ-RUSTuTC95-IU4AcR3aY9VGDN5i0B_KY/export?format=csv&gid=0"
+          curl -L $CSV_URL -o data.csv
+
+      - name: Convert CSV to JSON
+        shell: python
+        run: |
+          import csv, json
+          data = {}
+          with open('data.csv', mode='r', encoding='utf-8') as f:
+              reader = csv.DictReader(f)
+              for row in reader:
+                  date = row['Ngày'] # Tên cột trong Sheet
+                  if not date: continue
+                  if date not in data: data[date] = []
+                  data[date].append({
+                      "hanzi": row['Hán tự'],
+                      "q1": json.loads(row['Quiz 1']),
+                      "q2": json.loads(row['Quiz 2'])
+                  })
+          with open('data/quiz_data.json', 'w', encoding='utf-8') as f:
+              json.dump(data, f, ensure_ascii=False, indent=2)
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add data/quiz_data.json
+          git commit -m "Update quiz data from Google Sheets" || exit 0
+          git push

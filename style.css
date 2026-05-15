@@ -1,0 +1,148 @@
+:root {
+    --primary-color: #6a1b9a;
+    --bg-color: #f0f2f5;
+    --card-bg: #ffffff;
+    --text-main: #2c3e50;
+    --correct-color: #2e7d32;
+    --wrong-color: #c62828;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+.container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header mượt mà */
+.header-area {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.header-area h1 {
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+/* Dropdown hiện đại */
+select {
+    border-radius: 12px !important;
+    border: 2px solid #ddd !important;
+    height: 5rem !important;
+    background: white !important;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 4px rgba(106, 27, 154, 0.1) !important;
+}
+
+/* Thẻ Card chứa Chữ Hán */
+.card {
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.hanzi-title {
+    font-size: 10rem;
+    font-family: "Noto Serif SC", serif; /* Font chữ Hán chuyên dụng */
+    text-align: center;
+    color: #1a1a1a;
+    margin: 20px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Khối Quiz */
+.quiz-block {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 20px;
+}
+
+.quiz-block b {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+}
+
+/* Lựa chọn (Options) */
+.opt {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.opt:hover {
+    border-color: var(--primary-color);
+    background: #f3e5f5;
+}
+
+.opt input {
+    margin-right: 15px;
+    margin-bottom: 0;
+}
+
+/* Phản hồi Đúng/Sai */
+.feedback {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.4rem;
+    display: none;
+    animation: slideIn 0.4s ease;
+}
+
+.correct { background: #e8f5e9; color: var(--correct-color); border: 1px solid #c8e6c9; }
+.wrong { background: #ffebee; color: var(--wrong-color); border: 1px solid #ffcdd2; }
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Nút bấm */
+.button.button-large {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    border-radius: 50px;
+    padding: 0 40px;
+    height: 5.5rem;
+    font-size: 1.6rem;
+    text-transform: none;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);
+}
+
+.button.button-large:hover {
+    background-color: #4a148c;
+    transform: scale(1.02);
+}

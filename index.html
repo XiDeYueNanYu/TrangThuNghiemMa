@@ -3,257 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typography Pro - Bracket & Translation Fix</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
-            color: #fff;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            min-height: 100vh; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-        }
-        #master-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
-        
-        .text-line {
-            position: absolute;
-            left: 0; right: 0;
-            text-align: center;
-            font-weight: 800;
-            text-transform: uppercase;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            will-change: transform, opacity, top, font-size;
-            display: flex; justify-content: center; align-items: flex-end;
-            white-space: nowrap;
-        }
-
-        .word-wrapper {
-            display: inline-flex; flex-direction: column; align-items: center;
-            justify-content: flex-end; margin: 0 0.12em; vertical-align: bottom;
-        }
-        .translation {
-            font-size: 0.45em; line-height: 1; color: #00d2ff;
-            text-transform: none; font-weight: 400;
-            margin-bottom: 0.35em; min-height: 1.1em;
-        }
-        .old-line .translation { visibility: hidden; }
-        .original { line-height: 1; }
-
-        #control-btn {
-            position: fixed; bottom: 30px; z-index: 1000;
-            padding: 15px 35px; font-size: 1.1rem; font-weight: bold;
-            border-radius: 50px; border: none; cursor: pointer;
-            background: #fff; color: #000; transition: 0.3s;
-        }
-        #control-btn:hover { background: #00d2ff; color: #fff; }
-    </style>
+    <title>Hán Tự Quiz Pro</title>
+    
+    <!-- Google Fonts: Inter cho tiếng Việt và Noto Serif SC cho chữ Hán -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <header class="header-area">
+            <h1>Hán Tự Quiz Pro</h1>
+            <p>Luyện tập trắc nghiệm từ dữ liệu AI</p>
+            <div class="row">
+                <div class="column column-60 column-offset-20">
+                    <select id="dateSelect">
+                        <option value="">-- Đang tải dữ liệu... --</option>
+                    </select>
+                </div>
+            </div>
+        </header>
 
-    <button id="control-btn">Đang tải...</button>
-    <div id="master-container"></div>
-
-    <script>
-        const BRACKET_COLOR_MAP = {
-            '【': { end: '】', color: '#ff4757' },
-            '\\[': { end: '\\]', color: '#ffa502' },
-            '《': { end: '》', color: '#2ed573' },
-            '〖': { end: '〗', color: '#eccc68' },
-            '«':  { end: '»',  color: '#FF69B4' },
-            '{':  { end: '}',  color: '#00ced1' },
-            '「': { end: '」', color: '#fa8072' }
-        };
-
-        const DICTIONARY = {
-            "kế hoạch": "计划", "tiếng Việt": "越南语", "Câu lạc bộ": "俱乐部",
-            "thư viện": "图书馆", "nấu ăn": "做饭", "thể thao": "体育"
-        };
-
-        const CONTENT = `
-            【Linda】
-tuần này 
-【kế hoạch】 của cậu 
-thế nào?
-【Hôm nay】 
-là 【thứ Hai】 nhỉ? 
-【Hôm nay】 và 【ngày mai】 
-mình học 【tiếng Việt】 
-ở 【Viện】. 
-【Ngày kia】 
-sẽ học 【Vẽ】 
-ở 【Câu lạc bộ】
-Ngày kìa 
-học Đàn bầu 
-ở nhà cô Tâm
-Còn thứ Sáu 
-mình có hẹn 
-với cô giáo rồi
-Thứ Bảy và Chủ nhật 
-mình ở nhà
-Còn Mary 
-thế nào?
-Mình cũng bận lắm
-Từ thứ Hai đến thứ Sáu 
-mình đọc sách 
-ở thư viện
-Thứ Bảy mình sẽ 
-học nấu ăn 
-ở nhà chị Kim Anh
-Mình 
-thích nấu ăn lắm
-Còn
-Chủ nhật 
-mình sẽ chơi thể thao một chút
-Thế à? 
-Mary 
-biết chơi ten nít không?
-Biết
-Nhưng không giỏi lắm.
-        `;
-
-        const CONFIG = {
-            maxFontSize: 100, 
-			lineSpacing: 2.3, 
-			oldLineMultiplier: 0.7, 
-			manualDuration: 39 
-        };
-
-        const stage = document.getElementById('master-container');
-        const btn = document.getElementById('control-btn');
-        const audio = new Audio('hoithoai.mp3');
-
-        let lineElements = [];
-        let currentIndex = 0;
-        let linesWithTiming = [];
-        let isPlaying = false;
-        let timer = null;
-
-        // HÀM XỬ LÝ TEXT MỚI: ĐẢM BẢO NHẬN DIỆN DỊCH TRONG NGOẶC
-        function processLine(text) {
-            let processedText = text;
-
-            // Bước 1: Bảo vệ các từ trong từ điển bằng cách thay thế trước
-            const sortedKeys = Object.keys(DICTIONARY).sort((a, b) => b.length - a.length);
-            const dictMatches = [];
-            sortedKeys.forEach((key, i) => {
-                const regex = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-                processedText = processedText.replace(regex, (m) => {
-                    const id = `__DICT${i}__`;
-                    dictMatches[id] = { o: m, t: DICTIONARY[key] };
-                    return id;
-                });
-            });
-
-            // Bước 2: Nhận diện màu sắc theo cặp dấu
-            for (const start in BRACKET_COLOR_MAP) {
-                const end = BRACKET_COLOR_MAP[start].end;
-                const color = BRACKET_COLOR_MAP[start].color;
-                const regex = new RegExp(`${start}(.*?)${end}`, 'g');
-                processedText = processedText.replace(regex, (match, content) => {
-                    return `<span style="color: ${color}">${content}</span>`;
-                });
-            }
-
-            // Bước 3: Tách thành các token và tạo cấu trúc word-wrapper
-            // Tách dựa trên khoảng trắng nhưng giữ lại các thẻ span
-            const tokens = processedText.match(/(<span[^>]*>.*?<\/span>|[^ ]+)/g) || [];
-            
-            return tokens.map(token => {
-                let color = '#fff';
-                let displayWord = token;
-                let translation = "";
-
-                // Trường hợp 1: Token là một thẻ màu (chứa nội dung trong ngoặc)
-                if (token.startsWith('<span style="color:')) {
-                    const colorMatch = token.match(/color: (#[a-fA-F0-9]+)/);
-                    const contentMatch = token.match(/>(.*)<\/span>/);
-                    if (colorMatch) color = colorMatch[1];
-                    if (contentMatch) displayWord = contentMatch[1];
-                }
-
-                // Kiểm tra xem displayWord (dù là text thuần hay content trong ngoặc) có chứa ID từ điển không
-                for (const id in dictMatches) {
-                    if (displayWord.includes(id)) {
-                        translation = dictMatches[id].t;
-                        displayWord = displayWord.replace(new RegExp(id, 'g'), dictMatches[id].o);
-                    }
-                }
-
-                // Xử lý nốt các dấu câu còn dính vào token (ví dụ "Linda.")
-                // Không bọc dấu câu vào bản dịch
-                return `
-                <span class="word-wrapper">
-                    <span class="translation">${translation}</span>
-                    <span class="original" style="color: ${color}">${displayWord}</span>
-                </span>`;
-            }).join(' ');
-        }
-
-        audio.onloadedmetadata = () => {
-            const rawLines = CONTENT.trim().split('\n').map(l => l.trim());
-            const duration = CONFIG.manualDuration > 0 ? CONFIG.manualDuration : audio.duration;
-            const timePerLine = (duration / rawLines.length) * 1000;
-            linesWithTiming = rawLines.map(text => ({ text, time: timePerLine }));
-            btn.textContent = "Bắt đầu";
-        };
-
-        function updateStage() {
-            if (lineElements.length === 0) return;
-            const vH = window.innerHeight;
-            const latest = lineElements[lineElements.length - 1];
-            // Loại bỏ tất cả ký hiệu đặc biệt để tính font size chuẩn
-            const cleanText = latest.rawText.replace(/[【】\[\]《》〖〗«»{}「」]/g, '');
-            const baseFS = Math.min(CONFIG.maxFontSize, Math.floor(window.innerWidth / (cleanText.length * 0.75)));
-
-            lineElements.forEach((obj, i) => {
-                const distance = lineElements.length - 1 - i;
-                const el = obj.element;
-                const fs = (distance === 0) ? baseFS : baseFS * CONFIG.oldLineMultiplier;
-                el.className = `text-line ${distance === 0 ? 'current-line' : 'old-line'}`;
-                el.style.fontSize = `${fs}px`;
-                el.style.top = `calc(50% - ${distance * fs * CONFIG.lineSpacing}px)`;
-                el.style.opacity = Math.max(0, 1 - distance * 0.3);
-            });
-        }
-
-        function next() {
-            if (!isPlaying || currentIndex >= linesWithTiming.length) return;
-            const data = linesWithTiming[currentIndex];
-            const el = document.createElement('div');
-            el.className = 'text-line';
-            el.innerHTML = processLine(data.text);
-            stage.appendChild(el);
-            lineElements.push({ element: el, rawText: data.text });
-            if (lineElements.length > 6) lineElements.shift().element.remove();
-            updateStage();
-            currentIndex++;
-            timer = setTimeout(next, data.time);
-        }
-
-        btn.onclick = () => {
-            if (!isPlaying) {
-                isPlaying = true;
-                audio.play();
-                btn.textContent = "Tạm dừng";
-                next();
-            } else {
-                isPlaying = false;
-                audio.pause();
-                btn.textContent = "Tiếp tục";
-                if (timer) clearTimeout(timer);
-            }
-        };
-
-        audio.onended = () => {
-            isPlaying = false;
-            btn.textContent = "Bắt đầu lại";
-            currentIndex = 0;
-            lineElements = [];
-            stage.innerHTML = '';
-            if (timer) clearTimeout(timer);
-        };
-
-        window.onresize = updateStage;
-    </script>
+        <div id="mainContent">
+            <div class="welcome-msg">Chọn một ngày để bắt đầu thử thách!</div>
+        </div>
+        
+        <div id="actionArea" style="display:none; text-align: center; margin-bottom: 80px;">
+           <button class="button button-large" onclick="checkAnswers()">Nộp bài & Kiểm tra</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
